@@ -13,7 +13,7 @@ Real addresses, hostnames and the camouflage site are placeholders here; real va
 | G2 | VPN protocols survive from RU (both servers, + monitor)? | **SERVER A: PASS** (2026-11-08/09). Phase 2b: 4/5 variants, Vision 3/3. Monitor (D-18): 12 h 02 m, 289 cycles, both links 289/289 OK (100 %), office line 100 %, no gaps (keep-awake worked), evening 2 h 50 m covered, no errors; median 1 MB speed Vision 7.2 / XHTTP 11.1 Mbit/s. Keys rotated afterwards (D-19). **Open: server B** (D-17). | `evidence/EVIDENCE-phase2b-tunnel-20261108-195210.txt`, `evidence/EVIDENCE-phase2c-monitor-20261108-200950.txt` |
 | G3 | Works on 2+ real home ISPs (friends)? | NOT STARTED | - |
 | G4 | Work laptop needs a router? | NOT DECIDED. Known: GlobalProtect portal `<EMPLOYER_GP_PORTAL>` (<EMPLOYER_GP_PORTAL_IP>, the employer's company AS, DE) answers HTTPS from RU (prelogin HTTP 200). GP tunnel (IPsec UDP 4501) untested. AWS Client VPN is OpenVPN-based (OpenVPN blocked in RU since Feb 2026); its endpoint/proto not yet known. AWS EC2/S3 in 6 regions reachable from RU-PC without throttling. | phase0 quick evidence |
-| G5 | Router stack + twin pass? | NOT STARTED: router not available in Georgia (see D-07). | - |
+| G5 | Router stack + twin pass? | NOT STARTED: one unit bought in Georgia for a pilot (D-20); setup guide `docs/router-setup.html` written, untested on hardware. | - |
 
 ## Server A (Time4VPS, <SERVER_A_IP>)
 
@@ -43,9 +43,10 @@ Stockholm (hourly; IP lottery: test with Phase 2a, destroy and recreate if froze
 
 ## Router
 
-Decision: two GL-MT3000 (Beryl AX) only. Not available in Georgia; user arrives in Russia in
-~3 weeks; plan is to order to Russia for delivery by arrival and to prepare a complete router kit
-in advance (see `docs/NEXT-STEPS.md` item 7 and `docs/router-arrival-check.html`).
+Decision: GL-MT3000 (Beryl AX) only. One unit bought in Georgia (2026-11-09) as a pilot (D-20); two more
+being ordered in Russia from different sellers for delivery by arrival (MAIN must be Global; a CN unit
+only as SPARE). Manual setup: `docs/router-setup.html` (OpenWrt 25.12.6 + Podkop 0.7.24; image and
+packages cached in `.private/downloads/router-kit/`). Arrival check: `docs/router-arrival-check.html`.
 
 ## Known issues and lessons
 

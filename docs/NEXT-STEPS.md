@@ -45,7 +45,10 @@ Items marked **BUILD** need new code; follow `CLAUDE.md` (conventions, privacy, 
   OpenVPN Connect on a friend's phone in Russia, 10 minutes, then remove.
 - G4 decision: if AWS VPN (OpenVPN) is blocked or GlobalProtect unstable -> router required (expected).
 
-## 6. BUILD: router kit (prepared now, used in Russia)
+## 6. BUILD: router kit (pilot unit in Georgia, D-20)
+
+- Pilot: when the Georgian unit arrives, arrival check, then `docs/router-setup.html` steps 1-7; record
+  every deviation and replace the guide's UNVERIFIED notes with tested steps. Then build the script below on it.
 
 - `router/` for GL-MT3000 on official OpenWrt 25.12.x: sysupgrade image(s) + recovery notes (U-Boot web
   recovery) + checksums downloaded in advance; offline copies of sing-box, Podkop, travelmate, luci apps.
@@ -59,7 +62,8 @@ Items marked **BUILD** need new code; follow `CLAUDE.md` (conventions, privacy, 
 
 ## 7. Purchases and dates
 
-- 2x GL-MT3000 (+1 for redundancy, returned if not needed): order **~2026-11-13 to 11-15** from 2-3 sellers on
+- One GL-MT3000 bought in Georgia (pilot, D-20). In Russia 2 more from different sellers (MAIN Global; CN only as
+  SPARE): order **~2026-11-13 to 11-15** from sellers on
   major Russian marketplaces (listings show ~14-day cross-border delivery); check pickup-point storage days and
   extension; arrival check per `docs/router-arrival-check.html`.
 - Own domain for self-steal (~$10/yr, Cloudflare Registrar or similar, non-.ru, privacy; DNS-only record):

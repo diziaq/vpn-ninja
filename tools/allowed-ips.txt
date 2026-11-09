@@ -6,6 +6,10 @@
 77.88.8.8     # Yandex public DNS
 192.168.8.1   # GL.iNet factory admin address
 10.77.0.1     # planned router LAN address
+192.168.1.0   # OpenWrt default LAN network (192.168.1.0/24)
+192.168.1.1   # OpenWrt default LAN address and GL.iNet U-Boot recovery page
+192.168.1.2   # laptop static address for U-Boot recovery
+255.255.255.0 # /24 subnet mask
 # Documentation-only ranges (RFC 5737): never real hosts; used in templates and tests. Prefix match.
 192.0.2.
 198.51.100.

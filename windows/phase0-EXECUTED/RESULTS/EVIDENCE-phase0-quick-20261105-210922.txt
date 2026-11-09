@@ -1,0 +1,102 @@
+﻿==== RU-PROBE EVIDENCE ====
+Script:     phase0-quick.ps1 v1.0
+Run ID:     phase0-quick-20261105-210922-1ae9f46b
+Machine:    1ae9f46b (hash of computer name)
+Started:    2026-11-05T21:09:22 local / 2026-11-05T16:09:22 UTC
+Finished:   2026-11-05T21:10:20 local / 2026-11-05T16:10:20 UTC (1,0 min)
+Status:     COMPLETED
+
+---- Results ----
+== 1. Environment ==
+OS: Майкрософт Windows 11 Pro build 26200; PowerShell 5.1.26100.9711 (FullLanguage)
+curl: True; portable .exe runs from user folder: True; admin group member: False
+Browser proxy configured: False; active VPN-like adapters: none
+
+== 2. Network identity ==
+Public IP 91.221.248.x (masked); country RU; city SysertтАЩ
+Network: <RU-PC ASN> <RU-PC ISP> Company Ltd
+
+== 3. Filtering sanity (direct, no VPN) ==
+   control  HTTP_200                 https://www.google.com/
+   control  HTTP_200                 https://github.com/
+   control  HTTP_200                 https://www.microsoft.com/
+   blocked  TIMEOUT                  https://www.instagram.com/
+   blocked  TIMEOUT                  https://www.youtube.com/
+   blocked  TLS_FAIL                 https://www.linkedin.com/
+   blocked  TIMEOUT                  https://x.com/
+   russian  HTTP_302                 https://ya.ru/
+   russian  HTTP_200                 https://www.gosuslugi.ru/
+
+== 4. AWS availability (direct, no VPN) ==
+Any HTTP code (even 400 or 403) means the AWS server was reached. DNS/CONNECT/TLS/TIMEOUT/RESET mean it was not.
+
+Regional endpoints (EC2 API and S3 in each region; these sit in Amazon's own network):
+   region          EC2 API                    S3
+   us-east-1       HTTP_301                   HTTP_307
+   us-west-2       HTTP_301                   HTTP_307
+   eu-west-1       HTTP_301                   HTTP_307
+   eu-central-1    HTTP_301                   HTTP_307
+   eu-north-1      HTTP_301                   HTTP_307
+   ap-southeast-1  HTTP_301                   HTTP_307
+
+Global services:
+   STS global                     HTTP_302                 0 bytes
+   Sign-in                        HTTP_302                 0 bytes
+   Console                        HTTP_302                 139 bytes
+   aws.amazon.com (CloudFront)    TIMEOUT                  0 bytes
+
+Large transfers (1 MB or a large listing; a stall after ~16 KB means throttling):
+   CloudFront: AWS CLI installer          HTTP_206               1048576 bytes 1 779 KB/s
+   S3 us-east-1: public bucket listing    HTTP_200               395425 bytes 183 KB/s
+   S3 eu-central-1: public bucket listing HTTP_200               286685 bytes 435 KB/s
+
+Your work endpoints (from services.txt):
+   HTTP_200                 https://<EMPLOYER_GP_PORTAL>/global-protect/prelogin.esp
+
+== 5. Quick verdict ==
+Tools can run here:          YES
+Regular Russian ISP egress:  YES
+Russian filtering visible:   YES (4 of 4 blocked sites fail, 3 of 3 controls work)
+AWS regions reachable:       6 of 6
+AWS global services reached: 3 of 4
+AWS large-transfer stalls:   none seen
+
+---- Detail ----
+section      name                                     status                 http     bytes  connect      tls    total remote ip        url
+sanity       control                                  HTTP_200                200    212186 0.059178 0.149461 0.477556 <ip>  https://www.google.com/
+sanity       control                                  HTTP_200                200    529953 0.223008 0.571576 3.116238 <ip>     https://github.com/
+sanity       control                                  HTTP_200                200    201253 0.231061 0.363628 0.575258 <ip>       https://www.microsoft.com/
+sanity       blocked                                  TIMEOUT                 000         0 0.000000 0.000000 6.004053                  https://www.instagram.com/
+sanity       blocked                                  TIMEOUT                 000         0 0.000000 0.000000 6.013705                  https://www.youtube.com/
+sanity       blocked                                  TLS_FAIL                000         0 0.293463 0.000000 0.339751                  https://www.linkedin.com/
+sanity       blocked                                  TIMEOUT                 000         0 0.163203 0.584445 10.010556 <ip>     https://x.com/
+sanity       russian                                  HTTP_302                302         0 0.087071 0.603933 0.659064 <ip>     https://ya.ru/
+sanity       russian                                  HTTP_200                200     49856 0.090004 0.414960 0.522700 <ip>    https://www.gosuslugi.ru/
+aws-region   ec2 us-east-1                            HTTP_301                301         0 0.270430 1.028321 1.172545 <ip>      https://ec2.us-east-1.amazonaws.com/
+aws-region   s3 us-east-1                             HTTP_307                307         0 0.360150 0.712689 0.871331 <ip>     https://s3.us-east-1.amazonaws.com/
+aws-region   ec2 us-west-2                            HTTP_301                301         0 0.423055 0.986971 1.214683 <ip>   https://ec2.us-west-2.amazonaws.com/
+aws-region   s3 us-west-2                             HTTP_307                307         0 0.490182 1.663794 1.890042 <ip>    https://s3.us-west-2.amazonaws.com/
+aws-region   ec2 eu-west-1                            HTTP_301                301         0 0.330002 0.586076 0.665057 <ip>    https://ec2.eu-west-1.amazonaws.com/
+aws-region   s3 eu-west-1                             HTTP_307                307         0 0.265827 0.552515 0.635120 <ip>     https://s3.eu-west-1.amazonaws.com/
+aws-region   ec2 eu-central-1                         HTTP_301                301         0 0.211748 0.450361 0.514359 <ip>      https://ec2.eu-central-1.amazonaws.com/
+aws-region   s3 eu-central-1                          HTTP_307                307         0 0.188836 0.472738 0.535776 <ip>     https://s3.eu-central-1.amazonaws.com/
+aws-region   ec2 eu-north-1                           HTTP_301                301         0 0.171093 0.436112 0.486227 <ip>    https://ec2.eu-north-1.amazonaws.com/
+aws-region   s3 eu-north-1                            HTTP_307                307         0 0.178764 0.425980 0.477454 <ip>      https://s3.eu-north-1.amazonaws.com/
+aws-region   ec2 ap-southeast-1                       HTTP_301                301         0 0.527090 1.120611 1.446566 <ip>     https://ec2.ap-southeast-1.amazonaws.com/
+aws-region   s3 ap-southeast-1                        HTTP_307                307         0 0.556506 1.433269 1.798015 <ip>    https://s3.ap-southeast-1.amazonaws.com/
+aws-global   STS global                               HTTP_302                302         0 0.619689 0.938896 1.090970 <ip>   https://sts.amazonaws.com/
+aws-global   Sign-in                                  HTTP_302                302         0 0.306082 0.698785 0.856117 <ip>          https://signin.aws.amazon.com/
+aws-global   Console                                  HTTP_302                302       139 0.710439 0.959179 1.015499 <ip>  https://console.aws.amazon.com/
+aws-global   aws.amazon.com (CloudFront)              TIMEOUT                 000         0 0.000000 0.000000 6.010718                  https://aws.amazon.com/
+aws-transfer CloudFront: AWS CLI installer            HTTP_206                206   1048576 0.186260 0.257327 0.575752 <ip>     https://awscli.amazonaws.com/AWSCLIV2.msi
+aws-transfer S3 us-east-1: public bucket listing      HTTP_200                200    395425 0.353260 0.525560 2.106180 <ip>     https://noaa-goes16.s3.amazonaws.com/?list-type=2&max-keys=1000
+aws-transfer S3 eu-central-1: public bucket listing   HTTP_200                200    286685 0.242882 0.339463 0.643783 <ip>       https://copernicus-dem-30m.s3.eu-central-1.amazonaws.com/?list-type=2&max-keys=1000
+work         https                                    HTTP_200                200      2254 0.254833 0.818636 0.887239 <EMPLOYER_GP_PORTAL_IP>   https://<EMPLOYER_GP_PORTAL>/global-protect/prelogin.esp
+
+---- Errors during run (includes ones the script handled; for diagnosis) ----
+(none)
+
+---- Raw files kept on the PC (send only if asked) ----
+runs\phase0-quick-20261105-210922\quick.csv  sha256 bacfff6d431394f7e9e8d07c8a3877c5eb6b0de1a74044f62f0642711b58900a
+runs\phase0-quick-20261105-210922\console.log  sha256 d3deb7f4e62db990dc75dad873368ec374643a1c0d65d5e0eaf69999eeab838f
+==== END ====

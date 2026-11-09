@@ -1,0 +1,55 @@
+# Service list for Phase 0 baseline (and later tunnel tests).
+# Format: GROUP  URL   (one per line; lines starting with # are ignored)
+#
+# X = controls, should work from anywhere
+# A = blocked in Russia, expected to FAIL without a tunnel
+# B = Russian services, expected to WORK without a tunnel
+# C = foreign services that refuse Russian IPs (observe the result)
+# D = work endpoints: replace the YOUR-... placeholders, or leave them (they are skipped)
+# T = throttling probes on big clouds: downloads 1 MB; FREEZE_AFTER_...B means throttled
+#     A 404/403 in group T means the test file moved, not a block.
+#
+# Add your own services to A, B or C. Keep it to about 40 lines.
+
+X https://www.google.com/
+X https://www.microsoft.com/
+X https://github.com/
+X https://www.wikipedia.org/
+
+A https://www.instagram.com/
+A https://www.facebook.com/
+A https://x.com/
+A https://www.youtube.com/
+A https://www.linkedin.com/
+A https://discord.com/
+A https://web.whatsapp.com/
+A https://web.telegram.org/
+A https://signal.org/
+A https://www.bbc.com/
+A https://www.dw.com/
+
+B https://ya.ru/
+B https://www.gosuslugi.ru/
+B https://www.sberbank.ru/
+B https://www.tbank.ru/
+B https://www.ozon.ru/
+B https://www.wildberries.ru/
+B https://vk.com/
+
+C https://chatgpt.com/
+C https://claude.ai/
+C https://gemini.google.com/
+C https://www.netflix.com/
+
+# GlobalProtect portal (filled in).
+D https://<EMPLOYER_GP_PORTAL>/global-protect/prelogin.esp
+# AWS Client VPN: copy the host from the "remote" line of your .ovpn file.
+# If it starts with "*." or the file has "remote-random-hostname", put any word in front, e.g. test.cvpn-endpoint-...
+# Only meaningful if the .ovpn says "proto tcp"; with "proto udp" leave this placeholder.
+D tcp://YOUR-AWS-CVPN-ENDPOINT:443
+
+T https://speed.cloudflare.com/__down?bytes=1048576
+T https://nbg1-speed.hetzner.com/100MB.bin
+T https://proof.ovh.net/files/10Mb.dat
+T http://speedtest-fra1.digitalocean.com/10mb.test
+T https://speedtest.frankfurt.linode.com/100MB-frankfurt.bin

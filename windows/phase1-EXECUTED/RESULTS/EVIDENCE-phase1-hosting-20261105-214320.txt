@@ -1,0 +1,98 @@
+﻿==== RU-PROBE EVIDENCE ====
+Script:     phase1-hosting.ps1 v1.0
+Run ID:     phase1-hosting-20261105-214320-1ae9f46b
+Machine:    1ae9f46b (hash of computer name)
+Started:    2026-11-05T21:43:20 local / 2026-11-05T16:43:20 UTC
+Finished:   2026-11-05T21:45:58 local / 2026-11-05T16:45:58 UTC (2,6 min)
+Status:     COMPLETED
+Parameters: MaxTime=20 s; RangeBytes=2097152; ProvidersFile=providers.txt (18 entries, sha256 9a1568d3d8171773)
+
+---- Results ----
+== 1. Line identity ==
+Public IP 91.221.248.x (masked); country RU; city <RU-PC town>’; network <RU-PC ASN> <RU-PC ISP> Company Ltd
+
+== 2. Line checks ==
+Plain DNS over UDP 53 to public resolvers: 1.1.1.1=OK, 8.8.8.8=OK, 77.88.8.8=OK
+Outbound TCP ports (portquiz.net): 22=OPEN, 80=OPEN, 443=OPEN, 2053=OPEN, 8080=OPEN, 8443=OPEN
+TLS issuer www.microsoft.com: CN=Microsoft TLS G2 RSA CA OCSP 04, O=Microsoft Corporation, C=US
+TLS issuer github.com: CN=Sectigo Public Server Authentication CA DV E36, O=Sectigo Limited, C=GB
+TLS issuer www.wikipedia.org: CN=YE2, O=Let's Encrypt, C=US
+TLS issuer ya.ru: CN=GlobalSign GCC E46 OV TLS CA 2025, O=GlobalSign nv-sa, C=BE
+HTTPS inspection: not detected.
+
+== 3. Hosting providers (first 2 MB of each test file, direct, no VPN) ==
+
+Candidates (providers we could rent from):
+   Vultr         Frankfurt DE    FREEZE           16 KB       0 Mbit/s  TIMEOUT
+   Vultr         Amsterdam NL    UNSTABLE       2048 KB    21,6 Mbit/s  HTTP_206
+   Vultr         Stockholm SE    OK             2048 KB    24,9 Mbit/s  HTTP_206
+   Vultr         Warsaw PL       OK             2048 KB    16,4 Mbit/s  HTTP_206
+   HostHatch     Vienna AT       OK-SMALL-FILE      12 KB     0,6 Mbit/s  HTTP_206
+   HostHatch     Amsterdam NL    OK-SMALL-FILE      12 KB     0,7 Mbit/s  HTTP_206
+   HostHatch     Stockholm SE    OK-SMALL-FILE      12 KB     0,5 Mbit/s  HTTP_206
+   BuyVM         Luxembourg LU   OK             2048 KB     9,3 Mbit/s  HTTP_206
+   Time4VPS      Vilnius LT      OK             2048 KB    10,2 Mbit/s  HTTP_206
+   Leaseweb      Haarlem NL      URL-BROKEN        1 KB       0 Mbit/s  HTTP_404
+   Leaseweb      Frankfurt DE    URL-BROKEN        1 KB       0 Mbit/s  HTTP_404
+
+Calibration: big clouds often throttled in Russia:
+   Hetzner       Falkenstein DE  BLOCKED           0 KB       0 Mbit/s  TIMEOUT
+   Hetzner       Helsinki FI     BLOCKED           0 KB       0 Mbit/s  TIMEOUT
+   DigitalOcean  Frankfurt DE    URL-BROKEN        0 KB       0 Mbit/s  DNS_FAIL
+   OVH           Roubaix FR      BLOCKED           0 KB       0 Mbit/s  TIMEOUT
+   Linode        Frankfurt DE    BLOCKED           0 KB       0 Mbit/s  TIMEOUT
+
+Calibration: Russian mirror (must be fast):
+   Yandex mirror Moscow RU       OK             2048 KB    27,7 Mbit/s  HTTP_206
+
+For context:
+   Cloudflare    anycast         OK             2048 KB      28 Mbit/s  HTTP_200
+
+== 4. Verdict ==
+   Vultr         PARTIAL                        ok 2, problems 2, broken URLs 0
+   HostHatch     UNKNOWN (test files missing)   ok 0, problems 0, broken URLs 3
+   BuyVM         PASS                           ok 1, problems 0, broken URLs 0
+   Time4VPS      PASS                           ok 1, problems 0, broken URLs 0
+   Leaseweb      UNKNOWN (test files missing)   ok 0, problems 0, broken URLs 2
+
+Russian mirror fast: YES (download path works)
+Big-cloud controls throttled or blocked: 4 of 5
+Gate G1 (two or more candidate providers pass): PASS  [BuyVM, Time4VPS]
+
+---- Detail (every attempt) ----
+role        provider      location        # final      attempt            bytes  Mbit/s  connect      tls    total remote ip        url
+CANDIDATE   Vultr         Frankfurt DE    1 FREEZE     FREEZE/TIMEOUT     15957       0 0.182538 0.282844 20.003686 <ip>   https://fra-de-ping.vultr.com/vultr.com.100MB.bin
+CANDIDATE   Vultr         Frankfurt DE    2 FREEZE     FREEZE/TIMEOUT     15957       0 0.070264 0.163628 20.006063 <ip>   https://fra-de-ping.vultr.com/vultr.com.100MB.bin
+CANDIDATE   Vultr         Amsterdam NL    1 UNSTABLE   FREEZE/TIMEOUT     15957       0 0.167439 0.266591 20.010824 <ip>   https://ams-nl-ping.vultr.com/vultr.com.100MB.bin
+CANDIDATE   Vultr         Amsterdam NL    2 UNSTABLE   OK/HTTP_206      2097152    21,6 0.075346 0.180274 0.776176 <ip>   https://ams-nl-ping.vultr.com/vultr.com.100MB.bin
+CANDIDATE   Vultr         Stockholm SE    1 OK         OK/HTTP_206      2097152    24,9 0.165381 0.245647 0.672954 <ip>     https://sto-se-ping.vultr.com/vultr.com.100MB.bin
+CANDIDATE   Vultr         Warsaw PL       1 OK         OK/HTTP_206      2097152    16,4 0.186379 0.306682 1.025179 <ip>     https://waw-pl-ping.vultr.com/vultr.com.100MB.bin
+CANDIDATE   HostHatch     Vienna AT       1 OK-SMALL-FILE OK-SMALL-FILE/HTTP_206     12321     0,3 0.253666 0.000000 0.326536 <ip>  http://lg.vie.hosthatch.com/100MB.test
+CANDIDATE   HostHatch     Vienna AT       2 OK-SMALL-FILE OK-SMALL-FILE/HTTP_206     12321     0,6 0.082089 0.000000 0.155404 <ip>  http://lg.vie.hosthatch.com/100MB.test
+CANDIDATE   HostHatch     Amsterdam NL    1 OK-SMALL-FILE OK-SMALL-FILE/HTTP_206     12321     0,4 0.152540 0.000000 0.225246 <ip>     http://lg.ams.hosthatch.com/100MB.test
+CANDIDATE   HostHatch     Amsterdam NL    2 OK-SMALL-FILE OK-SMALL-FILE/HTTP_206     12321     0,7 0.081510 0.000000 0.148297 <ip>     http://lg.ams.hosthatch.com/100MB.test
+CANDIDATE   HostHatch     Stockholm SE    1 OK-SMALL-FILE OK-SMALL-FILE/HTTP_206     12321     0,5 0.127089 0.000000 0.199297 <ip>    http://lg.sto.hosthatch.com/100MB.test
+CANDIDATE   HostHatch     Stockholm SE    2 OK-SMALL-FILE OK-SMALL-FILE/HTTP_206     12321     0,5 0.109534 0.000000 0.180837 <ip>    http://lg.sto.hosthatch.com/100MB.test
+CANDIDATE   BuyVM         Luxembourg LU   1 OK         OK/HTTP_206      2097152     9,3 0.540826 0.716933 1.800114 <ip>   https://speedtest.lu.buyvm.net/100MB.test
+CANDIDATE   Time4VPS      Vilnius LT      1 OK         OK/HTTP_206      2097152    10,2 0.244969 0.350915 1.641602 <ip>     https://lg.time4vps.com/100MB.test
+CANDIDATE   Leaseweb      Haarlem NL      1 URL-BROKEN URL-BROKEN/HTTP_404       548       0 0.307221 0.000000 0.368973 <ip>      http://mirror.nl.leaseweb.net/speedtest/100mb.bin
+CANDIDATE   Leaseweb      Frankfurt DE    1 URL-BROKEN URL-BROKEN/HTTP_404       548       0 0.148046 0.000000 0.216811 <ip>     http://mirror.de.leaseweb.net/speedtest/100mb.bin
+CONTROL-BAD Hetzner       Falkenstein DE  1 BLOCKED    BLOCKED/TIMEOUT         0       0 0.000000 0.000000 8.013663                  https://fsn1-speed.hetzner.com/100MB.bin
+CONTROL-BAD Hetzner       Falkenstein DE  2 BLOCKED    BLOCKED/TIMEOUT         0       0 0.000000 0.000000 8.006078                  https://fsn1-speed.hetzner.com/100MB.bin
+CONTROL-BAD Hetzner       Helsinki FI     1 BLOCKED    BLOCKED/TIMEOUT         0       0 0.000000 0.000000 8.016341                  https://hel1-speed.hetzner.com/100MB.bin
+CONTROL-BAD Hetzner       Helsinki FI     2 BLOCKED    BLOCKED/TIMEOUT         0       0 0.000000 0.000000 8.017734                  https://hel1-speed.hetzner.com/100MB.bin
+CONTROL-BAD DigitalOcean  Frankfurt DE    1 URL-BROKEN URL-BROKEN/DNS_FAIL         0       0 0.000000 0.000000 0.053450                  http://speedtest-fra1.digitalocean.com/100mb.test
+CONTROL-BAD OVH           Roubaix FR      1 BLOCKED    BLOCKED/TIMEOUT         0       0 0.000000 0.000000 8.004041                  https://proof.ovh.net/files/100Mio.dat
+CONTROL-BAD OVH           Roubaix FR      2 BLOCKED    BLOCKED/TIMEOUT         0       0 0.000000 0.000000 8.011576                  https://proof.ovh.net/files/100Mio.dat
+CONTROL-BAD Linode        Frankfurt DE    1 BLOCKED    BLOCKED/TIMEOUT         0       0 0.000000 0.000000 8.009274                  https://speedtest.frankfurt.linode.com/100MB-frankfurt.bin
+CONTROL-BAD Linode        Frankfurt DE    2 BLOCKED    BLOCKED/TIMEOUT         0       0 0.000000 0.000000 8.016052                  https://speedtest.frankfurt.linode.com/100MB-frankfurt.bin
+CONTROL-OK  Yandex mirror Moscow RU       1 OK         OK/HTTP_206      2097152    27,7 0.131441 0.198200 0.605527 <ip>  https://mirror.yandex.ru/debian/ls-lR.gz
+INFO        Cloudflare    anycast         1 OK         OK/HTTP_200      2097152      28 0.088650 0.174980 0.598931 <ip>  https://speed.cloudflare.com/__down?bytes=2097152
+
+---- Errors during run (includes ones the script handled; for diagnosis) ----
+(none)
+
+---- Raw files kept on the PC (send only if asked) ----
+runs\phase1-hosting-20261105-214320\hosting.csv  sha256 c73d151f9d3d4e163167a9eb44c8f0c47b67816336e0177f109f7aebc72a90ac
+runs\phase1-hosting-20261105-214320\console.log  sha256 019fbf293d90195362ed4611166f5dda547b6b101e177e358c7c9d9f22fa700e
+==== END ====

@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Russia connectivity: gated rollout plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: light;
+  --bg: #EEF2F1;
+  --surface: #FFFFFF;
+  --ink: #1C2B33;
+  --muted: #56656D;
+  --line: #C9D3D5;
+  --signal: #1F5F8B;
+  --signal-soft: #DCE8F1;
+  --gate: #A86F08;
+  --gate-soft: #F6ECD6;
+  --pass: #2E7D4F;
+  --pass-soft: #DDEFE3;
+  --fail: #B3362C;
+  --fail-soft: #F5DEDB;
+  --code-bg: #1F2A30;
+  --code-ink: #E3EBEE;
+  --font-sans: "IBM Plex Sans", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  --font-cond: "IBM Plex Sans Condensed", "Arial Narrow", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #10171B; --surface: #172127; --ink: #DCE5E8; --muted: #93A3AA; --line: #2B3A41;
+    --signal: #6FA8D6; --signal-soft: #1B2F3D; --gate: #E0A93A; --gate-soft: #33291A;
+    --pass: #63B985; --pass-soft: #17301F; --fail: #E07468; --fail-soft: #3A1D1A;
+    --code-bg: #0B1114; --code-ink: #D6E1E5;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #10171B; --surface: #172127; --ink: #DCE5E8; --muted: #93A3AA; --line: #2B3A41;
+  --signal: #6FA8D6; --signal-soft: #1B2F3D; --gate: #E0A93A; --gate-soft: #33291A;
+  --pass: #63B985; --pass-soft: #17301F; --fail: #E07468; --fail-soft: #3A1D1A;
+  --code-bg: #0B1114; --code-ink: #D6E1E5;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 16px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-sans); font-size: 16px; line-height: 1.6; }
+a { color: var(--signal); }
+a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; border-radius: 4px; }
+
+.layout { display: grid; grid-template-columns: 280px minmax(0, 1fr); max-width: 1240px; margin: 0 auto; }
+nav.track { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 32px 18px 32px 26px; border-right: 1px solid var(--line); }
+.navbox summary { display: none; cursor: pointer; font-weight: 600; padding: 4px 0 10px; }
+.track-title { font-family: var(--font-cond); font-weight: 600; font-size: 1.05rem; margin: 0 0 14px; }
+.track ol { list-style: none; margin: 0; padding: 0 0 0 20px; position: relative; }
+.track ol::before { content: ""; position: absolute; left: 6px; top: 8px; bottom: 8px; width: 2px; background: var(--line); }
+.track li { position: relative; }
+.track li::before { content: ""; position: absolute; left: -19px; top: 11px; width: 10px; height: 10px; border-radius: 50%; background: var(--bg); border: 2px solid var(--signal); }
+.track li.ng::before { border-radius: 1px; transform: rotate(45deg); border-color: var(--gate); width: 8px; height: 8px; left: -18px; top: 12px; }
+.track li.aux::before { border-color: var(--line); }
+.track li.current::before { background: var(--signal); }
+.track li.ng.current::before { background: var(--gate); }
+.track a { display: block; padding: 4px 8px; color: var(--muted); text-decoration: none; font-size: 14px; border-radius: 6px; line-height: 1.4; }
+.track a:hover { color: var(--ink); background: var(--signal-soft); }
+.track li.current > a { color: var(--ink); font-weight: 600; }
+.track .sep { height: 12px; }
+.track li.sep::before { display: none; }
+
+main { padding: 48px 56px 96px; min-width: 0; }
+.prose { max-width: 48rem; }
+.hero { max-width: 52rem; padding-bottom: 28px; border-bottom: 2px solid var(--ink); }
+h1 { font-family: var(--font-cond); font-weight: 700; font-size: 2.6rem; line-height: 1.08; margin: 0 0 18px; letter-spacing: -0.01em; }
+.lede { font-family: var(--font-cond); font-weight: 500; font-size: 1.55rem; line-height: 1.3; margin: 0 0 18px; }
+.status { color: var(--muted); font-size: 14.5px; margin: 0; }
+h2 { font-family: var(--font-cond); font-weight: 600; font-size: 1.7rem; line-height: 1.2; margin: 64px 0 12px; }
+h3 { font-size: 1.05rem; font-weight: 600; margin: 28px 0 8px; }
+h4 { font-size: 0.98rem; font-weight: 600; margin: 0 0 6px; }
+p { margin: 0 0 12px; }
+ul, ol { margin: 0 0 12px; padding-left: 1.3rem; }
+li { margin: 3px 0; }
+
+.note, .warn { border-left: 3px solid var(--signal); background: var(--signal-soft); padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.warn { border-left-color: var(--fail); background: var(--fail-soft); }
+.note p:last-child, .warn p:last-child { margin-bottom: 0; }
+
+.table-wrap { overflow-x: auto; margin: 16px 0 20px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; line-height: 1.5; }
+th, td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+tr:last-child td { border-bottom: 0; }
+th { font-weight: 600; background: var(--signal-soft); white-space: nowrap; }
+td.n { font-family: var(--font-cond); font-weight: 600; color: var(--signal); white-space: nowrap; }
+
+.flow { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 8px; margin: 16px 0; }
+.flow svg { display: block; width: 100%; min-width: 640px; max-width: 820px; height: auto; margin: 0 auto; }
+.flow-legend { display: flex; flex-wrap: wrap; gap: 18px; font-size: 13.5px; color: var(--muted); margin: 8px 4px 0; }
+.flow-legend span::before { content: ""; display: inline-block; width: 12px; height: 12px; margin-right: 6px; vertical-align: -1px; border: 2px solid var(--signal); border-radius: 3px; }
+.flow-legend .lg-gate::before { border-color: var(--gate); background: var(--gate-soft); transform: rotate(45deg) scale(.85); border-radius: 1px; }
+.flow-legend .lg-side::before { border-color: var(--muted); border-style: dashed; }
+.flow-legend .lg-stop::before { border-color: var(--fail); background: var(--fail-soft); }
+svg text { font-family: var(--font-sans); fill: var(--ink); }
+svg .t-title { font-size: 14px; font-weight: 600; }
+svg .t-sub { font-size: 12px; fill: var(--muted); }
+svg .t-gate { font-size: 12.5px; font-weight: 600; }
+svg .t-lbl { font-size: 12px; fill: var(--muted); font-weight: 600; }
+svg .n-phase rect { fill: var(--surface); stroke: var(--signal); stroke-width: 1.6; }
+svg .n-start rect { fill: var(--signal-soft); stroke: var(--signal); stroke-width: 1.2; }
+svg .n-gate polygon { fill: var(--gate-soft); stroke: var(--gate); stroke-width: 1.6; }
+svg .n-side rect { fill: var(--surface); stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+svg .n-stop rect { fill: var(--fail-soft); stroke: var(--fail); stroke-width: 1.4; }
+svg .wire { fill: none; stroke: var(--muted); stroke-width: 1.5; }
+svg .wire-loop { fill: none; stroke: var(--muted); stroke-width: 1.3; stroke-dasharray: 4 3; }
+svg .ah { fill: var(--muted); }
+svg a:hover rect, svg a:hover polygon { stroke-width: 2.6; }
+
+.phase { margin-top: 80px; padding-top: 10px; border-top: 2px solid var(--ink); max-width: 52rem; }
+.phase-head { display: grid; grid-template-columns: auto 1fr; column-gap: 22px; align-items: start; }
+.phase-num { font-family: var(--font-cond); font-weight: 700; font-size: 4.4rem; line-height: .9; color: var(--signal); min-width: 1.1ch; }
+.phase-title { font-family: var(--font-cond); font-weight: 600; font-size: 1.6rem; line-height: 1.2; margin: 6px 0 0; }
+.phase-q { font-family: var(--font-cond); font-weight: 500; font-size: 1.3rem; line-height: 1.35; margin: 8px 0 0; color: var(--signal); }
+.meta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px 18px; margin: 22px 0 18px; padding: 12px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+.meta div { min-width: 0; }
+.meta dt { font-size: 12.5px; color: var(--muted); }
+.meta dd { margin: 0; font-size: 14.5px; font-weight: 500; }
+.why { font-size: 15.5px; }
+
+ol.steps { list-style: none; padding: 0; margin: 14px 0 8px; }
+ol.steps > li { display: grid; grid-template-columns: 20px 2.6em minmax(0, 1fr); column-gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--line); margin: 0; }
+ol.steps > li:last-child { border-bottom: 0; }
+ol.steps input[type="checkbox"] { margin: 5px 0 0; width: 16px; height: 16px; accent-color: var(--pass); }
+.sn { font-family: var(--font-cond); font-weight: 600; color: var(--signal); padding-top: 1px; }
+ol.steps li.done .sbody { color: var(--muted); }
+.sbody ul { margin-top: 6px; }
+.who { display: inline-block; font-size: 12.5px; color: var(--muted); border: 1px solid var(--line); border-radius: 20px; padding: 0 8px; margin-left: 6px; vertical-align: 1px; }
+
+.gate { margin: 26px 0 8px; border: 1.6px solid var(--gate); border-radius: 10px; background: var(--gate-soft); padding: 16px 18px 6px; }
+.gate-title { display: flex; align-items: center; gap: 10px; font-family: var(--font-cond); font-weight: 600; font-size: 1.25rem; margin: 0 0 12px; }
+.gate-title::before { content: ""; width: 12px; height: 12px; border: 2px solid var(--gate); transform: rotate(45deg); flex: none; }
+.gate .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 22px; }
+.gate .pass h4 { color: var(--pass); }
+.gate .fail h4 { color: var(--fail); }
+.gate ul { padding-left: 1.1rem; font-size: 15px; }
+.unlocks { font-size: 14px; color: var(--muted); margin: 4px 0 10px; }
+
+pre { position: relative; background: var(--code-bg); color: var(--code-ink); padding: 14px 16px; border-radius: 8px; overflow-x: auto; font-family: var(--font-mono); font-size: 13.5px; line-height: 1.55; margin: 10px 0 16px; }
+code { font-family: var(--font-mono); font-size: .9em; }
+p code, li code, td code, dd code { background: var(--signal-soft); padding: 1px 5px; border-radius: 4px; }
+.copy { position: absolute; top: 8px; right: 8px; font: 500 12px var(--font-sans); background: transparent; color: var(--code-ink); border: 1px solid #4A5A62; border-radius: 6px; padding: 3px 9px; cursor: pointer; }
+.copy:hover { background: rgba(255,255,255,.08); }
+
+.arch { list-style: none; padding: 0; margin: 14px 0; }
+.arch li { padding: 10px 0 10px 16px; border-left: 3px solid var(--signal); margin: 0 0 8px; background: var(--surface); border-radius: 0 8px 8px 0; padding-right: 14px; }
+.path { font-family: var(--font-cond); font-size: 1.1rem; font-weight: 500; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; margin: 14px 0; }
+
+footer { margin-top: 80px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; max-width: 52rem; }
+
+@media (max-width: 960px) {
+  .layout { grid-template-columns: 1fr; }
+  nav.track { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); padding: 16px 18px; background: var(--surface); }
+  .navbox summary { display: block; }
+  .track-title { display: none; }
+  main { padding: 28px 18px 72px; }
+  h1 { font-size: 2rem; }
+  .lede { font-size: 1.3rem; }
+  .meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .gate .cols { grid-template-columns: 1fr; }
+  .phase-num { font-size: 3.4rem; }
+}
+@media print {
+  nav.track, .copy { display: none; }
+  .layout { grid-template-columns: 1fr; }
+  body { background: #fff; }
+  .phase { break-before: page; }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav class="track" aria-label="Plan map">
+  <details class="navbox" id="navbox">
+    <summary>Plan map</summary>
+    <p class="track-title">Plan map</p>
+    <ol>
+      <li class="aux"><a href="#top">How to use this plan</a></li>
+      <li class="aux"><a href="#order">Ordering rule</a></li>
+      <li class="aux"><a href="#flow">Flowchart</a></li>
+      <li class="aux"><a href="#inputs">Inputs and end state</a></li>
+      <li class="sep" aria-hidden="true"></li>
+      <li><a href="#p0">0. Feasibility and baseline</a></li>
+      <li class="ng"><a href="#g0">G0. Probe usable?</a></li>
+      <li><a href="#p1">1. Hosting reachability</a></li>
+      <li class="ng"><a href="#g1">G1. Hosts reachable?</a></li>
+      <li><a href="#p2">2. Protocol validation</a></li>
+      <li class="ng"><a href="#g2">G2. Protocols survive?</a></li>
+      <li><a href="#p3">3. Real home and mobile ISPs</a></li>
+      <li class="ng"><a href="#g3">G3. Real ISPs pass?</a></li>
+      <li><a href="#p4">4. Work-path decision</a></li>
+      <li class="ng"><a href="#g4">G4. Router needed?</a></li>
+      <li><a href="#p5">5. Router pilot</a></li>
+      <li class="ng"><a href="#g5">G5. Stack passes?</a></li>
+      <li><a href="#p6">6. Commit and replicate</a></li>
+      <li><a href="#p7">7. Pre-departure</a></li>
+      <li><a href="#p8">8. Arrival day</a></li>
+      <li><a href="#p9">9. Operations</a></li>
+      <li class="sep" aria-hidden="true"></li>
+      <li class="aux"><a href="#gates">Gate summary</a></li>
+      <li class="aux"><a href="#branches">Fallback branches</a></li>
+      <li class="aux"><a href="#parallel">Parallel work</a></li>
+      <li class="aux"><a href="#a-tests">A. Test procedures</a></li>
+      <li class="aux"><a href="#b-friends">B. Friend instructions</a></li>
+      <li class="aux"><a href="#c-routers">C. Router purchase</a></li>
+      <li class="aux"><a href="#d-facts">D. Known constraints</a></li>
+      <li class="aux"><a href="#e-security">E. Security rules</a></li>
+    </ol>
+  </details>
+</nav>
+
+<main>
+
+<header class="hero" id="top">
+  <h1>Russia connectivity: gated rollout plan</h1>
+  <p class="lede">Every phase answers one question. Money and time go into the next phase only after the current gate passes.</p>
+  <p class="status">Prepared 5 November 2026 for the implementing agent. Censorship in Russia changes week to week; re-check Appendix D before starting Phase 2.</p>
+</header>
+
+<section class="prose">
+  <h2 id="use">How to use this plan</h2>
+  <ul>
+    <li>Run phases in order. Do not start a phase until the gate before it has passed, except where <a href="#parallel">Parallel work</a> says otherwise.</li>
+    <li>For every gate, keep the evidence listed in the <a href="#gates">Gate summary</a> in a run log (a plain document with dates, logs and screenshots).</li>
+    <li>Thresholds are defaults. Change one only with a written reason in the run log.</li>
+    <li>Keys, passwords, subscription links and configs never go into this document, chat logs or the run log. They live in a password manager (see <a href="#e-security">Appendix E</a>).</li>
+    <li>The user is a confident computer user but not a network specialist. Give step-by-step instructions, ask yes/no questions, and make the technical decisions yourself.</li>
+  </ul>
+
+  <h2 id="order">Ordering rule</h2>
+  <p>The cheapest question that can kill the plan goes first. Each row lists what a negative answer saves.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Phase</th><th>Question</th><th>Cost to find out</th><th>A “no” saves you</th></tr></thead>
+      <tbody>
+        <tr><td class="n">0</td><td>Can we run meaningful tests from inside Russia?</td><td>$0</td><td>Designing tests nobody can run</td></tr>
+        <tr><td class="n">1</td><td>Can Russian ISPs reach the hosting providers we would rent from?</td><td>$0</td><td>Renting servers that are already blocked</td></tr>
+        <tr><td class="n">2</td><td>Do our tunnel protocols survive Russian filtering, reliably and fast enough?</td><td>≈ $15–25</td><td>Buying routers, a domain and annual plans</td></tr>
+        <tr><td class="n">3</td><td>Do they also work on real home and mobile ISPs?</td><td>$0</td><td>False confidence from one office line</td></tr>
+        <tr><td class="n">4</td><td>Does the work laptop need a router in front of it?</td><td>$0</td><td>Buying hardware that adds nothing</td></tr>
+        <tr><td class="n">5</td><td>Does the full router stack work end to end?</td><td>One returnable router</td><td>Buying the second router</td></tr>
+        <tr><td class="n">6–9</td><td>Commit, prepare, arrive, operate</td><td>Second router, annual plans</td><td>Nothing; premises are verified</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="flow">
+  <h2>Flowchart</h2>
+  <p class="prose">Click a box to jump to its section. Dashed boxes are loops or side branches; red boxes stop the self-hosted track.</p>
+  <div class="flow">
+    <svg viewBox="0 0 800 1490" role="img" aria-labelledby="flowTitle">
+      <title id="flowTitle">Gated rollout flowchart: phases 0 to 9 with gates G0 to G5 and fallback branches</title>
+      <defs>
+        <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" class="ah"/>
+        </marker>
+      </defs>
+
+      <!-- main spine wires -->
+      <path class="wire" d="M270 62 V90" marker-end="url(#ah)"/>
+      <path class="wire" d="M270 148 V170" marker-end="url(#ah)"/>
+      <path class="wire" d="M270 244 V270" marker-end="url(#ah)"/>
+      <path class="wire" d="M270 328 V350" marker-end="url(#ah)"/>
+      <path class="wire" d="M270 424 V450" marker-end="url(#ah)"/>
+      <path class="wire" d="M270 508 V530" marker-end="url(#ah)"/>
+      <path class="wire" d="M270 604 V630" marker-end="url(#ah)"/>
+      <path class="wire" d="M270 688 V710" marker-end="url(#ah)"/>
+      <path class="wire" d="M270 784 V810" marker-end="url(#ah)"/>
+      <path class="wire" d="M270 868 V890" marker-end="url(#ah)"/>
+      <path class="wire" d="M270 964 V990" marker-end="url(#ah)"/>
+      <path class="wire" d="M270 1048 V1070" marker-end="url(#ah)"/>
+      <path class="wire" d="M270 1144 V1170" marker-end="url(#ah)"/>
+      <path class="wire" d="M270 1228 V1250" marker-end="url(#ah)"/>
+      <path class="wire" d="M270 1308 V1330" marker-end="url(#ah)"/>
+      <path class="wire" d="M270 1388 V1410" marker-end="url(#ah)"/>
+
+      <!-- yes labels -->
+      <text class="t-lbl" x="280" y="262">Yes</text>
+      <text class="t-lbl" x="280" y="442">Yes</text>
+      <text class="t-lbl" x="280" y="622">Yes</text>
+      <text class="t-lbl" x="280" y="802">Yes</text>
+      <text class="t-lbl" x="280" y="982">Yes</text>
+      <text class="t-lbl" x="280" y="1162">Yes</text>
+
+      <!-- side wires -->
+      <path class="wire" d="M420 208 H498" marker-end="url(#ah)"/>
+      <text class="t-lbl" x="440" y="200">No</text>
+      <path class="wire-loop" d="M680 234 V290 H424" marker-end="url(#ah)"/>
+
+      <path class="wire" d="M420 388 H498" marker-end="url(#ah)"/>
+      <text class="t-lbl" x="440" y="380">No</text>
+      <path class="wire-loop" d="M600 362 V316 H424" marker-end="url(#ah)"/>
+
+      <path class="wire" d="M420 568 H498" marker-end="url(#ah)"/>
+      <text class="t-lbl" x="440" y="560">No</text>
+      <path class="wire-loop" d="M600 542 V496 H424" marker-end="url(#ah)"/>
+      <path class="wire" d="M640 594 V618" marker-end="url(#ah)"/>
+      <text class="t-lbl" x="650" y="611">after 3 rounds</text>
+
+      <path class="wire" d="M420 748 H498" marker-end="url(#ah)"/>
+      <text class="t-lbl" x="440" y="740">No</text>
+
+      <path class="wire" d="M420 928 H498" marker-end="url(#ah)"/>
+      <text class="t-lbl" x="440" y="920">No</text>
+      <path class="wire-loop" d="M720 954 V1190 H424" marker-end="url(#ah)"/>
+
+      <path class="wire" d="M420 1108 H498" marker-end="url(#ah)"/>
+      <text class="t-lbl" x="440" y="1100">No</text>
+
+      <!-- nodes: main column -->
+      <a href="#inputs"><g class="n-start"><rect x="120" y="10" width="300" height="52" rx="26"/>
+        <text class="t-title" x="270" y="32" text-anchor="middle">Start: RU-PC, GE-PC, work laptop,</text>
+        <text class="t-sub" x="270" y="50" text-anchor="middle">friends in Russia, budget</text></g></a>
+
+      <a href="#p0"><g class="n-phase"><rect x="120" y="92" width="300" height="56" rx="8"/>
+        <text class="t-title" x="270" y="116" text-anchor="middle">0  Feasibility and baseline</text>
+        <text class="t-sub" x="270" y="136" text-anchor="middle">$0, one evening</text></g></a>
+
+      <a href="#g0"><g class="n-gate"><polygon points="270,172 420,208 270,244 120,208"/>
+        <text class="t-gate" x="270" y="204" text-anchor="middle">G0: RU-PC usable</text>
+        <text class="t-gate" x="270" y="220" text-anchor="middle">and representative?</text></g></a>
+
+      <a href="#p1"><g class="n-phase"><rect x="120" y="272" width="300" height="56" rx="8"/>
+        <text class="t-title" x="270" y="296" text-anchor="middle">1  Hosting reachability</text>
+        <text class="t-sub" x="270" y="316" text-anchor="middle">$0, one evening</text></g></a>
+
+      <a href="#g1"><g class="n-gate"><polygon points="270,352 420,388 270,424 120,388"/>
+        <text class="t-gate" x="270" y="384" text-anchor="middle">G1: two or more</text>
+        <text class="t-gate" x="270" y="400" text-anchor="middle">providers reachable?</text></g></a>
+
+      <a href="#p2"><g class="n-phase"><rect x="120" y="452" width="300" height="56" rx="8"/>
+        <text class="t-title" x="270" y="476" text-anchor="middle">2  Protocol validation</text>
+        <text class="t-sub" x="270" y="496" text-anchor="middle">≈ $15–25, 2–3 evenings + 24 h soak</text></g></a>
+
+      <a href="#g2"><g class="n-gate"><polygon points="270,532 420,568 270,604 120,568"/>
+        <text class="t-gate" x="270" y="564" text-anchor="middle">G2: protocols survive</text>
+        <text class="t-gate" x="270" y="580" text-anchor="middle">from Russia?</text></g></a>
+
+      <a href="#p3"><g class="n-phase"><rect x="120" y="632" width="300" height="56" rx="8"/>
+        <text class="t-title" x="270" y="656" text-anchor="middle">3  Real home and mobile ISPs</text>
+        <text class="t-sub" x="270" y="676" text-anchor="middle">$0, 3–5 days, parallel with 4</text></g></a>
+
+      <a href="#g3"><g class="n-gate"><polygon points="270,712 420,748 270,784 120,748"/>
+        <text class="t-gate" x="270" y="744" text-anchor="middle">G3: passes on two</text>
+        <text class="t-gate" x="270" y="760" text-anchor="middle">or more home ISPs?</text></g></a>
+
+      <a href="#p4"><g class="n-phase"><rect x="120" y="812" width="300" height="56" rx="8"/>
+        <text class="t-title" x="270" y="836" text-anchor="middle">4  Work-path decision</text>
+        <text class="t-sub" x="270" y="856" text-anchor="middle">$0, one hour</text></g></a>
+
+      <a href="#g4"><g class="n-gate"><polygon points="270,892 420,928 270,964 120,928"/>
+        <text class="t-gate" x="270" y="924" text-anchor="middle">G4: work laptop</text>
+        <text class="t-gate" x="270" y="940" text-anchor="middle">needs a router?</text></g></a>
+
+      <a href="#p5"><g class="n-phase"><rect x="120" y="992" width="300" height="56" rx="8"/>
+        <text class="t-title" x="270" y="1016" text-anchor="middle">5  Router pilot, one unit</text>
+        <text class="t-sub" x="270" y="1036" text-anchor="middle">returnable, 1–2 evenings + 3 days</text></g></a>
+
+      <a href="#g5"><g class="n-gate"><polygon points="270,1072 420,1108 270,1144 120,1108"/>
+        <text class="t-gate" x="270" y="1104" text-anchor="middle">G5: stack and twin</text>
+        <text class="t-gate" x="270" y="1120" text-anchor="middle">tests pass?</text></g></a>
+
+      <a href="#p6"><g class="n-phase"><rect x="120" y="1172" width="300" height="56" rx="8"/>
+        <text class="t-title" x="270" y="1196" text-anchor="middle">6  Commit and replicate</text>
+        <text class="t-sub" x="270" y="1216" text-anchor="middle">second router, annual plans</text></g></a>
+
+      <a href="#p7"><g class="n-phase"><rect x="120" y="1252" width="300" height="56" rx="8"/>
+        <text class="t-title" x="270" y="1276" text-anchor="middle">7  Pre-departure</text>
+        <text class="t-sub" x="270" y="1296" text-anchor="middle">14 days to 1 day before leaving</text></g></a>
+
+      <a href="#p8"><g class="n-phase"><rect x="120" y="1332" width="300" height="56" rx="8"/>
+        <text class="t-title" x="270" y="1356" text-anchor="middle">8  Arrival day</text>
+        <text class="t-sub" x="270" y="1376" text-anchor="middle">day-one runbook</text></g></a>
+
+      <a href="#p9"><g class="n-phase"><rect x="120" y="1412" width="300" height="56" rx="8"/>
+        <text class="t-title" x="270" y="1436" text-anchor="middle">9  Operations</text>
+        <text class="t-sub" x="270" y="1456" text-anchor="middle">monthly checks, incident runbooks</text></g></a>
+
+      <!-- nodes: side column -->
+      <a href="#branches"><g class="n-side"><rect x="500" y="182" width="280" height="52" rx="8"/>
+        <text class="t-title" x="640" y="204" text-anchor="middle">Branch F3: degraded probing</text>
+        <text class="t-sub" x="640" y="222" text-anchor="middle">friends become primary probes</text></g></a>
+
+      <a href="#g1"><g class="n-side"><rect x="500" y="362" width="280" height="52" rx="8"/>
+        <text class="t-title" x="640" y="384" text-anchor="middle">Extend the shortlist</text>
+        <text class="t-sub" x="640" y="402" text-anchor="middle">re-test, up to 10 providers</text></g></a>
+
+      <a href="#g2"><g class="n-side"><rect x="500" y="542" width="280" height="52" rx="8"/>
+        <text class="t-title" x="640" y="564" text-anchor="middle">Iterate: new /24, SNI,</text>
+        <text class="t-sub" x="640" y="582" text-anchor="middle">transport or provider, max 3 rounds</text></g></a>
+
+      <a href="#branches"><g class="n-stop"><rect x="500" y="620" width="280" height="52" rx="8"/>
+        <text class="t-title" x="640" y="642" text-anchor="middle">Branch F1: commercial only</text>
+        <text class="t-sub" x="640" y="660" text-anchor="middle">stop the self-hosted track</text></g></a>
+
+      <a href="#g3"><g class="n-side"><rect x="500" y="722" width="280" height="52" rx="8"/>
+        <text class="t-title" x="640" y="744" text-anchor="middle">ISP-specific block</text>
+        <text class="t-sub" x="640" y="762" text-anchor="middle">return to Phase 2 with that ISP</text></g></a>
+
+      <a href="#branches"><g class="n-side"><rect x="500" y="902" width="280" height="52" rx="8"/>
+        <text class="t-title" x="640" y="924" text-anchor="middle">Branch F2: no router</text>
+        <text class="t-sub" x="640" y="942" text-anchor="middle">apps on devices, go to Phase 6</text></g></a>
+
+      <a href="#g5"><g class="n-side"><rect x="500" y="1082" width="190" height="52" rx="8"/>
+        <text class="t-title" x="595" y="1104" text-anchor="middle">Fix, or restore</text>
+        <text class="t-sub" x="595" y="1122" text-anchor="middle">stock firmware and return</text></g></a>
+    </svg>
+    <div class="flow-legend" aria-hidden="true">
+      <span>Phase</span><span class="lg-gate">Gate</span><span class="lg-side">Loop or side branch</span><span class="lg-stop">Stop</span>
+    </div>
+  </div>
+</section>
+
+<section class="prose" id="inputs">
+  <h2>Inputs and end state</h2>
+  <h3>What we have</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Asset</th><th>What it is</th><th>Used in</th></tr></thead>
+      <tbody>
+        <tr><td>RU-PC</td><td>Computer in an ordinary office in Russia on a regular business ISP and corporate Wi-Fi, reachable from Georgia over remote desktop. The only controlled probe inside Russia.</td><td>0, 1, 2, 5, 6, 7</td></tr>
+        <tr><td>GE-PC</td><td>Computer in Georgia with unrestricted internet. All setup work happens here.</td><td>All</td></tr>
+        <tr><td>Work laptop</td><td>Needs GlobalProtect and AWS Client VPN. Two VPN clients cannot run on it at the same time.</td><td>4, 5</td></tr>
+        <tr><td>Friends in Russia</td><td>Phones on home ISPs and mobile operators. Cannot receive hardware.</td><td>3</td></tr>
+        <tr><td>Budget</td><td>Servers, domain, routers, commercial backup. Price is not the constraint; reliability is.</td><td>2, 5, 6</td></tr>
+        <tr><td>Reference setup</td><td>A colleague’s Amnezia self-hosted server at FirstVDS. Use as a reference only; do not reuse that server (see Appendix D).</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>What we are building</h3>
+  <ul class="arch">
+    <li><strong>Two servers</strong> at different non-Russian providers, in different countries and networks. Each runs 3x-ui (Xray) with VLESS + Reality using its own domain for camouflage (“self-steal”) and VLESS + XHTTP, plus AmneziaWG 3.1 installed by the Amnezia app.</li>
+    <li><strong>Two identical routers</strong> (GL.iNet Beryl AX preferred) on official OpenWrt with Podkop. Podkop’s URLTest switches automatically between both servers’ VLESS + Reality links. Travelmate handles hotel Wi-Fi. Two Wi-Fi networks: WORK (everything through the tunnel) and DIRECT (no tunnel).</li>
+    <li><strong>Phones and the personal laptop</strong> use apps directly: a subscription client (Hiddify, Happ or v2RayTun) with both servers, and the Amnezia app with AmneziaWG 3.1 keys.</li>
+    <li><strong>Commercial backup:</strong> Amnezia Premium, bought close to departure.</li>
+    <li><strong>Monitoring:</strong> a scheduled probe on RU-PC until arrival.</li>
+  </ul>
+  <p class="path">Work laptop with GlobalProtect or AWS VPN → router WORK Wi-Fi → VLESS + Reality → server A or B → corporate gateway</p>
+</section>
+
+<!-- PHASE 0 -->
+<section class="phase" id="p0">
+  <div class="phase-head">
+    <div class="phase-num">0</div>
+    <div>
+      <h2 class="phase-title">Feasibility and baseline</h2>
+      <p class="phase-q">Can we run meaningful tests from inside Russia, and what does the network block today?</p>
+    </div>
+  </div>
+  <dl class="meta">
+    <div><dt>Owner</dt><dd>User and agent</dd></div>
+    <div><dt>Cost</dt><dd>$0</dd></div>
+    <div><dt>Time</dt><dd>One evening</dd></div>
+    <div><dt>Starts after</dt><dd>Nothing</dd></div>
+  </dl>
+  <p class="why">Every later gate relies on evidence from RU-PC. If it cannot install tools, drops the remote session, or sits behind a proxy that hides real filtering, the test design changes before any money is spent.</p>
+  <ol class="steps">
+    <li><input type="checkbox" aria-label="Mark 0.1 done"><span class="sn">0.1</span><div class="sbody"><strong>Employer authorization.</strong> <span class="who">User</span> Confirm with the employer that working from Russia and connecting GlobalProtect and AWS Client VPN from there is permitted, and that RU-PC may be used for network tests and test software. Do not design the setup to disguise the work location from the employer. If remote work from Russia is not permitted, the work-laptop track (Phases 4–5) loses its purpose; the personal track continues.</div></li>
+    <li><input type="checkbox" aria-label="Mark 0.2 done"><span class="sn">0.2</span><div class="sbody"><strong>RU-PC audit.</strong> <span class="who">Agent</span>
+      <ul>
+        <li>Operating system and version, admin rights, ability to install software (curl, a proxy client, Python if needed).</li>
+        <li>Remote desktop stability over at least two hours; whether the machine can stay on overnight.</li>
+        <li>Public IP, its ISP name and ASN (for example from ipinfo.io). It must be a Russian ISP, not a data center or a foreign proxy.</li>
+        <li>Whether outbound UDP and TCP on ports other than 443 work.</li>
+        <li>Whether a corporate proxy intercepts TLS: inspect the certificate issuer of a known HTTPS site.</li>
+      </ul></div></li>
+    <li><input type="checkbox" aria-label="Mark 0.3 done"><span class="sn">0.3</span><div class="sbody"><strong>Service inventory.</strong> <span class="who">User and agent</span> Build <code>services.txt</code> with one URL per line, tagged by group:
+      <ul>
+        <li><strong>A</strong>: blocked in Russia, must go through the tunnel.</li>
+        <li><strong>B</strong>: Russian services (banks, Gosuslugi, Yandex, marketplaces), must go direct.</li>
+        <li><strong>C</strong>: foreign services that refuse Russian IPs (AI services, some banks and streaming), tunnel only, no leaks.</li>
+        <li><strong>D</strong>: work endpoints: the GlobalProtect portal hostname and the AWS Client VPN endpoint hostname, protocol and port from the <code>.ovpn</code> file.</li>
+      </ul></div></li>
+    <li><input type="checkbox" aria-label="Mark 0.4 done"><span class="sn">0.4</span><div class="sbody"><strong>Direct baseline from RU-PC</strong>, no tunnel. <span class="who">Agent</span> Run test T4 (Appendix A) without the proxy flag. Record which group A sites fail (expected) and which group B sites work. For group D: DNS resolves, TCP 443 connects, and the GlobalProtect prelogin page loads (Appendix A, D-checks).</div></li>
+    <li><input type="checkbox" aria-label="Mark 0.5 done"><span class="sn">0.5</span><div class="sbody"><strong>Open the run log</strong> and store the audit notes and baseline output. <span class="who">Agent</span></div></li>
+  </ol>
+  <div class="gate" id="g0">
+    <p class="gate-title">Gate G0: is RU-PC a usable and representative probe?</p>
+    <div class="cols">
+      <div class="pass"><h4>Pass when</h4><ul>
+        <li>Test tools install and run.</li>
+        <li>The remote session stays up for two hours or more.</li>
+        <li>Traffic leaves through a Russian ISP, not a data center or foreign proxy.</li>
+        <li>At least some group A sites fail directly, which proves filtering is applied on this line.</li>
+      </ul></div>
+      <div class="fail"><h4>If it fails</h4><ul>
+        <li>Switch to <a href="#branches">Branch F3</a>: friends’ phones become the primary probes, with Phase 3 procedures used earlier and more often.</li>
+        <li>If a corporate proxy blocks all non-web traffic, results will be too pessimistic: never reject a protocol on RU-PC evidence alone.</li>
+      </ul></div>
+    </div>
+    <p class="unlocks">Unlocks Phase 1.</p>
+  </div>
+</section>
+
+<!-- PHASE 1 -->
+<section class="phase" id="p1">
+  <div class="phase-head">
+    <div class="phase-num">1</div>
+    <div>
+      <h2 class="phase-title">Hosting reachability</h2>
+      <p class="phase-q">Which hosting providers can a Russian ISP reach at all?</p>
+    </div>
+  </div>
+  <dl class="meta">
+    <div><dt>Owner</dt><dd>Agent</dd></div>
+    <div><dt>Cost</dt><dd>$0, no purchases</dd></div>
+    <div><dt>Time</dt><dd>One evening</dd></div>
+    <div><dt>Starts after</dt><dd>G0 (or F3)</dd></div>
+  </dl>
+  <p class="why">Whole provider networks get throttled or blocked. Checking subnets first costs nothing and keeps us from renting servers that are dead on arrival.</p>
+  <ol class="steps">
+    <li><input type="checkbox" aria-label="Mark 1.1 done"><span class="sn">1.1</span><div class="sbody"><strong>Shortlist four to six providers.</strong> Requirements: non-Russian company; KVM virtualization; dedicated IPv4; Ubuntu 22.04 or Debian 11+ images; hourly billing or a refund window; accepts a foreign card; at least three distinct countries and networks across the list. Include Amnezia Hosting (Netherlands) as one candidate.
+      <p style="margin-top:8px">Exclude: AWS, Oracle Cloud, DigitalOcean, OVH, Hetzner, Scaleway, Akamai/Linode (known throttling from Russia); Russian-owned hosters including their foreign locations (2026 hosting rules); FirstVDS (October 2026 breach).</p></div></li>
+    <li><input type="checkbox" aria-label="Mark 1.2 done"><span class="sn">1.2</span><div class="sbody"><strong>Collect sample IPs and subnets</strong> for each candidate: looking-glass pages, provider documentation, or a short-lived hourly test server.</div></li>
+    <li><input type="checkbox" aria-label="Mark 1.3 done"><span class="sn">1.3</span><div class="sbody"><strong>Run TSPU_checker from RU-PC</strong> against each candidate subnet, and test T1 against sample IPs on ports 22 and 443.</div></li>
+    <li><input type="checkbox" aria-label="Mark 1.4 done"><span class="sn">1.4</span><div class="sbody"><strong>Rank the candidates</strong> and record the results in the run log.</div></li>
+  </ol>
+  <div class="gate" id="g1">
+    <p class="gate-title">Gate G1: are two or more providers reachable?</p>
+    <div class="cols">
+      <div class="pass"><h4>Pass when</h4><ul>
+        <li>At least two providers in different networks (ideally different countries) show no subnet-level blocking from RU-PC.</li>
+      </ul></div>
+      <div class="fail"><h4>If it fails</h4><ul>
+        <li>Extend the shortlist and repeat 1.1–1.3.</li>
+        <li>After ten candidates without two passes, stop and ask the user whether to switch to <a href="#branches">Branch F1</a>.</li>
+      </ul></div>
+    </div>
+    <p class="unlocks">Unlocks Phase 2.</p>
+  </div>
+</section>
+
+<!-- PHASE 2 -->
+<section class="phase" id="p2">
+  <div class="phase-head">
+    <div class="phase-num">2</div>
+    <div>
+      <h2 class="phase-title">Protocol validation from Russia</h2>
+      <p class="phase-q">Do our tunnel protocols survive Russian filtering, reliably and fast enough?</p>
+    </div>
+  </div>
+  <dl class="meta">
+    <div><dt>Owner</dt><dd>Agent</dd></div>
+    <div><dt>Cost</dt><dd>≈ $15–25: two short-term servers and a domain</dd></div>
+    <div><dt>Time</dt><dd>2–3 evenings plus a 24-hour soak</dd></div>
+    <div><dt>Starts after</dt><dd>G1</dd></div>
+  </dl>
+  <p class="why">This is the main go/no-go. If no protocol passes, routers, annual plans and the domain are all wasted. Rent the shortest billing period available.</p>
+  <div class="warn"><p><strong>Never enable a full-tunnel VPN on RU-PC.</strong> It will cut the remote desktop session. Use local proxy mode, split tunnelling, <code>route-nopull</code> for OpenVPN, or limited <code>AllowedIPs</code> for AmneziaWG.</p></div>
+  <ol class="steps">
+    <li><input type="checkbox" aria-label="Mark 2.1 done"><span class="sn">2.1</span><div class="sbody"><strong>Rent server A and server B</strong> at the two best providers from G1. Harden both: SSH keys only, password login off, firewall allowing only SSH, 443/tcp and the AmneziaWG UDP port, automatic security updates.</div></li>
+    <li><input type="checkbox" aria-label="Mark 2.2 done"><span class="sn">2.2</span><div class="sbody"><strong>Deploy the stack on each server.</strong>
+      <ul>
+        <li>3x-ui (Xray). Inbound 1: VLESS + Reality on 443/tcp; for now use a neutral, non-brand camouflage site, never Google, Microsoft, Apple or other big brands. Inbound 2: VLESS + XHTTP.</li>
+        <li>Panel reachable only through an SSH tunnel, never exposed publicly.</li>
+        <li>AmneziaWG 3.1 installed from GE-PC with the Amnezia app. Do not install the app’s own Xray container: it would conflict with 3x-ui on port 443.</li>
+      </ul></div></li>
+    <li><input type="checkbox" aria-label="Mark 2.3 done"><span class="sn">2.3</span><div class="sbody"><strong>OpenVPN probe</strong> (feeds G4). Run a temporary OpenVPN server on server B (UDP 1194 and TCP on a spare port). Connect from RU-PC with <code>route-nopull</code> and keep it up for ten minutes. AWS Client VPN uses OpenVPN, so if this is blocked, AWS Client VPN will be too. Remove the OpenVPN server afterwards.</div></li>
+    <li><input type="checkbox" aria-label="Mark 2.4 done"><span class="sn">2.4</span><div class="sbody"><strong>Reference check from GE-PC:</strong> each profile connects, the visible IP is the server’s, DNS leak test is clean, throughput is recorded.</div></li>
+    <li><input type="checkbox" aria-label="Mark 2.5 done"><span class="sn">2.5</span><div class="sbody"><strong>Tests from RU-PC</strong> for every server and profile: T1 port reachability, T2 three-minute series, T3 50 MB download, T4 service list through the tunnel, T5 24-hour soak (Appendix A). AmneziaWG goes through split tunnelling only.</div></li>
+    <li><input type="checkbox" aria-label="Mark 2.6 done"><span class="sn">2.6</span><div class="sbody"><strong>Domain and self-steal.</strong> Buy a non-.ru domain at an international registrar with privacy protection. Point it at server A (and a subdomain at B). Run a small web server with a valid certificate on each server and switch Reality to camouflage as that site. Re-run T1–T4.</div></li>
+    <li><input type="checkbox" aria-label="Mark 2.7 done"><span class="sn">2.7</span><div class="sbody"><strong>Fill the pass matrix:</strong> server × profile × test, with links to logs.</div></li>
+  </ol>
+  <div class="gate" id="g2">
+    <p class="gate-title">Gate G2: do the protocols survive from Russia?</p>
+    <div class="cols">
+      <div class="pass"><h4>Pass when, on both servers</h4><ul>
+        <li>At least one VLESS profile passes T2 with 9 of 9 requests.</li>
+        <li>T3 completes without a stall longer than 10 seconds.</li>
+        <li>T4 reaches every group A and C service.</li>
+        <li>T5 succeeds in 97% or more of checks over 24 hours.</li>
+        <li>Median throughput is at least 20 Mbit/s, or half of RU-PC’s direct speed, whichever is lower.</li>
+        <li>AmneziaWG 3.1 results are recorded; they matter for phones, not for routers.</li>
+      </ul></div>
+      <div class="fail"><h4>If it fails</h4><ul>
+        <li>Iterate, up to three rounds: new IP from another /24, different camouflage site or browser fingerprint, switch to XHTTP, swap in the next provider from G1.</li>
+        <li>Still failing: <a href="#branches">Branch F1</a>. Do not buy routers before G2 passes.</li>
+      </ul></div>
+    </div>
+    <p class="unlocks">Unlocks Phases 3 and 4, which can run in parallel.</p>
+  </div>
+</section>
+
+<!-- PHASE 3 -->
+<section class="phase" id="p3">
+  <div class="phase-head">
+    <div class="phase-num">3</div>
+    <div>
+      <h2 class="phase-title">Real home and mobile ISPs</h2>
+      <p class="phase-q">Does what passed on one office line also pass where people actually live?</p>
+    </div>
+  </div>
+  <dl class="meta">
+    <div><dt>Owner</dt><dd>Agent, friends</dd></div>
+    <div><dt>Cost</dt><dd>$0</dd></div>
+    <div><dt>Time</dt><dd>3–5 days elapsed</dd></div>
+    <div><dt>Starts after</dt><dd>G2</dd></div>
+  </dl>
+  <p class="why">Filtering differs by ISP and region. The office line is one data point; the user will live on a home ISP and sometimes on mobile.</p>
+  <ol class="steps">
+    <li><input type="checkbox" aria-label="Mark 3.1 done"><span class="sn">3.1</span><div class="sbody"><strong>Create one client per friend</strong> in 3x-ui with a 14-day expiry and a traffic cap (for example 10 GB). Never share the user’s own keys.</div></li>
+    <li><input type="checkbox" aria-label="Mark 3.2 done"><span class="sn">3.2</span><div class="sbody"><strong>Send the instructions</strong> from <a href="#b-friends">Appendix B</a>, translated to Russian.</div></li>
+    <li><input type="checkbox" aria-label="Mark 3.3 done"><span class="sn">3.3</span><div class="sbody"><strong>Collect results</strong> into an ISP × server × profile matrix. Note whether mobile tests ran during whitelist mode.</div></li>
+  </ol>
+  <div class="gate" id="g3">
+    <p class="gate-title">Gate G3: does it pass on two or more home ISPs?</p>
+    <div class="cols">
+      <div class="pass"><h4>Pass when</h4><ul>
+        <li>At least one server works on two or more different home ISPs, preferably including the ISP at the user’s future address.</li>
+        <li>Mobile results are informational: whitelist mode cannot be fixed by any setup.</li>
+      </ul></div>
+      <div class="fail"><h4>If it fails</h4><ul>
+        <li>Office passes but homes fail means ISP-specific blocking. Return to Phase 2 iteration using the failing friend as the reference probe.</li>
+      </ul></div>
+    </div>
+    <p class="unlocks">Unlocks Phase 5 together with G4.</p>
+  </div>
+</section>
+
+<!-- PHASE 4 -->
+<section class="phase" id="p4">
+  <div class="phase-head">
+    <div class="phase-num">4</div>
+    <div>
+      <h2 class="phase-title">Work-path decision</h2>
+      <p class="phase-q">Does the work laptop need a router in front of it?</p>
+    </div>
+  </div>
+  <dl class="meta">
+    <div><dt>Owner</dt><dd>Agent, user decides</dd></div>
+    <div><dt>Cost</dt><dd>$0</dd></div>
+    <div><dt>Time</dt><dd>One hour</dd></div>
+    <div><dt>Starts after</dt><dd>G2 and 0.1</dd></div>
+  </dl>
+  <p class="why">The router exists only to carry the corporate VPNs inside the tunnel. If they work directly and reliably from Russia, the router is optional.</p>
+  <ol class="steps">
+    <li><input type="checkbox" aria-label="Mark 4.1 done"><span class="sn">4.1</span><div class="sbody"><strong>Gather evidence:</strong> group D results from 0.4, the OpenVPN probe from 2.3, and, if the employer allows it, a real GlobalProtect and AWS Client VPN session on RU-PC.</div></li>
+    <li><input type="checkbox" aria-label="Mark 4.2 done"><span class="sn">4.2</span><div class="sbody"><strong>Apply the decision rule.</strong> A router is required if any of these is true: the OpenVPN probe is blocked or unstable; the GlobalProtect portal or gateway is unreachable or unstable directly; the corporate VPN clients cannot coexist with the personal tunnel on the laptop. A router is optional only if both corporate VPNs connect directly from RU-PC and stay stable through a full work session.</div></li>
+  </ol>
+  <div class="gate" id="g4">
+    <p class="gate-title">Gate G4: does the work laptop need a router?</p>
+    <div class="cols">
+      <div class="pass"><h4>Yes</h4><ul><li>Go to Phase 5.</li></ul></div>
+      <div class="fail"><h4>No</h4><ul><li><a href="#branches">Branch F2</a>: no router, apps on devices, continue at Phase 6. The user may still choose a router for resilience.</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- PHASE 5 -->
+<section class="phase" id="p5">
+  <div class="phase-head">
+    <div class="phase-num">5</div>
+    <div>
+      <h2 class="phase-title">Router pilot, one unit</h2>
+      <p class="phase-q">Does the full router stack work end to end, and does its exact configuration pass in Russia?</p>
+    </div>
+  </div>
+  <dl class="meta">
+    <div><dt>Owner</dt><dd>User (hands), agent</dd></div>
+    <div><dt>Cost</dt><dd>One router, ≈ $70–90, returnable</dd></div>
+    <div><dt>Time</dt><dd>1–2 evenings plus 3 days</dd></div>
+    <div><dt>Starts after</dt><dd>G2, G3, G4 = yes</dd></div>
+  </dl>
+  <p class="why">The router cannot be tested inside Russia, but it does not need to be: Russia-dependent behaviour is already validated in Phases 2–3. Here we validate everything router-dependent in Georgia, then run the router’s exact configuration on RU-PC.</p>
+  <ol class="steps">
+    <li><input type="checkbox" aria-label="Mark 5.1 done"><span class="sn">5.1</span><div class="sbody"><strong>Buy one unit</strong> of the best available model (<a href="#c-routers">Appendix C</a>). Confirm the return window and whether a unit is accepted after stock firmware is restored. Alternative: buy two and keep the second sealed. Record model, hardware revision and serial number.</div></li>
+    <li><input type="checkbox" aria-label="Mark 5.2 done"><span class="sn">5.2</span><div class="sbody"><strong>Day zero on stock firmware:</strong> powers on, Wi-Fi visible, admin page opens, stock firmware updates. Any defect: return immediately.</div></li>
+    <li><input type="checkbox" aria-label="Mark 5.3 done"><span class="sn">5.3</span><div class="sbody"><strong>Flash official OpenWrt.</strong> Choose the stable release that Podkop and the needed packages support on that day. Have the recovery procedure ready before flashing (U-Boot web recovery on GL.iNet, vendor intermediate firmware on Cudy).</div></li>
+    <li><input type="checkbox" aria-label="Mark 5.4 done"><span class="sn">5.4</span><div class="sbody"><strong>Configure.</strong>
+      <ul>
+        <li>Podkop with URLTest across the VLESS + Reality links of servers A and B (a subscription script is optional).</li>
+        <li>DNS resolved through the tunnel.</li>
+        <li>WORK Wi-Fi: everything through the tunnel. DIRECT Wi-Fi: no tunnel.</li>
+        <li>Travelmate for hotel Wi-Fi and captive portals.</li>
+        <li>MSS clamping on; WAN tested with MTU 1492 to imitate Russian PPPoE lines.</li>
+        <li>Strong admin password; remote and cloud management off.</li>
+      </ul></div></li>
+    <li><input type="checkbox" aria-label="Mark 5.5 done"><span class="sn">5.5</span><div class="sbody"><strong>Tests in Georgia, T6–T10</strong> (Appendix A): function, failover, a full work session with both corporate VPNs, every WAN mode, three-day burn-in.</div></li>
+    <li><input type="checkbox" aria-label="Mark 5.6 done"><span class="sn">5.6</span><div class="sbody"><strong>Router twin on RU-PC.</strong> Export the sing-box configuration Podkop generates, replace the router-specific inbounds with a local proxy inbound, and run T2–T5 on RU-PC. The closest alternative is an OpenWrt x86 virtual machine on RU-PC with the same Podkop settings.</div></li>
+    <li><input type="checkbox" aria-label="Mark 5.7 done"><span class="sn">5.7</span><div class="sbody"><strong>Back up</strong> the router configuration and store it in the password manager.</div></li>
+  </ol>
+  <div class="gate" id="g5">
+    <p class="gate-title">Gate G5: do the stack and twin tests pass?</p>
+    <div class="cols">
+      <div class="pass"><h4>Pass when</h4><ul>
+        <li>T6–T10 pass in Georgia.</li>
+        <li>The twin configuration passes T2–T5 on RU-PC.</li>
+      </ul></div>
+      <div class="fail"><h4>If it fails</h4><ul>
+        <li>Fix configuration issues (MTU, DNS, routing) and re-test.</li>
+        <li>Hardware or model problem: restore stock firmware, repack, return; take the next model from Appendix C and repeat 5.1.</li>
+      </ul></div>
+    </div>
+    <p class="unlocks">Unlocks Phase 6.</p>
+  </div>
+</section>
+
+<!-- PHASE 6 -->
+<section class="phase" id="p6">
+  <div class="phase-head">
+    <div class="phase-num">6</div>
+    <div>
+      <h2 class="phase-title">Commit and replicate</h2>
+      <p class="phase-q">Everything is verified; now spend the money that only makes sense once it works.</p>
+    </div>
+  </div>
+  <dl class="meta">
+    <div><dt>Owner</dt><dd>Agent, user</dd></div>
+    <div><dt>Cost</dt><dd>Second router, annual server plans</dd></div>
+    <div><dt>Time</dt><dd>1–2 evenings</dd></div>
+    <div><dt>Starts after</dt><dd>G5, or G4 = no</dd></div>
+  </dl>
+  <ol class="steps">
+    <li><input type="checkbox" aria-label="Mark 6.1 done"><span class="sn">6.1</span><div class="sbody"><strong>Second router:</strong> same model and hardware revision (for Cudy, a matching serial-number range). Flash, restore the backup, verify T6 and T7. Add a GL.iNet Flint 2 only if the home is large.</div></li>
+    <li><input type="checkbox" aria-label="Mark 6.2 done"><span class="sn">6.2</span><div class="sbody"><strong>Servers:</strong> move A and B to annual billing where possible, delete unused test servers, export 3x-ui and Amnezia configurations as backups.</div></li>
+    <li><input type="checkbox" aria-label="Mark 6.3 done"><span class="sn">6.3</span><div class="sbody"><strong>End devices:</strong> phones and the personal laptop get the subscription client and the Amnezia app with AmneziaWG 3.1. Split tunnelling: Russian domains and IPs go direct.</div></li>
+    <li><input type="checkbox" aria-label="Mark 6.4 done"><span class="sn">6.4</span><div class="sbody"><strong>Secrets vault:</strong> server logins, SSH keys, panel logins, subscription links, AmneziaWG configs, router backups, firmware recovery files. Keep an encrypted offline copy.</div></li>
+    <li><input type="checkbox" aria-label="Mark 6.5 done"><span class="sn">6.5</span><div class="sbody"><strong>Monitoring on RU-PC:</strong> a scheduled probe every 15–30 minutes for each server and profile, an email alert after three consecutive failures, and a daily summary.</div></li>
+    <li><input type="checkbox" aria-label="Mark 6.6 done"><span class="sn">6.6</span><div class="sbody"><strong>Friends’ keys:</strong> revoke, or extend with the user’s agreement.</div></li>
+  </ol>
+</section>
+
+<!-- PHASE 7 -->
+<section class="phase" id="p7">
+  <div class="phase-head">
+    <div class="phase-num">7</div>
+    <div>
+      <h2 class="phase-title">Pre-departure</h2>
+      <p class="phase-q">Is everything current, paid and packed on the day the user leaves?</p>
+    </div>
+  </div>
+  <dl class="meta">
+    <div><dt>Owner</dt><dd>User and agent</dd></div>
+    <div><dt>Cost</dt><dd>Commercial backup ≈ $50 a year</dd></div>
+    <div><dt>Time</dt><dd>14 days to 1 day before leaving</dd></div>
+    <div><dt>Starts after</dt><dd>Phase 6</dd></div>
+  </dl>
+  <ol class="steps">
+    <li><input type="checkbox" aria-label="Mark 7.1 done"><span class="sn">7.1</span><div class="sbody"><strong>14–7 days before:</strong> buy Amnezia Premium so its refund window covers the first days in Russia; add it to the phones.</div></li>
+    <li><input type="checkbox" aria-label="Mark 7.2 done"><span class="sn">7.2</span><div class="sbody"><strong>7 days before:</strong> full test suite on RU-PC, review the monitoring history, replace anything flaky.</div></li>
+    <li><input type="checkbox" aria-label="Mark 7.3 done"><span class="sn">7.3</span><div class="sbody"><strong>3 days before:</strong> update apps and router packages. Spare router first; update the main router only after the spare is verified.</div></li>
+    <li><input type="checkbox" aria-label="Mark 7.4 done"><span class="sn">7.4</span><div class="sbody"><strong>1 day before:</strong> pack both routers, USB-C power adapters, an Ethernet cable, a USB cable for phone tethering and a power bank. Save the day-one runbook offline. Download offline maps. Confirm that all services are paid for at least three months ahead.</div></li>
+  </ol>
+</section>
+
+<!-- PHASE 8 -->
+<section class="phase" id="p8">
+  <div class="phase-head">
+    <div class="phase-num">8</div>
+    <div>
+      <h2 class="phase-title">Arrival day</h2>
+      <p class="phase-q">Does it work on the real line, and if not, what is the next rung?</p>
+    </div>
+  </div>
+  <dl class="meta">
+    <div><dt>Owner</dt><dd>User, agent remotely</dd></div>
+    <div><dt>Cost</dt><dd>$0</dd></div>
+    <div><dt>Time</dt><dd>15 minutes, then a work session</dd></div>
+    <div><dt>Starts after</dt><dd>Arrival</dd></div>
+  </dl>
+  <ol class="steps">
+    <li><input type="checkbox" aria-label="Mark 8.1 done"><span class="sn">8.1</span><div class="sbody"><strong>SIM:</strong> a SIM arriving from abroad may have no mobile data or SMS for up to 24 hours; an operator captcha link can lift this earlier. Use Wi-Fi meanwhile.</div></li>
+    <li><input type="checkbox" aria-label="Mark 8.2 done"><span class="sn">8.2</span><div class="sbody"><strong>Connect the router:</strong> Ethernet from the ISP’s router into WAN, or hotel Wi-Fi through travelmate. On the WORK network, check that the visible IP is the server’s and run the service list.</div></li>
+    <li><input type="checkbox" aria-label="Mark 8.3 done"><span class="sn">8.3</span><div class="sbody"><strong>Quick diagnosis</strong> with the tunnel off: open google.com and yandex.ru. Both open: traffic may be leaving through a foreign operator. Only Yandex opens: normal filtering, turn the tunnel on. Nothing foreign opens even with the tunnel: probably mobile whitelist mode, use Wi-Fi.</div></li>
+    <li><input type="checkbox" aria-label="Mark 8.4 done"><span class="sn">8.4</span><div class="sbody"><strong>Fallback ladder:</strong> automatic URLTest switch → manually pin the other server → phone apps (AmneziaWG 3.1, XHTTP) → commercial backup → spare router.</div></li>
+    <li><input type="checkbox" aria-label="Mark 8.5 done"><span class="sn">8.5</span><div class="sbody"><strong>First evening:</strong> a full work session through the router; report results to the agent.</div></li>
+  </ol>
+</section>
+
+<!-- PHASE 9 -->
+<section class="phase" id="p9">
+  <div class="phase-head">
+    <div class="phase-num">9</div>
+    <div>
+      <h2 class="phase-title">Operations</h2>
+      <p class="phase-q">How does it stay working for months?</p>
+    </div>
+  </div>
+  <dl class="meta">
+    <div><dt>Owner</dt><dd>Agent, user</dd></div>
+    <div><dt>Cost</dt><dd>≈ $15–17 a month</dd></div>
+    <div><dt>Time</dt><dd>30 minutes a month</dd></div>
+    <div><dt>Starts after</dt><dd>Arrival</dd></div>
+  </dl>
+  <h3>Monthly</h3>
+  <ul>
+    <li>Review monitoring and the phones’ connection history.</li>
+    <li>Updates: spare router first, main router three days later; servers one at a time.</li>
+    <li>Check payments; Amnezia Hosting does not renew automatically and deletes unpaid servers after seven days.</li>
+  </ul>
+  <h3>Incident runbooks</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Incident</th><th>Response</th><th>Target</th></tr></thead>
+      <tbody>
+        <tr><td>One server’s IP blocked</td><td>New server on another /24 or the next provider from G1; restore the 3x-ui backup; update DNS and links; push the new subscription. The other server carries traffic meanwhile.</td><td>Under 1 hour</td></tr>
+        <tr><td>Protocol blocked on both servers</td><td>Switch transport, camouflage site or fingerprint; phones fall back to AmneziaWG 3.1; commercial backup.</td><td>Same day</td></tr>
+        <tr><td>Router failure</td><td>Swap to the spare; arrange warranty service later.</td><td>5 minutes</td></tr>
+        <tr><td>Mobile whitelist mode</td><td>No technical fix; use Wi-Fi.</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="prose" id="gates">
+  <h2>Gate summary</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Gate</th><th>Question</th><th>Evidence to keep</th><th>On failure</th></tr></thead>
+      <tbody>
+        <tr><td class="n">G0</td><td>Is RU-PC usable and representative?</td><td>Audit notes, ISP/ASN lookup, direct T4 log</td><td>Branch F3</td></tr>
+        <tr><td class="n">G1</td><td>Are two or more providers reachable?</td><td>TSPU_checker output per provider, T1 logs</td><td>Extend shortlist; after 10, user decides on F1</td></tr>
+        <tr><td class="n">G2</td><td>Do the protocols survive from Russia?</td><td>T1–T5 logs, soak CSV, pass matrix, OpenVPN probe log</td><td>Iterate three rounds, then F1</td></tr>
+        <tr><td class="n">G3</td><td>Does it pass on two or more home ISPs?</td><td>Friend reports, ISP matrix</td><td>Back to Phase 2 with the failing ISP</td></tr>
+        <tr><td class="n">G4</td><td>Does the work laptop need a router?</td><td>Group D results, OpenVPN probe, optional real client test</td><td>F2</td></tr>
+        <tr><td class="n">G5</td><td>Do the stack and twin tests pass?</td><td>T6–T10 log, twin T2–T5 log, router backup</td><td>Fix, or restore stock firmware and return</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="branches">Fallback branches</h2>
+  <h3>F1. Commercial only</h3>
+  <p>Taken when G1 or G2 fails after the allowed iterations. Use Amnezia Premium plus a second commercial service from a different company on phones and laptops. No routers. Corporate VPN access from Russia may then be impossible; escalate to the user and, through them, the employer.</p>
+  <h3>F2. No router</h3>
+  <p>Taken when G4 says the corporate VPNs work directly. Keep the two servers and apps on every device. The corporate VPN runs alone on the work laptop. One router remains an optional purchase for resilience.</p>
+  <h3>F3. Degraded probing</h3>
+  <p>Taken when G0 fails. Friends’ phones become the main probes for Phases 1–2. Expect slower cycles and fewer controlled measurements; require results from at least two friends on different ISPs before passing G2.</p>
+
+  <h2 id="parallel">Parallel work</h2>
+  <ul>
+    <li>Employer authorization (0.1) can start immediately and run alongside everything else.</li>
+    <li>Phases 3 and 4 run in parallel after G2.</li>
+    <li>If the router takes more than seven days to arrive, it may be ordered after G2 instead of after G3, accepting a small return risk. Never order before G2.</li>
+    <li>The domain is bought only in step 2.6, after the first protocol results.</li>
+  </ul>
+</section>
+
+<section class="prose" id="a-tests">
+  <h2>Appendix A. Test procedures</h2>
+  <p>All tunnel tests use a client that exposes a local SOCKS5 or mixed proxy at <code>127.0.0.1:1080</code>. On Linux use xray-core or the sing-box CLI. On Windows use the sing-box CLI, v2rayN or Hiddify and substitute their local port. Windows 10 and later include <code>curl.exe</code>; run the bash examples in WSL or Git Bash, or adapt them to PowerShell.</p>
+
+  <h3>T1. Port reachability</h3>
+<pre><code>nc -zv -w5 SERVER_IP 443
+# Windows PowerShell:
+Test-NetConnection SERVER_IP -Port 443</code></pre>
+
+  <h3>T2. Three-minute series</h3>
+  <p>Some blocks trigger only after the first kilobytes or after a delay, so a single request proves nothing. Pass: 9 of 9 responses with a 2xx or 3xx code.</p>
+<pre><code>for i in $(seq 1 9); do
+  curl -s -o /dev/null -m 20 --socks5-hostname 127.0.0.1:1080 \
+    -w "$(date +%T) %{http_code} %{time_total}s\n" https://www.instagram.com
+  sleep 20
+done</code></pre>
+
+  <h3>T3. Large download</h3>
+  <p>Catches freezes after about 16 KB and measures throughput. Pass: completes, no stall over 10 seconds.</p>
+<pre><code>curl --socks5-hostname 127.0.0.1:1080 -o /dev/null -m 120 \
+  -w "%{size_download} bytes, %{speed_download} B/s\n" \
+  "https://speed.cloudflare.com/__down?bytes=50000000"</code></pre>
+
+  <h3>T4. Service list</h3>
+  <p>Run once through the tunnel and once without <code>--socks5-hostname</code> for the direct baseline.</p>
+<pre><code>while read url; do
+  printf "%-45s " "$url"
+  curl -s -o /dev/null -m 15 --socks5-hostname 127.0.0.1:1080 -w "%{http_code}\n" "$url"
+done &lt; services.txt</code></pre>
+
+  <h3>T5. Soak</h3>
+  <p>Run one client instance per server and profile on its own local port (1081, 1082 and so on). Schedule the probe every 5 minutes with cron or Windows Task Scheduler. Pass: 97% or more rows return 204 in under 5 seconds over 24 hours.</p>
+<pre><code># probe.sh LABEL PORT
+ts=$(date -u +%FT%TZ)
+r=$(curl -s -o /dev/null -m 20 --socks5-hostname 127.0.0.1:$2 \
+     -w "%{http_code},%{time_total}" https://www.gstatic.com/generate_204)
+echo "$ts,$1,$r" &gt;&gt; soak.csv</code></pre>
+
+  <h3>D-checks. Corporate endpoints</h3>
+  <p>TLS reachability only; no credentials are used. Run direct and through the tunnel.</p>
+<pre><code>curl -sv -m 15 -o /dev/null https://GP_PORTAL/global-protect/prelogin.esp</code></pre>
+  <p>For AWS Client VPN, rely on the OpenVPN probe from step 2.3; a reachable port does not show whether the OpenVPN handshake itself is blocked.</p>
+
+  <h3>T6–T10. Router tests in Georgia</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Test</th><th>What to do</th><th>Pass when</th></tr></thead>
+      <tbody>
+        <tr><td class="n">T6</td><td>On WORK Wi-Fi: visible IP, DNS leak test, T4 service list</td><td>Server IP, no leaks, all group A and C reachable</td></tr>
+        <tr><td class="n">T7</td><td>Stop Xray on server A; watch traffic; start it again</td><td>Traffic moves to B within a minute and back without manual action</td></tr>
+        <tr><td class="n">T8</td><td>Work laptop on WORK Wi-Fi: GlobalProtect, then AWS Client VPN; 30+ minute video call, large download, git and ssh</td><td>Both connect and stay stable; no stalls on large transfers</td></tr>
+        <tr><td class="n">T9</td><td>WAN modes: Ethernet, Wi-Fi repeater, USB tethering from a phone; reboot in each mode</td><td>Tunnel comes back on its own in every mode</td></tr>
+        <tr><td class="n">T10</td><td>Three-day burn-in with normal use</td><td>No manual restarts needed</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="prose" id="b-friends">
+  <h2>Appendix B. Friend instructions</h2>
+  <p>Translate into Russian before sending. Send the link or QR code in a separate message.</p>
+  <ol>
+    <li>Install Hiddify. If it is not in your app store, install Happ or v2RayTun instead.</li>
+    <li>Open the link or QR code I sent and import it into the app. Connect.</li>
+    <li>Open these sites: [5–6 sites from groups A and C]. Play a YouTube video for two minutes.</li>
+    <li>Run a speed test on fast.com.</li>
+    <li>Leave a video playing for 30 minutes and note whether it stops.</li>
+    <li>Repeat everything on mobile data, and once more in the evening between 19:00 and 23:00.</li>
+    <li>Send me: city, home ISP, mobile operator, times of the tests, what did not work, screenshots of errors, and whether most foreign sites were dead on mobile even without the app (that means whitelist mode).</li>
+  </ol>
+  <p>The key expires in 14 days.</p>
+</section>
+
+<section class="prose" id="c-routers">
+  <h2>Appendix C. Router purchase</h2>
+  <p>Buy two of the same model. Ranked by preference:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Rank</th><th>Model</th><th>Why</th><th>Check at purchase</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td>GL.iNet Beryl AX (GL-MT3000)</td><td>Pocket size, USB-C power, MediaTek MT7981B, 512 MB RAM, mature official OpenWrt support, stock firmware as a fallback</td><td>Exactly GL-MT3000; not GL-MT1300 (old Beryl) or GL-MT3600BE (Beryl 7). USB-C 5V/3A adapter included</td></tr>
+        <tr><td class="n">2</td><td>Cudy TR3000 v1</td><td>Same chip and RAM, USB-C, official OpenWrt; less flash (128 MB) and a less convenient flashing path</td><td>Hardware v1. Serial starting 2543 or higher has newer flash and needs the updated intermediate firmware. Non-Chinese box means the 128 MB version, which is fine</td></tr>
+        <tr><td class="n">3</td><td>GL.iNet Flint 2 (GL-MT6000)</td><td>Most powerful, quad-core MT7986, 1 GB RAM, official OpenWrt; a home router, not portable</td><td>Exactly GL-MT6000; not the old Flint (GL-AX1800) or Flint 3 (Qualcomm). 12 V adapter included</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Always: new and sealed; receipt and warranty card; pay on delivery or with buyer protection, never by prepaid transfer to an unknown shop; no setup or flashing by the shop; keep the box and receipt until G5 passes.</p>
+</section>
+
+<section class="prose" id="d-facts">
+  <h2>Appendix D. Known constraints, November 2026</h2>
+  <ul>
+    <li>Plain WireGuard and OpenVPN are blocked in Russia since February 2026.</li>
+    <li>Filtering judges traffic behaviour after roughly the first 16 KB, checks whether the camouflage site matches the hosting, and since August 2026 blocks whole subnets of hosters popular with VPNs. Rollout differs by ISP and region.</li>
+    <li>Large clouds (AWS, DigitalOcean, OVH, Oracle Cloud, Scaleway, Akamai, Hetzner) are often throttled from Russia.</li>
+    <li>Data-center networks inside Russia are filtered less than home ISPs, which is why RU-PC on an office ISP is a better probe than a Russian VPS.</li>
+    <li>Mobile internet in many regions periodically switches to whitelist mode; only allowlisted IPs are reachable and no tunnel helps.</li>
+    <li>AmneziaWG 1.5 and 2.0 have become vulnerable to blocking; Amnezia recommends 3.1 for self-hosted servers. Versions 2.0 and 3.1 share one container and cannot run side by side from the app.</li>
+    <li>Router firmware (Keenetic, OpenWrt, GL.iNet) does not support AmneziaWG 3.x yet, so routers use VLESS.</li>
+    <li>Podkop is in beta, needs OpenWrt 24.10 or later, and its URLTest mode does not accept XHTTP links.</li>
+    <li>Since 2026, Russian hosting providers may not host VPN infrastructure. FirstVDS suffered a breach on 17 October 2026 that exposed root passwords and SSH keys.</li>
+    <li>Many popular Russian apps detect an active VPN, so split tunnelling for Russian services is required.</li>
+  </ul>
+  <h3>References</h3>
+  <ul>
+    <li>Teplitsa analysis of VLESS blocking, September 2026: <a href="https://te-st.org/2026/09/30/vlessmore/">te-st.org/2026/09/30/vlessmore</a></li>
+    <li>Amnezia self-hosted: <a href="https://amnezia.org/ru/self-hosted">amnezia.org/ru/self-hosted</a></li>
+    <li>AmneziaWG 3.1 self-hosted notes: <a href="https://docs.amnezia.org/documentation/instructions/new-amneziawg-selfhosted/">docs.amnezia.org</a></li>
+    <li>Podkop: <a href="https://github.com/itdoginfo/podkop">github.com/itdoginfo/podkop</a></li>
+    <li>Podkop URLTest subscription script: <a href="https://github.com/Naz1anmak/podkop-urltest-subscription">github.com/Naz1anmak/podkop-urltest-subscription</a></li>
+    <li>OpenWrt hardware pages: <a href="https://openwrt.org/toh/cudy/tr3000">Cudy TR3000</a>, <a href="https://openwrt.org/toh/gl.inet/gl-mt3600be">GL-MT3600BE</a></li>
+  </ul>
+</section>
+
+<section class="prose" id="e-security">
+  <h2>Appendix E. Security rules</h2>
+  <ul>
+    <li>Secrets live only in the password manager, with an encrypted offline copy. Never in this document, the run log, chats or email.</li>
+    <li>Servers: SSH keys only, password login off, firewall with the minimum open ports, automatic security updates, panels reachable only through an SSH tunnel.</li>
+    <li>Every person and device gets its own client key, so one can be revoked without touching the others. Friends’ keys expire.</li>
+    <li>Routers: strong admin password, remote and cloud management off, configuration backed up after every change.</li>
+    <li>A lost or stolen router means revoking its keys on both servers the same day.</li>
+    <li>RU-PC: install only what the tests need and remove test tools after Phase 7 unless monitoring still runs; follow the employer’s rules for that machine.</li>
+  </ul>
+</section>
+
+<footer>
+  Gated rollout plan, version 1, 5 November 2026. Checkboxes reset when the page is reloaded; record progress in the run log.
+</footer>
+
+</main>
+</div>
+
+<script>
+(function () {
+  // Open the plan map on wide screens
+  var navbox = document.getElementById('navbox');
+  var wide = window.matchMedia('(min-width: 961px)');
+  function syncNav() { if (wide.matches) navbox.open = true; }
+  syncNav();
+  if (wide.addEventListener) wide.addEventListener('change', syncNav);
+
+  // Highlight the current section in the plan map
+  var links = Array.prototype.slice.call(document.querySelectorAll('.track a'));
+  var map = {};
+  links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a.parentElement; });
+  var targets = Object.keys(map).map(function (id) { return document.getElementById(id); }).filter(Boolean);
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          links.forEach(function (a) { a.parentElement.classList.remove('current'); });
+          var li = map[e.target.id];
+          if (li) li.classList.add('current');
+        }
+      });
+    }, { rootMargin: '-10% 0px -80% 0px' });
+    targets.forEach(function (t) { io.observe(t); });
+  }
+
+  // Close the map after a jump on narrow screens
+  links.forEach(function (a) {
+    a.addEventListener('click', function () { if (!wide.matches) navbox.open = false; });
+  });
+
+  // Dim finished steps
+  document.querySelectorAll('ol.steps input[type="checkbox"]').forEach(function (cb) {
+    cb.addEventListener('change', function () { cb.parentElement.classList.toggle('done', cb.checked); });
+  });
+
+  // Copy buttons for code blocks
+  document.querySelectorAll('pre').forEach(function (pre) {
+    var btn = document.createElement('button');
+    btn.className = 'copy';
+    btn.type = 'button';
+    btn.textContent = 'Copy';
+    btn.addEventListener('click', function () {
+      var text = pre.querySelector('code').innerText;
+      var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1500); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () { btn.textContent = 'Select and copy'; });
+      } else { btn.textContent = 'Select and copy'; }
+    });
+    pre.appendChild(btn);
+  });
+})();
+</script>
+</body>
+</html>

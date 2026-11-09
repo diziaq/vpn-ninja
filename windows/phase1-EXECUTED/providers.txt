@@ -1,0 +1,33 @@
+# Phase 1 provider list. Format:  ROLE | Provider | Location | Test-file URL
+# Lines starting with # are ignored. The script downloads the first 2 MB of each file.
+#
+# ROLE:
+#   CANDIDATE   provider we could rent VPN servers from
+#   CONTROL-BAD big cloud that Russian ISPs often throttle; shows whether this line
+#               applies the ~16 KB freeze at all (calibration)
+#   CONTROL-OK  Russian mirror; must be fast, proves the download path works
+#   INFO        measured for context only
+#
+# A 404 or DNS error usually means the test file moved, not a block.
+
+CANDIDATE   | Vultr       | Frankfurt DE   | https://fra-de-ping.vultr.com/vultr.com.100MB.bin
+CANDIDATE   | Vultr       | Amsterdam NL   | https://ams-nl-ping.vultr.com/vultr.com.100MB.bin
+CANDIDATE   | Vultr       | Stockholm SE   | https://sto-se-ping.vultr.com/vultr.com.100MB.bin
+CANDIDATE   | Vultr       | Warsaw PL      | https://waw-pl-ping.vultr.com/vultr.com.100MB.bin
+CANDIDATE   | HostHatch   | Vienna AT      | http://lg.vie.hosthatch.com/100MB.test
+CANDIDATE   | HostHatch   | Amsterdam NL   | http://lg.ams.hosthatch.com/100MB.test
+CANDIDATE   | HostHatch   | Stockholm SE   | http://lg.sto.hosthatch.com/100MB.test
+CANDIDATE   | BuyVM       | Luxembourg LU  | https://speedtest.lu.buyvm.net/100MB.test
+CANDIDATE   | Time4VPS    | Vilnius LT     | https://lg.time4vps.com/100MB.test
+CANDIDATE   | Leaseweb    | Haarlem NL     | http://mirror.nl.leaseweb.net/speedtest/100mb.bin
+CANDIDATE   | Leaseweb    | Frankfurt DE   | http://mirror.de.leaseweb.net/speedtest/100mb.bin
+
+CONTROL-BAD | Hetzner     | Falkenstein DE | https://fsn1-speed.hetzner.com/100MB.bin
+CONTROL-BAD | Hetzner     | Helsinki FI    | https://hel1-speed.hetzner.com/100MB.bin
+CONTROL-BAD | DigitalOcean| Frankfurt DE   | http://speedtest-fra1.digitalocean.com/100mb.test
+CONTROL-BAD | OVH         | Roubaix FR     | https://proof.ovh.net/files/100Mio.dat
+CONTROL-BAD | Linode      | Frankfurt DE   | https://speedtest.frankfurt.linode.com/100MB-frankfurt.bin
+
+CONTROL-OK  | Yandex mirror | Moscow RU    | https://mirror.yandex.ru/debian/ls-lR.gz
+
+INFO        | Cloudflare  | anycast        | https://speed.cloudflare.com/__down?bytes=2097152

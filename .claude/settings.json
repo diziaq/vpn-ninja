@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git show *)",
+      "Bash(bash -n *)",
+      "Bash(shellcheck *)",
+      "Bash(bash tools/test/test-privacy.sh)",
+      "Bash(python3 tools/privacy.py scan *)",
+      "Bash(python3 docs/src/gen_guide.py)"
+    ],
+    "deny": [
+      "Bash(git push *)",
+      "Bash(git add -A *)",
+      "Bash(git add -A)",
+      "Bash(git add . *)",
+      "Bash(git add .)",
+      "Bash(git add --all *)",
+      "Bash(git commit -a *)",
+      "Bash(git commit -n *)",
+      "Bash(git commit --no-verify *)",
+      "Read(./.private/**/secrets/**)",
+      "Edit(./.private/archive/**)"
+    ]
+  }
+}

@@ -8,3 +8,6 @@ dist/
 # Local noise
 .DS_Store
 .claude/settings.local.json
+# The global ignore hides dotfiles; the shared Claude Code settings belong in git (local ones do not).
+!.claude/
+!.claude/settings.json

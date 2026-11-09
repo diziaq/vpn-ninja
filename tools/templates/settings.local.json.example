@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker *)",
+      "Bash(pdftoppm *)",
+      "Bash(bash /Users/YOU/.claude/skills/offline-html/scripts/offline-check.sh *)",
+      "Bash(python3 /Users/YOU/.claude/skills/html-report/scripts/embed-fonts.py *)"
+    ],
+    "additionalDirectories": [
+      "/path/to/an/old/working/folder/if/you/still/need/it"
+    ]
+  }
+}

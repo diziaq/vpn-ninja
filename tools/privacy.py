@@ -65,7 +65,12 @@ def is_binary(data):
 def redact_text(text, rules, allowed):
     for pat, rep in rules:
         text = pat.sub(rep, text)
-    return IPV4.sub(lambda m: m.group(0) if m.group(0) in allowed else "<ip>", text)
+    return IPV4.sub(lambda m: m.group(0) if ip_allowed(m.group(0), allowed) else "<ip>", text)
+
+
+def ip_allowed(ip, allowed):
+    """Exact entries, or prefixes ending in '.' (used for the RFC 5737 documentation ranges)."""
+    return ip in allowed or any(a.endswith(".") and ip.startswith(a) for a in allowed)
 
 
 def cmd_redact(src, dst):
@@ -121,7 +126,7 @@ def scan(paths, staged):
                 if pat.search(line):
                     found.append(f"private value /{pat.pattern}/")
             for ip in IPV4.findall(line):
-                if ip not in allowed:
+                if not ip_allowed(ip, allowed):
                     found.append("IPv4 not in tools/allowed-ips.txt")
             for name, pat in GENERIC:
                 if pat.search(line):

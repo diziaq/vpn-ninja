@@ -6,3 +6,7 @@
 77.88.8.8     # Yandex public DNS
 192.168.8.1   # GL.iNet factory admin address
 10.77.0.1     # planned router LAN address
+# Documentation-only ranges (RFC 5737): never real hosts; used in templates and tests. Prefix match.
+192.0.2.
+198.51.100.
+203.0.113.

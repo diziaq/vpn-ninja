@@ -1,0 +1,35 @@
+# TEMPLATE for .private/redact-map.tsv. Copy it there and replace every example value with a real one.
+# The real file is never committed (.private/ is git-ignored).
+#
+# Format: one rule per line, <python regex> TAB <replacement>. Lines starting with # are comments.
+# Rules run top to bottom, so put specific entries (a full IP, a full hostname) before broad ones
+# (a network prefix, a short name). Every regex is also a pattern the pre-commit guard refuses to commit.
+# Escape dots (\.) so the regex matches only the literal value. (?i) makes a rule case-insensitive.
+#
+# Values below are fake (RFC 5737 / example.com). Replace them; keep the placeholders on the right,
+# because the committed files already use them.
+#
+# --- server A (and later B): addresses, network, IPv6, hostname, short hostname -------------------
+203\.0\.113\.10	<SERVER_A_IP>
+203\.0\.113\.0/24	<SERVER_A_NET>/24
+203\.0\.113\.	<SERVER_A_NET>.
+2001:db8::10	<SERVER_A_IPV6>
+abcd\.l\.provider\.example	<SERVER_A_HOST>
+abcd	srvA
+# --- Reality camouflage site (a neighbour's site today) ---------------------------------------------
+203\.0\.113\.6\b	<CAMOUFLAGE_A_IP>
+neighbour-site\.example	<CAMOUFLAGE_A>
+# --- employer: VPN portal and gateway, MDM, network, name, e-mail -----------------------------------
+198\.51\.100\.163	<EMPLOYER_GP_PORTAL_IP>
+198\.51\.100\.	<EMPLOYER_NET>
+(?i)vpn\.corp\.example	<EMPLOYER_GP_PORTAL>
+(?i)gw\.corp\.example	<EMPLOYER_GP_GATEWAY>
+(?i)corp\.mdm\.example	<EMPLOYER_MDM>
+(?i)user@corp\.example	<USER_EMAIL>
+(?i)\bExampleCorp\b	the employer
+# --- people and places: user's login and first name, the Russian PC's town, ISP, ASN ---------------
+(?i)jdoe	<USER>
+\bJohn\b	the user
+\bSometown\b	<RU-PC town>
+(?i)\bExampleNet\b	<RU-PC ISP>
+AS64500	<RU-PC ASN>

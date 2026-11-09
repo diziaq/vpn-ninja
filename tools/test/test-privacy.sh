@@ -13,7 +13,7 @@ P="python3 $ROOT/tools/privacy.py"
 fail() { echo "FAIL: $*" >&2; exit 1; }
 # Sample values are assembled at runtime so this file itself passes the commit guard.
 ip_mapped="203.0.113.$((3 + 4))"            # RFC 5737 documentation range
-ip_other="198.51.100.$((4 + 5))"
+ip_other="100.64.$((1 + 1)).9"            # shared address space: not allowlisted
 uuid="36a6a1b2-1111-2222-3333-$((4444 * 100000000 + 55556666))"
 
 # 1. redaction: mapped value, unknown IP, allowlisted IP, CRLF preserved

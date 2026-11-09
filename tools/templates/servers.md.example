@@ -1,0 +1,12 @@
+# TEMPLATE for .private/servers.md: the real values behind the placeholders used in git.
+# Copy to .private/servers.md and fill in. No keys or vless links here: those live in the password manager.
+
+| Placeholder | Real value | Notes |
+|---|---|---|
+| `<SERVER_A_IP>` | 203.0.113.10 | provider, country, plan, paid until |
+| `<SERVER_A_IPV6>` | 2001:db8::10 | |
+| `<SERVER_A_HOST>` / `srvA` | abcd.l.provider.example / abcd | SSH: `ssh -i ~/.ssh/vpn_servers root@<SERVER_A_IP>` |
+| `<CAMOUFLAGE_A>` / `<CAMOUFLAGE_A_IP>` | neighbour-site.example / 203.0.113.6 | picked by setup-server.sh; kept by rotate-keys.sh |
+| current client ID ends with | ...abcd | full ID only in the password manager |
+| `<EMPLOYER_GP_PORTAL>` / IP | vpn.corp.example / 198.51.100.163 | |
+| `<RU-PC town>` / `<RU-PC ISP>` / ASN | Sometown / ExampleNet / AS64500 | Russian PC used as probe |

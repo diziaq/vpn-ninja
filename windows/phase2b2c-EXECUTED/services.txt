@@ -1,0 +1,29 @@
+# Service list for the tunnel test. Format: GROUP URL
+# X = controls, A = blocked in Russia (must open through the tunnel),
+# C = foreign services that refuse Russian IPs (must open through the tunnel),
+# B = Russian services (informational: some refuse foreign IPs)
+
+X https://www.google.com/
+X https://github.com/
+X https://www.wikipedia.org/
+
+A https://www.instagram.com/
+A https://www.facebook.com/
+A https://x.com/
+A https://www.youtube.com/
+A https://www.linkedin.com/
+A https://discord.com/
+A https://web.whatsapp.com/
+A https://web.telegram.org/
+A https://signal.org/
+A https://www.bbc.com/
+
+C https://chatgpt.com/
+C https://claude.ai/
+C https://gemini.google.com/
+C https://www.netflix.com/
+
+B https://ya.ru/
+B https://www.gosuslugi.ru/
+B https://www.sberbank.ru/
+B https://www.ozon.ru/

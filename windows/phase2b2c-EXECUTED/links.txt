@@ -1,0 +1,5 @@
+# Paste the two lines printed by setup-server.sh below this comment block
+# (they start with vless://). One link per line. Lines with # are ignored.
+# These lines are SECRET: they are the keys to your VPN server.
+# After the tests you can delete them from this file.
+

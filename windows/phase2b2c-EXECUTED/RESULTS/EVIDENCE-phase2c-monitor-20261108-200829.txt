@@ -1,0 +1,38 @@
+﻿==== RU-PROBE EVIDENCE ====
+Script:     phase2c-monitor.ps1 v1.1
+Run ID:     phase2c-monitor-20261108-200829-ebed7270
+Machine:    ebed7270 (hash of computer name)
+Started:    2026-11-08T20:08:29 local / 2026-11-08T15:08:29 UTC
+Updated:    2026-11-08T20:08:42 local (0h00m running)
+Status:     RUNNING (rewritten after every cycle; if Updated is old, the monitor was closed or the PC slept/rebooted)
+Parameters: IntervalSec=150; Hours=until stopped; Download=1000000 bytes; KeepAwake=True; xray=Xray 26.10.31 (Xray, Penetrates Everything.) a4a3dff (go1.27.3 windows/amd64); links=2
+
+---- Results ----
+Cycles: 1. Office line (direct ya.ru) OK in 1 of 1 (100%).
+Gaps (no cycle for over 6,2 min; PC asleep or frozen): 0, total 0h00m
+Evening coverage (19:00-23:00 local): about 0h02m
+
+Per link (OK = test page + blocked site + 1 MB download all passed in that cycle;
+"line-adjusted" leaves out cycles in which the office line itself was down):
+  srvA-vision
+     server:443 type=tcp flow=xtls-rprx-vision fp=chrome sni=<CAMOUFLAGE_A> id=36a6...fe0c; exit address = server (OK)
+     cycles 1: OK 1, partial 0, failed 0 -> 100% (line-adjusted 100%), evening 100%
+     longest outage 0h00m; proxy restarts 0; median speed 5,7 Mbit/s
+     VERDICT: NOT YET (needs 3 h including 1 h of evening)
+  srvA-xhttp
+     server:8443 type=xhttp flow=- fp=chrome sni=<CAMOUFLAGE_A> id=36a6...fe0c; exit address = server (OK)
+     cycles 1: OK 1, partial 0, failed 0 -> 100% (line-adjusted 100%), evening 100%
+     longest outage 0h00m; proxy restarts 0; median speed 9,3 Mbit/s
+     VERDICT: NOT YET (needs 3 h including 1 h of evening)
+
+---- Events ----
+2026-11-08 20:08:32  Link loaded: srvA-vision (server:443 type=tcp flow=xtls-rprx-vision fp=chrome sni=<CAMOUFLAGE_A> id=36a6...fe0c); exit address = server (OK)
+2026-11-08 20:08:34  Link loaded: srvA-xhttp (server:8443 type=xhttp flow=- fp=chrome sni=<CAMOUFLAGE_A> id=36a6...fe0c); exit address = server (OK)
+2026-11-08 20:08:34  Monitor started. Keep-awake: True
+
+---- Cycles (time, cycle, direct, then per link: test page/blocked site/download, Mbit/s) ----
+2026-11-08T20:08:34 #1 direct=ok srvA-vision=ok/ok/ok,5,7 srvA-xhttp=ok/ok/ok,9,3
+
+---- Errors during run (includes ones the script handled; for diagnosis) ----
+(none)
+==== END ====

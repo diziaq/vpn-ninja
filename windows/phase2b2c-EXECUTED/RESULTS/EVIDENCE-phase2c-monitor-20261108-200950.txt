@@ -1,0 +1,327 @@
+﻿==== RU-PROBE EVIDENCE ====
+Script:     phase2c-monitor.ps1 v1.1
+Run ID:     phase2c-monitor-20261108-200950-ebed7270
+Machine:    ebed7270 (hash of computer name)
+Started:    2026-11-08T20:09:50 local / 2026-11-08T15:09:50 UTC
+Updated:    2026-11-09T08:12:44 local (12h02m running)
+Status:     STOPPED (by 3-STOP-MONITOR)
+Parameters: IntervalSec=150; Hours=until stopped; Download=1000000 bytes; KeepAwake=True; xray=Xray 26.10.31 (Xray, Penetrates Everything.) a4a3dff (go1.27.3 windows/amd64); links=2
+
+---- Results ----
+Cycles: 289. Office line (direct ya.ru) OK in 289 of 289 (100%).
+Gaps (no cycle for over 6,2 min; PC asleep or frozen): 0, total 0h00m
+Evening coverage (19:00-23:00 local): about 2h50m
+
+Per link (OK = test page + blocked site + 1 MB download all passed in that cycle;
+"line-adjusted" leaves out cycles in which the office line itself was down):
+  srvA-vision
+     server:443 type=tcp flow=xtls-rprx-vision fp=chrome sni=<CAMOUFLAGE_A> id=36a6...fe0c; exit address = server (OK)
+     cycles 289: OK 289, partial 0, failed 0 -> 100% (line-adjusted 100%), evening 100%
+     longest outage 0h00m; proxy restarts 0; median speed 7,2 Mbit/s
+     VERDICT: PASS
+  srvA-xhttp
+     server:8443 type=xhttp flow=- fp=chrome sni=<CAMOUFLAGE_A> id=36a6...fe0c; exit address = server (OK)
+     cycles 289: OK 289, partial 0, failed 0 -> 100% (line-adjusted 100%), evening 100%
+     longest outage 0h00m; proxy restarts 0; median speed 11,1 Mbit/s
+     VERDICT: PASS
+
+---- Events ----
+2026-11-08 20:09:52  Link loaded: srvA-vision (server:443 type=tcp flow=xtls-rprx-vision fp=chrome sni=<CAMOUFLAGE_A> id=36a6...fe0c); exit address = server (OK)
+2026-11-08 20:09:54  Link loaded: srvA-xhttp (server:8443 type=xhttp flow=- fp=chrome sni=<CAMOUFLAGE_A> id=36a6...fe0c); exit address = server (OK)
+2026-11-08 20:09:54  Monitor started. Keep-awake: True
+2026-11-09 08:12:44  Stop requested by 3-STOP-MONITOR.
+
+---- Cycles (time, cycle, direct, then per link: test page/blocked site/download, Mbit/s) ----
+2026-11-08T20:09:54 #1 direct=ok srvA-vision=ok/ok/ok,4,3 srvA-xhttp=ok/ok/ok,6,5
+2026-11-08T20:12:24 #2 direct=ok srvA-vision=ok/ok/ok,3,1 srvA-xhttp=ok/ok/ok,12
+2026-11-08T20:14:55 #3 direct=ok srvA-vision=ok/ok/ok,2,1 srvA-xhttp=ok/ok/ok,2,7
+2026-11-08T20:17:26 #4 direct=ok srvA-vision=ok/ok/ok,3,7 srvA-xhttp=ok/ok/ok,2,8
+2026-11-08T20:19:57 #5 direct=ok srvA-vision=ok/ok/ok,2,9 srvA-xhttp=ok/ok/ok,9,3
+2026-11-08T20:22:27 #6 direct=ok srvA-vision=ok/ok/ok,4,5 srvA-xhttp=ok/ok/ok,6,4
+2026-11-08T20:24:58 #7 direct=ok srvA-vision=ok/ok/ok,5,6 srvA-xhttp=ok/ok/ok,3,1
+2026-11-08T20:27:28 #8 direct=ok srvA-vision=ok/ok/ok,3,5 srvA-xhttp=ok/ok/ok,6,8
+2026-11-08T20:29:58 #9 direct=ok srvA-vision=ok/ok/ok,1,6 srvA-xhttp=ok/ok/ok,7,6
+2026-11-08T20:32:29 #10 direct=ok srvA-vision=ok/ok/ok,7,3 srvA-xhttp=ok/ok/ok,6,1
+2026-11-08T20:34:59 #11 direct=ok srvA-vision=ok/ok/ok,5,9 srvA-xhttp=ok/ok/ok,6,7
+2026-11-08T20:37:30 #12 direct=ok srvA-vision=ok/ok/ok,7,1 srvA-xhttp=ok/ok/ok,5,7
+2026-11-08T20:40:01 #13 direct=ok srvA-vision=ok/ok/ok,7,1 srvA-xhttp=ok/ok/ok,9,6
+2026-11-08T20:42:31 #14 direct=ok srvA-vision=ok/ok/ok,8,4 srvA-xhttp=ok/ok/ok,10
+2026-11-08T20:45:02 #15 direct=ok srvA-vision=ok/ok/ok,5,7 srvA-xhttp=ok/ok/ok,17,6
+2026-11-08T20:47:32 #16 direct=ok srvA-vision=ok/ok/ok,1,4 srvA-xhttp=ok/ok/ok,9,6
+2026-11-08T20:50:03 #17 direct=ok srvA-vision=ok/ok/ok,6,9 srvA-xhttp=ok/ok/ok,16,8
+2026-11-08T20:52:34 #18 direct=ok srvA-vision=ok/ok/ok,7 srvA-xhttp=ok/ok/ok,14,3
+2026-11-08T20:55:04 #19 direct=ok srvA-vision=ok/ok/ok,5,9 srvA-xhttp=ok/ok/ok,9,3
+2026-11-08T20:57:35 #20 direct=ok srvA-vision=ok/ok/ok,6,8 srvA-xhttp=ok/ok/ok,7,5
+2026-11-08T21:00:06 #21 direct=ok srvA-vision=ok/ok/ok,2,6 srvA-xhttp=ok/ok/ok,8
+2026-11-08T21:02:37 #22 direct=ok srvA-vision=ok/ok/ok,7,8 srvA-xhttp=ok/ok/ok,17,3
+2026-11-08T21:05:07 #23 direct=ok srvA-vision=ok/ok/ok,7,2 srvA-xhttp=ok/ok/ok,19,4
+2026-11-08T21:07:38 #24 direct=ok srvA-vision=ok/ok/ok,7,2 srvA-xhttp=ok/ok/ok,18,3
+2026-11-08T21:10:08 #25 direct=ok srvA-vision=ok/ok/ok,7,1 srvA-xhttp=ok/ok/ok,3,5
+2026-11-08T21:12:38 #26 direct=ok srvA-vision=ok/ok/ok,6,9 srvA-xhttp=ok/ok/ok,6,6
+2026-11-08T21:15:09 #27 direct=ok srvA-vision=ok/ok/ok,7,9 srvA-xhttp=ok/ok/ok,3,8
+2026-11-08T21:17:39 #28 direct=ok srvA-vision=ok/ok/ok,3,7 srvA-xhttp=ok/ok/ok,17,9
+2026-11-08T21:20:10 #29 direct=ok srvA-vision=ok/ok/ok,4,4 srvA-xhttp=ok/ok/ok,6,5
+2026-11-08T21:22:41 #30 direct=ok srvA-vision=ok/ok/ok,7,7 srvA-xhttp=ok/ok/ok,9,5
+2026-11-08T21:25:11 #31 direct=ok srvA-vision=ok/ok/ok,5,2 srvA-xhttp=ok/ok/ok,8,6
+2026-11-08T21:27:42 #32 direct=ok srvA-vision=ok/ok/ok,6 srvA-xhttp=ok/ok/ok,2,9
+2026-11-08T21:30:12 #33 direct=ok srvA-vision=ok/ok/ok,8,3 srvA-xhttp=ok/ok/ok,12,2
+2026-11-08T21:32:42 #34 direct=ok srvA-vision=ok/ok/ok,7,9 srvA-xhttp=ok/ok/ok,6,4
+2026-11-08T21:35:12 #35 direct=ok srvA-vision=ok/ok/ok,5,9 srvA-xhttp=ok/ok/ok,14,2
+2026-11-08T21:37:42 #36 direct=ok srvA-vision=ok/ok/ok,5 srvA-xhttp=ok/ok/ok,14,2
+2026-11-08T21:40:13 #37 direct=ok srvA-vision=ok/ok/ok,7,6 srvA-xhttp=ok/ok/ok,6,5
+2026-11-08T21:42:43 #38 direct=ok srvA-vision=ok/ok/ok,3,2 srvA-xhttp=ok/ok/ok,11,2
+2026-11-08T21:45:14 #39 direct=ok srvA-vision=ok/ok/ok,7,4 srvA-xhttp=ok/ok/ok,6,1
+2026-11-08T21:47:44 #40 direct=ok srvA-vision=ok/ok/ok,4,5 srvA-xhttp=ok/ok/ok,13,7
+2026-11-08T21:50:15 #41 direct=ok srvA-vision=ok/ok/ok,4 srvA-xhttp=ok/ok/ok,5,6
+2026-11-08T21:52:45 #42 direct=ok srvA-vision=ok/ok/ok,6,5 srvA-xhttp=ok/ok/ok,14,3
+2026-11-08T21:55:16 #43 direct=ok srvA-vision=ok/ok/ok,7 srvA-xhttp=ok/ok/ok,8,6
+2026-11-08T21:57:46 #44 direct=ok srvA-vision=ok/ok/ok,4 srvA-xhttp=ok/ok/ok,16
+2026-11-08T22:00:16 #45 direct=ok srvA-vision=ok/ok/ok,5,1 srvA-xhttp=ok/ok/ok,5,2
+2026-11-08T22:02:47 #46 direct=ok srvA-vision=ok/ok/ok,3,2 srvA-xhttp=ok/ok/ok,12
+2026-11-08T22:05:17 #47 direct=ok srvA-vision=ok/ok/ok,8,5 srvA-xhttp=ok/ok/ok,4,8
+2026-11-08T22:07:48 #48 direct=ok srvA-vision=ok/ok/ok,8,6 srvA-xhttp=ok/ok/ok,7,3
+2026-11-08T22:10:18 #49 direct=ok srvA-vision=ok/ok/ok,7,5 srvA-xhttp=ok/ok/ok,8,5
+2026-11-08T22:12:48 #50 direct=ok srvA-vision=ok/ok/ok,8,6 srvA-xhttp=ok/ok/ok,11,1
+2026-11-08T22:15:19 #51 direct=ok srvA-vision=ok/ok/ok,8,3 srvA-xhttp=ok/ok/ok,13,2
+2026-11-08T22:17:50 #52 direct=ok srvA-vision=ok/ok/ok,7,8 srvA-xhttp=ok/ok/ok,7,3
+2026-11-08T22:20:20 #53 direct=ok srvA-vision=ok/ok/ok,6,3 srvA-xhttp=ok/ok/ok,12,1
+2026-11-08T22:22:50 #54 direct=ok srvA-vision=ok/ok/ok,8,7 srvA-xhttp=ok/ok/ok,10,5
+2026-11-08T22:25:21 #55 direct=ok srvA-vision=ok/ok/ok,8,5 srvA-xhttp=ok/ok/ok,8,7
+2026-11-08T22:27:52 #56 direct=ok srvA-vision=ok/ok/ok,2,9 srvA-xhttp=ok/ok/ok,3,4
+2026-11-08T22:30:23 #57 direct=ok srvA-vision=ok/ok/ok,6,4 srvA-xhttp=ok/ok/ok,13,8
+2026-11-08T22:32:53 #58 direct=ok srvA-vision=ok/ok/ok,7 srvA-xhttp=ok/ok/ok,5,6
+2026-11-08T22:35:23 #59 direct=ok srvA-vision=ok/ok/ok,4,9 srvA-xhttp=ok/ok/ok,12,2
+2026-11-08T22:37:54 #60 direct=ok srvA-vision=ok/ok/ok,7,4 srvA-xhttp=ok/ok/ok,9,1
+2026-11-08T22:40:24 #61 direct=ok srvA-vision=ok/ok/ok,3 srvA-xhttp=ok/ok/ok,14,6
+2026-11-08T22:42:54 #62 direct=ok srvA-vision=ok/ok/ok,1,7 srvA-xhttp=ok/ok/ok,3,7
+2026-11-08T22:45:25 #63 direct=ok srvA-vision=ok/ok/ok,6,7 srvA-xhttp=ok/ok/ok,3,5
+2026-11-08T22:47:55 #64 direct=ok srvA-vision=ok/ok/ok,3 srvA-xhttp=ok/ok/ok,12,6
+2026-11-08T22:50:25 #65 direct=ok srvA-vision=ok/ok/ok,1,3 srvA-xhttp=ok/ok/ok,18,1
+2026-11-08T22:52:56 #66 direct=ok srvA-vision=ok/ok/ok,3,2 srvA-xhttp=ok/ok/ok,7,4
+2026-11-08T22:55:27 #67 direct=ok srvA-vision=ok/ok/ok,4,2 srvA-xhttp=ok/ok/ok,10,8
+2026-11-08T22:57:57 #68 direct=ok srvA-vision=ok/ok/ok,7,5 srvA-xhttp=ok/ok/ok,10,2
+2026-11-08T23:00:28 #69 direct=ok srvA-vision=ok/ok/ok,4,8 srvA-xhttp=ok/ok/ok,9,4
+2026-11-08T23:02:58 #70 direct=ok srvA-vision=ok/ok/ok,8,5 srvA-xhttp=ok/ok/ok,8,6
+2026-11-08T23:05:29 #71 direct=ok srvA-vision=ok/ok/ok,8,8 srvA-xhttp=ok/ok/ok,15,1
+2026-11-08T23:07:59 #72 direct=ok srvA-vision=ok/ok/ok,7,1 srvA-xhttp=ok/ok/ok,13,3
+2026-11-08T23:10:29 #73 direct=ok srvA-vision=ok/ok/ok,6,9 srvA-xhttp=ok/ok/ok,10,2
+2026-11-08T23:12:59 #74 direct=ok srvA-vision=ok/ok/ok,8,4 srvA-xhttp=ok/ok/ok,9,7
+2026-11-08T23:15:30 #75 direct=ok srvA-vision=ok/ok/ok,8,2 srvA-xhttp=ok/ok/ok,7,5
+2026-11-08T23:18:01 #76 direct=ok srvA-vision=ok/ok/ok,6,6 srvA-xhttp=ok/ok/ok,12
+2026-11-08T23:20:32 #77 direct=ok srvA-vision=ok/ok/ok,4 srvA-xhttp=ok/ok/ok,12,2
+2026-11-08T23:23:02 #78 direct=ok srvA-vision=ok/ok/ok,4,5 srvA-xhttp=ok/ok/ok,10,5
+2026-11-08T23:25:32 #79 direct=ok srvA-vision=ok/ok/ok,4,5 srvA-xhttp=ok/ok/ok,15,9
+2026-11-08T23:28:03 #80 direct=ok srvA-vision=ok/ok/ok,8,1 srvA-xhttp=ok/ok/ok,7,7
+2026-11-08T23:30:33 #81 direct=ok srvA-vision=ok/ok/ok,7,5 srvA-xhttp=ok/ok/ok,10,2
+2026-11-08T23:33:04 #82 direct=ok srvA-vision=ok/ok/ok,8,1 srvA-xhttp=ok/ok/ok,13,8
+2026-11-08T23:35:34 #83 direct=ok srvA-vision=ok/ok/ok,7,8 srvA-xhttp=ok/ok/ok,10
+2026-11-08T23:38:05 #84 direct=ok srvA-vision=ok/ok/ok,8,1 srvA-xhttp=ok/ok/ok,12,5
+2026-11-08T23:40:36 #85 direct=ok srvA-vision=ok/ok/ok,4 srvA-xhttp=ok/ok/ok,8,5
+2026-11-08T23:43:07 #86 direct=ok srvA-vision=ok/ok/ok,6 srvA-xhttp=ok/ok/ok,9,7
+2026-11-08T23:45:38 #87 direct=ok srvA-vision=ok/ok/ok,5 srvA-xhttp=ok/ok/ok,12,5
+2026-11-08T23:48:08 #88 direct=ok srvA-vision=ok/ok/ok,8 srvA-xhttp=ok/ok/ok,14,9
+2026-11-08T23:50:39 #89 direct=ok srvA-vision=ok/ok/ok,7,8 srvA-xhttp=ok/ok/ok,10,2
+2026-11-08T23:53:09 #90 direct=ok srvA-vision=ok/ok/ok,8,1 srvA-xhttp=ok/ok/ok,13,7
+2026-11-08T23:55:40 #91 direct=ok srvA-vision=ok/ok/ok,8,1 srvA-xhttp=ok/ok/ok,14,3
+2026-11-08T23:58:10 #92 direct=ok srvA-vision=ok/ok/ok,7,9 srvA-xhttp=ok/ok/ok,8,9
+2026-11-09T00:00:41 #93 direct=ok srvA-vision=ok/ok/ok,6,2 srvA-xhttp=ok/ok/ok,11,7
+2026-11-09T00:03:12 #94 direct=ok srvA-vision=ok/ok/ok,8,2 srvA-xhttp=ok/ok/ok,11,1
+2026-11-09T00:05:43 #95 direct=ok srvA-vision=ok/ok/ok,6,6 srvA-xhttp=ok/ok/ok,16
+2026-11-09T00:08:13 #96 direct=ok srvA-vision=ok/ok/ok,7,2 srvA-xhttp=ok/ok/ok,9
+2026-11-09T00:10:43 #97 direct=ok srvA-vision=ok/ok/ok,6,7 srvA-xhttp=ok/ok/ok,18,3
+2026-11-09T00:13:14 #98 direct=ok srvA-vision=ok/ok/ok,7,9 srvA-xhttp=ok/ok/ok,12,6
+2026-11-09T00:15:45 #99 direct=ok srvA-vision=ok/ok/ok,7,9 srvA-xhttp=ok/ok/ok,10,6
+2026-11-09T00:18:16 #100 direct=ok srvA-vision=ok/ok/ok,8,6 srvA-xhttp=ok/ok/ok,14
+2026-11-09T00:20:46 #101 direct=ok srvA-vision=ok/ok/ok,7,8 srvA-xhttp=ok/ok/ok,9,5
+2026-11-09T00:23:17 #102 direct=ok srvA-vision=ok/ok/ok,8,6 srvA-xhttp=ok/ok/ok,7,6
+2026-11-09T00:25:48 #103 direct=ok srvA-vision=ok/ok/ok,7,4 srvA-xhttp=ok/ok/ok,18,5
+2026-11-09T00:28:19 #104 direct=ok srvA-vision=ok/ok/ok,6,2 srvA-xhttp=ok/ok/ok,9,9
+2026-11-09T00:30:49 #105 direct=ok srvA-vision=ok/ok/ok,7,7 srvA-xhttp=ok/ok/ok,7,6
+2026-11-09T00:33:20 #106 direct=ok srvA-vision=ok/ok/ok,7 srvA-xhttp=ok/ok/ok,8,4
+2026-11-09T00:35:50 #107 direct=ok srvA-vision=ok/ok/ok,4,5 srvA-xhttp=ok/ok/ok,10,5
+2026-11-09T00:38:20 #108 direct=ok srvA-vision=ok/ok/ok,8,6 srvA-xhttp=ok/ok/ok,13,4
+2026-11-09T00:40:51 #109 direct=ok srvA-vision=ok/ok/ok,7,3 srvA-xhttp=ok/ok/ok,17
+2026-11-09T00:43:21 #110 direct=ok srvA-vision=ok/ok/ok,8 srvA-xhttp=ok/ok/ok,12,6
+2026-11-09T00:45:52 #111 direct=ok srvA-vision=ok/ok/ok,7,5 srvA-xhttp=ok/ok/ok,14,8
+2026-11-09T00:48:22 #112 direct=ok srvA-vision=ok/ok/ok,7,7 srvA-xhttp=ok/ok/ok,13,5
+2026-11-09T00:50:53 #113 direct=ok srvA-vision=ok/ok/ok,8,2 srvA-xhttp=ok/ok/ok,12,8
+2026-11-09T00:53:23 #114 direct=ok srvA-vision=ok/ok/ok,5,3 srvA-xhttp=ok/ok/ok,13
+2026-11-09T00:55:53 #115 direct=ok srvA-vision=ok/ok/ok,7,6 srvA-xhttp=ok/ok/ok,14,3
+2026-11-09T00:58:24 #116 direct=ok srvA-vision=ok/ok/ok,7,5 srvA-xhttp=ok/ok/ok,13,3
+2026-11-09T01:00:55 #117 direct=ok srvA-vision=ok/ok/ok,8,2 srvA-xhttp=ok/ok/ok,9,1
+2026-11-09T01:03:25 #118 direct=ok srvA-vision=ok/ok/ok,7,9 srvA-xhttp=ok/ok/ok,16,9
+2026-11-09T01:05:55 #119 direct=ok srvA-vision=ok/ok/ok,7,2 srvA-xhttp=ok/ok/ok,8,3
+2026-11-09T01:08:25 #120 direct=ok srvA-vision=ok/ok/ok,8,8 srvA-xhttp=ok/ok/ok,7,6
+2026-11-09T01:10:56 #121 direct=ok srvA-vision=ok/ok/ok,8,2 srvA-xhttp=ok/ok/ok,19,7
+2026-11-09T01:13:27 #122 direct=ok srvA-vision=ok/ok/ok,8,4 srvA-xhttp=ok/ok/ok,10
+2026-11-09T01:15:58 #123 direct=ok srvA-vision=ok/ok/ok,7 srvA-xhttp=ok/ok/ok,13,6
+2026-11-09T01:18:28 #124 direct=ok srvA-vision=ok/ok/ok,8,4 srvA-xhttp=ok/ok/ok,14
+2026-11-09T01:20:59 #125 direct=ok srvA-vision=ok/ok/ok,8,3 srvA-xhttp=ok/ok/ok,12,4
+2026-11-09T01:23:30 #126 direct=ok srvA-vision=ok/ok/ok,8,4 srvA-xhttp=ok/ok/ok,14,3
+2026-11-09T01:26:00 #127 direct=ok srvA-vision=ok/ok/ok,7,2 srvA-xhttp=ok/ok/ok,13,5
+2026-11-09T01:28:31 #128 direct=ok srvA-vision=ok/ok/ok,7,8 srvA-xhttp=ok/ok/ok,9
+2026-11-09T01:31:02 #129 direct=ok srvA-vision=ok/ok/ok,8,2 srvA-xhttp=ok/ok/ok,11,4
+2026-11-09T01:33:32 #130 direct=ok srvA-vision=ok/ok/ok,7,2 srvA-xhttp=ok/ok/ok,9,8
+2026-11-09T01:36:03 #131 direct=ok srvA-vision=ok/ok/ok,3,9 srvA-xhttp=ok/ok/ok,14,1
+2026-11-09T01:38:34 #132 direct=ok srvA-vision=ok/ok/ok,7,1 srvA-xhttp=ok/ok/ok,9,6
+2026-11-09T01:41:04 #133 direct=ok srvA-vision=ok/ok/ok,8,2 srvA-xhttp=ok/ok/ok,5,3
+2026-11-09T01:43:34 #134 direct=ok srvA-vision=ok/ok/ok,7,9 srvA-xhttp=ok/ok/ok,10,1
+2026-11-09T01:46:05 #135 direct=ok srvA-vision=ok/ok/ok,8,7 srvA-xhttp=ok/ok/ok,10,7
+2026-11-09T01:48:35 #136 direct=ok srvA-vision=ok/ok/ok,3,9 srvA-xhttp=ok/ok/ok,10
+2026-11-09T01:51:06 #137 direct=ok srvA-vision=ok/ok/ok,8,6 srvA-xhttp=ok/ok/ok,13,2
+2026-11-09T01:53:36 #138 direct=ok srvA-vision=ok/ok/ok,8,7 srvA-xhttp=ok/ok/ok,12,2
+2026-11-09T01:56:06 #139 direct=ok srvA-vision=ok/ok/ok,8,1 srvA-xhttp=ok/ok/ok,14,3
+2026-11-09T01:58:36 #140 direct=ok srvA-vision=ok/ok/ok,8,4 srvA-xhttp=ok/ok/ok,10,8
+2026-11-09T02:01:07 #141 direct=ok srvA-vision=ok/ok/ok,7,8 srvA-xhttp=ok/ok/ok,14,5
+2026-11-09T02:03:37 #142 direct=ok srvA-vision=ok/ok/ok,7,8 srvA-xhttp=ok/ok/ok,7,4
+2026-11-09T02:06:08 #143 direct=ok srvA-vision=ok/ok/ok,8,8 srvA-xhttp=ok/ok/ok,14,3
+2026-11-09T02:08:38 #144 direct=ok srvA-vision=ok/ok/ok,7,4 srvA-xhttp=ok/ok/ok,16,3
+2026-11-09T02:11:09 #145 direct=ok srvA-vision=ok/ok/ok,7,7 srvA-xhttp=ok/ok/ok,14,1
+2026-11-09T02:13:39 #146 direct=ok srvA-vision=ok/ok/ok,7,8 srvA-xhttp=ok/ok/ok,8,6
+2026-11-09T02:16:10 #147 direct=ok srvA-vision=ok/ok/ok,8,8 srvA-xhttp=ok/ok/ok,12,4
+2026-11-09T02:18:41 #148 direct=ok srvA-vision=ok/ok/ok,7,8 srvA-xhttp=ok/ok/ok,14,2
+2026-11-09T02:21:11 #149 direct=ok srvA-vision=ok/ok/ok,8,7 srvA-xhttp=ok/ok/ok,13,8
+2026-11-09T02:23:42 #150 direct=ok srvA-vision=ok/ok/ok,8,5 srvA-xhttp=ok/ok/ok,14
+2026-11-09T02:26:13 #151 direct=ok srvA-vision=ok/ok/ok,7,1 srvA-xhttp=ok/ok/ok,13,4
+2026-11-09T02:28:43 #152 direct=ok srvA-vision=ok/ok/ok,7,6 srvA-xhttp=ok/ok/ok,14
+2026-11-09T02:31:13 #153 direct=ok srvA-vision=ok/ok/ok,8,3 srvA-xhttp=ok/ok/ok,11,6
+2026-11-09T02:33:44 #154 direct=ok srvA-vision=ok/ok/ok,8 srvA-xhttp=ok/ok/ok,10,6
+2026-11-09T02:36:14 #155 direct=ok srvA-vision=ok/ok/ok,7 srvA-xhttp=ok/ok/ok,11,7
+2026-11-09T02:38:44 #156 direct=ok srvA-vision=ok/ok/ok,7,8 srvA-xhttp=ok/ok/ok,11,4
+2026-11-09T02:41:14 #157 direct=ok srvA-vision=ok/ok/ok,8,8 srvA-xhttp=ok/ok/ok,12,3
+2026-11-09T02:43:45 #158 direct=ok srvA-vision=ok/ok/ok,4,1 srvA-xhttp=ok/ok/ok,10,9
+2026-11-09T02:46:15 #159 direct=ok srvA-vision=ok/ok/ok,8,2 srvA-xhttp=ok/ok/ok,15,7
+2026-11-09T02:48:46 #160 direct=ok srvA-vision=ok/ok/ok,8,8 srvA-xhttp=ok/ok/ok,12,4
+2026-11-09T02:51:16 #161 direct=ok srvA-vision=ok/ok/ok,7,7 srvA-xhttp=ok/ok/ok,19,1
+2026-11-09T02:53:47 #162 direct=ok srvA-vision=ok/ok/ok,8,1 srvA-xhttp=ok/ok/ok,6,6
+2026-11-09T02:56:17 #163 direct=ok srvA-vision=ok/ok/ok,8,2 srvA-xhttp=ok/ok/ok,14,7
+2026-11-09T02:58:47 #164 direct=ok srvA-vision=ok/ok/ok,8,1 srvA-xhttp=ok/ok/ok,15,6
+2026-11-09T03:01:18 #165 direct=ok srvA-vision=ok/ok/ok,8,4 srvA-xhttp=ok/ok/ok,18,8
+2026-11-09T03:03:49 #166 direct=ok srvA-vision=ok/ok/ok,8,8 srvA-xhttp=ok/ok/ok,6,5
+2026-11-09T03:06:20 #167 direct=ok srvA-vision=ok/ok/ok,6,9 srvA-xhttp=ok/ok/ok,9,5
+2026-11-09T03:08:50 #168 direct=ok srvA-vision=ok/ok/ok,7,8 srvA-xhttp=ok/ok/ok,10,2
+2026-11-09T03:11:20 #169 direct=ok srvA-vision=ok/ok/ok,7,8 srvA-xhttp=ok/ok/ok,18,5
+2026-11-09T03:13:51 #170 direct=ok srvA-vision=ok/ok/ok,8,2 srvA-xhttp=ok/ok/ok,14,9
+2026-11-09T03:16:22 #171 direct=ok srvA-vision=ok/ok/ok,6,4 srvA-xhttp=ok/ok/ok,14,3
+2026-11-09T03:18:52 #172 direct=ok srvA-vision=ok/ok/ok,7,9 srvA-xhttp=ok/ok/ok,6,6
+2026-11-09T03:21:23 #173 direct=ok srvA-vision=ok/ok/ok,8,3 srvA-xhttp=ok/ok/ok,9,4
+2026-11-09T03:23:54 #174 direct=ok srvA-vision=ok/ok/ok,7,2 srvA-xhttp=ok/ok/ok,8,5
+2026-11-09T03:26:25 #175 direct=ok srvA-vision=ok/ok/ok,8,1 srvA-xhttp=ok/ok/ok,19
+2026-11-09T03:28:55 #176 direct=ok srvA-vision=ok/ok/ok,7,9 srvA-xhttp=ok/ok/ok,10,2
+2026-11-09T03:31:26 #177 direct=ok srvA-vision=ok/ok/ok,8,1 srvA-xhttp=ok/ok/ok,10,3
+2026-11-09T03:33:57 #178 direct=ok srvA-vision=ok/ok/ok,7,9 srvA-xhttp=ok/ok/ok,11
+2026-11-09T03:36:28 #179 direct=ok srvA-vision=ok/ok/ok,6,5 srvA-xhttp=ok/ok/ok,12,7
+2026-11-09T03:38:58 #180 direct=ok srvA-vision=ok/ok/ok,7,6 srvA-xhttp=ok/ok/ok,13,8
+2026-11-09T03:41:28 #181 direct=ok srvA-vision=ok/ok/ok,5,8 srvA-xhttp=ok/ok/ok,10,2
+2026-11-09T03:43:58 #182 direct=ok srvA-vision=ok/ok/ok,4,3 srvA-xhttp=ok/ok/ok,10
+2026-11-09T03:46:29 #183 direct=ok srvA-vision=ok/ok/ok,6 srvA-xhttp=ok/ok/ok,10
+2026-11-09T03:48:59 #184 direct=ok srvA-vision=ok/ok/ok,6,8 srvA-xhttp=ok/ok/ok,9,1
+2026-11-09T03:51:30 #185 direct=ok srvA-vision=ok/ok/ok,8 srvA-xhttp=ok/ok/ok,13,7
+2026-11-09T03:54:01 #186 direct=ok srvA-vision=ok/ok/ok,4,5 srvA-xhttp=ok/ok/ok,14
+2026-11-09T03:56:31 #187 direct=ok srvA-vision=ok/ok/ok,7,7 srvA-xhttp=ok/ok/ok,11,7
+2026-11-09T03:59:02 #188 direct=ok srvA-vision=ok/ok/ok,7,7 srvA-xhttp=ok/ok/ok,11
+2026-11-09T04:01:32 #189 direct=ok srvA-vision=ok/ok/ok,3,7 srvA-xhttp=ok/ok/ok,11,3
+2026-11-09T04:04:02 #190 direct=ok srvA-vision=ok/ok/ok,7,8 srvA-xhttp=ok/ok/ok,14,6
+2026-11-09T04:06:33 #191 direct=ok srvA-vision=ok/ok/ok,5,3 srvA-xhttp=ok/ok/ok,14,7
+2026-11-09T04:09:04 #192 direct=ok srvA-vision=ok/ok/ok,1,9 srvA-xhttp=ok/ok/ok,8,1
+2026-11-09T04:11:34 #193 direct=ok srvA-vision=ok/ok/ok,5,5 srvA-xhttp=ok/ok/ok,13,6
+2026-11-09T04:14:05 #194 direct=ok srvA-vision=ok/ok/ok,8,3 srvA-xhttp=ok/ok/ok,13,1
+2026-11-09T04:16:35 #195 direct=ok srvA-vision=ok/ok/ok,6,3 srvA-xhttp=ok/ok/ok,8,6
+2026-11-09T04:19:06 #196 direct=ok srvA-vision=ok/ok/ok,7,2 srvA-xhttp=ok/ok/ok,10,7
+2026-11-09T04:21:37 #197 direct=ok srvA-vision=ok/ok/ok,6,3 srvA-xhttp=ok/ok/ok,14,2
+2026-11-09T04:24:07 #198 direct=ok srvA-vision=ok/ok/ok,7,1 srvA-xhttp=ok/ok/ok,10,4
+2026-11-09T04:26:38 #199 direct=ok srvA-vision=ok/ok/ok,7,9 srvA-xhttp=ok/ok/ok,9
+2026-11-09T04:29:09 #200 direct=ok srvA-vision=ok/ok/ok,6 srvA-xhttp=ok/ok/ok,11,9
+2026-11-09T04:31:40 #201 direct=ok srvA-vision=ok/ok/ok,3,8 srvA-xhttp=ok/ok/ok,11
+2026-11-09T04:34:10 #202 direct=ok srvA-vision=ok/ok/ok,6,5 srvA-xhttp=ok/ok/ok,14,7
+2026-11-09T04:36:41 #203 direct=ok srvA-vision=ok/ok/ok,4,2 srvA-xhttp=ok/ok/ok,11,8
+2026-11-09T04:39:11 #204 direct=ok srvA-vision=ok/ok/ok,7,7 srvA-xhttp=ok/ok/ok,8,3
+2026-11-09T04:41:42 #205 direct=ok srvA-vision=ok/ok/ok,8,1 srvA-xhttp=ok/ok/ok,13,2
+2026-11-09T04:44:13 #206 direct=ok srvA-vision=ok/ok/ok,8,1 srvA-xhttp=ok/ok/ok,12,6
+2026-11-09T04:46:43 #207 direct=ok srvA-vision=ok/ok/ok,6,9 srvA-xhttp=ok/ok/ok,10,6
+2026-11-09T04:49:14 #208 direct=ok srvA-vision=ok/ok/ok,6,9 srvA-xhttp=ok/ok/ok,10,5
+2026-11-09T04:51:44 #209 direct=ok srvA-vision=ok/ok/ok,8,4 srvA-xhttp=ok/ok/ok,14,7
+2026-11-09T04:54:15 #210 direct=ok srvA-vision=ok/ok/ok,5,5 srvA-xhttp=ok/ok/ok,10,7
+2026-11-09T04:56:46 #211 direct=ok srvA-vision=ok/ok/ok,2,6 srvA-xhttp=ok/ok/ok,14,1
+2026-11-09T04:59:17 #212 direct=ok srvA-vision=ok/ok/ok,3,8 srvA-xhttp=ok/ok/ok,10,1
+2026-11-09T05:01:47 #213 direct=ok srvA-vision=ok/ok/ok,8,6 srvA-xhttp=ok/ok/ok,12,6
+2026-11-09T05:04:18 #214 direct=ok srvA-vision=ok/ok/ok,2,6 srvA-xhttp=ok/ok/ok,8,9
+2026-11-09T05:06:48 #215 direct=ok srvA-vision=ok/ok/ok,8,5 srvA-xhttp=ok/ok/ok,13,1
+2026-11-09T05:09:18 #216 direct=ok srvA-vision=ok/ok/ok,6,6 srvA-xhttp=ok/ok/ok,10
+2026-11-09T05:11:49 #217 direct=ok srvA-vision=ok/ok/ok,4,3 srvA-xhttp=ok/ok/ok,3,3
+2026-11-09T05:14:20 #218 direct=ok srvA-vision=ok/ok/ok,7,4 srvA-xhttp=ok/ok/ok,13,9
+2026-11-09T05:16:50 #219 direct=ok srvA-vision=ok/ok/ok,6,3 srvA-xhttp=ok/ok/ok,9,9
+2026-11-09T05:19:20 #220 direct=ok srvA-vision=ok/ok/ok,8,7 srvA-xhttp=ok/ok/ok,15,2
+2026-11-09T05:21:50 #221 direct=ok srvA-vision=ok/ok/ok,8,3 srvA-xhttp=ok/ok/ok,13,5
+2026-11-09T05:24:21 #222 direct=ok srvA-vision=ok/ok/ok,3,6 srvA-xhttp=ok/ok/ok,13,8
+2026-11-09T05:26:52 #223 direct=ok srvA-vision=ok/ok/ok,8,6 srvA-xhttp=ok/ok/ok,11,3
+2026-11-09T05:29:22 #224 direct=ok srvA-vision=ok/ok/ok,6,9 srvA-xhttp=ok/ok/ok,9,2
+2026-11-09T05:31:53 #225 direct=ok srvA-vision=ok/ok/ok,2,3 srvA-xhttp=ok/ok/ok,7,3
+2026-11-09T05:34:23 #226 direct=ok srvA-vision=ok/ok/ok,4,8 srvA-xhttp=ok/ok/ok,12,1
+2026-11-09T05:36:53 #227 direct=ok srvA-vision=ok/ok/ok,4,2 srvA-xhttp=ok/ok/ok,14,9
+2026-11-09T05:39:23 #228 direct=ok srvA-vision=ok/ok/ok,7,3 srvA-xhttp=ok/ok/ok,10,6
+2026-11-09T05:41:54 #229 direct=ok srvA-vision=ok/ok/ok,6,6 srvA-xhttp=ok/ok/ok,12,3
+2026-11-09T05:44:25 #230 direct=ok srvA-vision=ok/ok/ok,7,4 srvA-xhttp=ok/ok/ok,11,6
+2026-11-09T05:46:55 #231 direct=ok srvA-vision=ok/ok/ok,6,2 srvA-xhttp=ok/ok/ok,10
+2026-11-09T05:49:26 #232 direct=ok srvA-vision=ok/ok/ok,8,6 srvA-xhttp=ok/ok/ok,14,6
+2026-11-09T05:51:56 #233 direct=ok srvA-vision=ok/ok/ok,6,5 srvA-xhttp=ok/ok/ok,12,9
+2026-11-09T05:54:27 #234 direct=ok srvA-vision=ok/ok/ok,8,4 srvA-xhttp=ok/ok/ok,15
+2026-11-09T05:56:58 #235 direct=ok srvA-vision=ok/ok/ok,5 srvA-xhttp=ok/ok/ok,7,6
+2026-11-09T05:59:28 #236 direct=ok srvA-vision=ok/ok/ok,6,3 srvA-xhttp=ok/ok/ok,11,2
+2026-11-09T06:01:59 #237 direct=ok srvA-vision=ok/ok/ok,6,1 srvA-xhttp=ok/ok/ok,17,8
+2026-11-09T06:04:29 #238 direct=ok srvA-vision=ok/ok/ok,6,2 srvA-xhttp=ok/ok/ok,4
+2026-11-09T06:07:00 #239 direct=ok srvA-vision=ok/ok/ok,6,2 srvA-xhttp=ok/ok/ok,10,3
+2026-11-09T06:09:31 #240 direct=ok srvA-vision=ok/ok/ok,8,3 srvA-xhttp=ok/ok/ok,11,8
+2026-11-09T06:12:01 #241 direct=ok srvA-vision=ok/ok/ok,7,5 srvA-xhttp=ok/ok/ok,13
+2026-11-09T06:14:31 #242 direct=ok srvA-vision=ok/ok/ok,6,5 srvA-xhttp=ok/ok/ok,4
+2026-11-09T06:17:02 #243 direct=ok srvA-vision=ok/ok/ok,7 srvA-xhttp=ok/ok/ok,2,2
+2026-11-09T06:19:32 #244 direct=ok srvA-vision=ok/ok/ok,7,2 srvA-xhttp=ok/ok/ok,7,3
+2026-11-09T06:22:02 #245 direct=ok srvA-vision=ok/ok/ok,6,7 srvA-xhttp=ok/ok/ok,9,2
+2026-11-09T06:24:33 #246 direct=ok srvA-vision=ok/ok/ok,5,1 srvA-xhttp=ok/ok/ok,10
+2026-11-09T06:27:04 #247 direct=ok srvA-vision=ok/ok/ok,6,2 srvA-xhttp=ok/ok/ok,13,3
+2026-11-09T06:29:35 #248 direct=ok srvA-vision=ok/ok/ok,3,1 srvA-xhttp=ok/ok/ok,8,5
+2026-11-09T06:32:05 #249 direct=ok srvA-vision=ok/ok/ok,8,2 srvA-xhttp=ok/ok/ok,12,2
+2026-11-09T06:34:36 #250 direct=ok srvA-vision=ok/ok/ok,7,6 srvA-xhttp=ok/ok/ok,12,1
+2026-11-09T06:37:07 #251 direct=ok srvA-vision=ok/ok/ok,8,1 srvA-xhttp=ok/ok/ok,12,6
+2026-11-09T06:39:38 #252 direct=ok srvA-vision=ok/ok/ok,8,1 srvA-xhttp=ok/ok/ok,10,6
+2026-11-09T06:42:08 #253 direct=ok srvA-vision=ok/ok/ok,6,5 srvA-xhttp=ok/ok/ok,9,1
+2026-11-09T06:44:39 #254 direct=ok srvA-vision=ok/ok/ok,7,3 srvA-xhttp=ok/ok/ok,11,6
+2026-11-09T06:47:10 #255 direct=ok srvA-vision=ok/ok/ok,7,8 srvA-xhttp=ok/ok/ok,12,7
+2026-11-09T06:49:40 #256 direct=ok srvA-vision=ok/ok/ok,6,3 srvA-xhttp=ok/ok/ok,14,8
+2026-11-09T06:52:11 #257 direct=ok srvA-vision=ok/ok/ok,7,9 srvA-xhttp=ok/ok/ok,13,8
+2026-11-09T06:54:41 #258 direct=ok srvA-vision=ok/ok/ok,6,6 srvA-xhttp=ok/ok/ok,11,1
+2026-11-09T06:57:11 #259 direct=ok srvA-vision=ok/ok/ok,7,2 srvA-xhttp=ok/ok/ok,13,3
+2026-11-09T06:59:41 #260 direct=ok srvA-vision=ok/ok/ok,5,4 srvA-xhttp=ok/ok/ok,12,3
+2026-11-09T07:02:12 #261 direct=ok srvA-vision=ok/ok/ok,7,3 srvA-xhttp=ok/ok/ok,10,7
+2026-11-09T07:04:42 #262 direct=ok srvA-vision=ok/ok/ok,6,8 srvA-xhttp=ok/ok/ok,16,8
+2026-11-09T07:07:13 #263 direct=ok srvA-vision=ok/ok/ok,6,3 srvA-xhttp=ok/ok/ok,10,1
+2026-11-09T07:09:43 #264 direct=ok srvA-vision=ok/ok/ok,8 srvA-xhttp=ok/ok/ok,13,2
+2026-11-09T07:12:14 #265 direct=ok srvA-vision=ok/ok/ok,7,9 srvA-xhttp=ok/ok/ok,10
+2026-11-09T07:14:45 #266 direct=ok srvA-vision=ok/ok/ok,6,9 srvA-xhttp=ok/ok/ok,7,1
+2026-11-09T07:17:15 #267 direct=ok srvA-vision=ok/ok/ok,7,8 srvA-xhttp=ok/ok/ok,10,3
+2026-11-09T07:19:46 #268 direct=ok srvA-vision=ok/ok/ok,7,3 srvA-xhttp=ok/ok/ok,10,5
+2026-11-09T07:22:16 #269 direct=ok srvA-vision=ok/ok/ok,6,5 srvA-xhttp=ok/ok/ok,13,2
+2026-11-09T07:24:47 #270 direct=ok srvA-vision=ok/ok/ok,7,3 srvA-xhttp=ok/ok/ok,10,1
+2026-11-09T07:27:17 #271 direct=ok srvA-vision=ok/ok/ok,8 srvA-xhttp=ok/ok/ok,12,2
+2026-11-09T07:29:47 #272 direct=ok srvA-vision=ok/ok/ok,4,9 srvA-xhttp=ok/ok/ok,14
+2026-11-09T07:32:18 #273 direct=ok srvA-vision=ok/ok/ok,7,4 srvA-xhttp=ok/ok/ok,11,6
+2026-11-09T07:34:49 #274 direct=ok srvA-vision=ok/ok/ok,8,9 srvA-xhttp=ok/ok/ok,8,1
+2026-11-09T07:37:20 #275 direct=ok srvA-vision=ok/ok/ok,7,2 srvA-xhttp=ok/ok/ok,10,1
+2026-11-09T07:39:51 #276 direct=ok srvA-vision=ok/ok/ok,7,4 srvA-xhttp=ok/ok/ok,12,3
+2026-11-09T07:42:21 #277 direct=ok srvA-vision=ok/ok/ok,7,1 srvA-xhttp=ok/ok/ok,10,9
+2026-11-09T07:44:51 #278 direct=ok srvA-vision=ok/ok/ok,7,2 srvA-xhttp=ok/ok/ok,11,5
+2026-11-09T07:47:21 #279 direct=ok srvA-vision=ok/ok/ok,6,1 srvA-xhttp=ok/ok/ok,12,2
+2026-11-09T07:49:51 #280 direct=ok srvA-vision=ok/ok/ok,6,7 srvA-xhttp=ok/ok/ok,11,3
+2026-11-09T07:52:22 #281 direct=ok srvA-vision=ok/ok/ok,6 srvA-xhttp=ok/ok/ok,7,1
+2026-11-09T07:54:53 #282 direct=ok srvA-vision=ok/ok/ok,6,6 srvA-xhttp=ok/ok/ok,8,6
+2026-11-09T07:57:24 #283 direct=ok srvA-vision=ok/ok/ok,5,6 srvA-xhttp=ok/ok/ok,11,1
+2026-11-09T07:59:54 #284 direct=ok srvA-vision=ok/ok/ok,7 srvA-xhttp=ok/ok/ok,16,7
+2026-11-09T08:02:25 #285 direct=ok srvA-vision=ok/ok/ok,2,5 srvA-xhttp=ok/ok/ok,10,9
+2026-11-09T08:04:55 #286 direct=ok srvA-vision=ok/ok/ok,3,7 srvA-xhttp=ok/ok/ok,9,9
+2026-11-09T08:07:26 #287 direct=ok srvA-vision=ok/ok/ok,4,5 srvA-xhttp=ok/ok/ok,11,2
+2026-11-09T08:09:56 #288 direct=ok srvA-vision=ok/ok/ok,3,2 srvA-xhttp=ok/ok/ok,5,8
+2026-11-09T08:12:27 #289 direct=ok srvA-vision=ok/ok/ok,3,1 srvA-xhttp=ok/ok/ok,9,8
+
+---- Errors during run (includes ones the script handled; for diagnosis) ----
+(none)
+==== END ====

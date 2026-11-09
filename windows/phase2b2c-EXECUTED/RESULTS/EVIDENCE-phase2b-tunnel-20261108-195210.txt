@@ -1,0 +1,200 @@
+﻿==== RU-PROBE EVIDENCE ====
+Script:     phase2b-tunnel.ps1 v1.0
+Run ID:     phase2b-tunnel-20261108-195210-ebed7270
+Machine:    ebed7270 (hash of computer name)
+Started:    2026-11-08T19:52:10 local / 2026-11-08T14:52:10 UTC
+Finished:   2026-11-08T20:02:40 local / 2026-11-08T15:02:40 UTC (10,5 min)
+Status:     COMPLETED
+Parameters: SeriesCount=6; SeriesGap=10 s; links=2; xray=Xray 26.10.31 (Xray, Penetrates Everything.) a4a3dff (go1.27.3 windows/amd64)
+
+---- Results ----
+== 1. Portable Xray client ==
+Xray client: Xray 26.10.31 (Xray, Penetrates Everything.) a4a3dff (go1.27.3 windows/amd64)
+
+== 2. VPN links ==
+srvA-vision: <SERVER_A_IP>:443 type=tcp flow=xtls-rprx-vision sni=<CAMOUFLAGE_A> id=36a6...fe0c
+srvA-xhttp: <SERVER_A_IP>:8443 type=xhttp flow=- sni=<CAMOUFLAGE_A> id=36a6...fe0c
+
+== 3.1 Variant: srvA-vision fp=chrome ==
+Exit IP through tunnel: <SERVER_A_IP> (matches server)
+Series to instagram.com: 6/6 OK  [200 200 200 200 200 200]
+Download 20 MB: OK (20000000 bytes, 20,5 Mbit/s)
+Services through tunnel: X 3/3, A 8/10, C 4/4, B 3/4
+Variant verdict: PASS
+
+== 3.2 Variant: srvA-vision fp=firefox ==
+Exit IP through tunnel: <SERVER_A_IP> (matches server)
+Series to instagram.com: 6/6 OK  [200 200 200 200 200 200]
+Download 20 MB: OK (20000000 bytes, 15,7 Mbit/s)
+Services through tunnel: X 3/3, A 8/10, C 3/4, B 3/4
+Variant verdict: PASS
+
+== 3.3 Variant: srvA-vision fp=safari ==
+Exit IP through tunnel: <SERVER_A_IP> (matches server)
+Series to instagram.com: 6/6 OK  [200 200 200 200 200 200]
+Download 20 MB: OK (20000000 bytes, 8,4 Mbit/s)
+Services through tunnel: X 3/3, A 8/10, C 4/4, B 3/4
+Variant verdict: PASS
+
+== 3.4 Variant: srvA-xhttp fp=chrome ==
+Exit IP through tunnel: <SERVER_A_IP> (matches server)
+Series to instagram.com: 6/6 OK  [200 200 200 200 200 200]
+Download 20 MB: OK (20000000 bytes, 6,2 Mbit/s)
+Services through tunnel: X 3/3, A 8/10, C 4/4, B 3/4
+Variant verdict: PASS
+
+== 3.5 Variant: srvA-xhttp fp=firefox ==
+Exit IP through tunnel: <SERVER_A_IP> (matches server)
+Series to instagram.com: 6/6 OK  [200 200 200 200 200 200]
+Download 20 MB: OK (20000000 bytes, 5,7 Mbit/s)
+Services through tunnel: X 3/3, A 5/10, C 4/4, B 3/4
+Variant verdict: PARTIAL
+   xray: 2026/11/08 20:02:33.685599 from tcp:127.0.0.1:6879 accepted tcp:www.netflix.com:443 [proxy]
+   xray: 2026/11/08 20:02:34.232255 from tcp:127.0.0.1:6880 accepted tcp:ya.ru:443 [proxy]
+   xray: 2026/11/08 20:02:34.754109 from tcp:127.0.0.1:6881 accepted tcp:www.gosuslugi.ru:443 [proxy]
+   xray: 2026/11/08 20:02:35.281640 from tcp:127.0.0.1:6882 accepted tcp:www.sberbank.ru:443 [proxy]
+   xray: 2026/11/08 20:02:35.464650 from tcp:127.0.0.1:6883 accepted tcp:www.ozon.ru:443 [proxy]
+
+== 4. Overall ==
+   srvA-vision fp=chrome                    PASS
+   srvA-vision fp=firefox                   PASS
+   srvA-vision fp=safari                    PASS
+   srvA-xhttp fp=chrome                     PASS
+   srvA-xhttp fp=firefox                    PARTIAL
+Variants passing: 4 of 5
+Protocol check for this server (part of Gate G2): PASS (at least one VLESS variant works; 24-hour soak still needed)
+
+---- Detail ----
+srvA-vision fp=chrome                    exit-ip        OK       <SERVER_A_IP>
+srvA-vision fp=chrome                    series         6/6      200 200 200 200 200 200
+srvA-vision fp=chrome                    download-20MB  OK       20000000 bytes, 20,5 Mbit/s, exit 0
+srvA-vision fp=chrome                    svc-X          OK       HTTP_200 https://www.google.com/
+srvA-vision fp=chrome                    svc-X          OK       HTTP_200 https://github.com/
+srvA-vision fp=chrome                    svc-X          OK       HTTP_200 https://www.wikipedia.org/
+srvA-vision fp=chrome                    svc-A          OK       HTTP_200 https://www.instagram.com/
+srvA-vision fp=chrome                    svc-A          FAIL     HTTP_400 https://www.facebook.com/
+srvA-vision fp=chrome                    svc-A          OK       HTTP_200 https://x.com/
+srvA-vision fp=chrome                    svc-A          OK       HTTP_200 https://www.youtube.com/
+srvA-vision fp=chrome                    svc-A          OK       HTTP_200 https://www.linkedin.com/
+srvA-vision fp=chrome                    svc-A          OK       HTTP_200 https://discord.com/
+srvA-vision fp=chrome                    svc-A          FAIL     HTTP_400 https://web.whatsapp.com/
+srvA-vision fp=chrome                    svc-A          OK       HTTP_200 https://web.telegram.org/
+srvA-vision fp=chrome                    svc-A          OK       HTTP_200 https://signal.org/
+srvA-vision fp=chrome                    svc-A          OK       HTTP_200 https://www.bbc.com/
+srvA-vision fp=chrome                    svc-C          OK       HTTP_200 https://chatgpt.com/
+srvA-vision fp=chrome                    svc-C          OK       HTTP_302 https://claude.ai/
+srvA-vision fp=chrome                    svc-C          OK       HTTP_200 https://gemini.google.com/
+srvA-vision fp=chrome                    svc-C          OK       HTTP_302 https://www.netflix.com/
+srvA-vision fp=chrome                    svc-B          OK       HTTP_302 https://ya.ru/
+srvA-vision fp=chrome                    svc-B          OK       HTTP_200 https://www.gosuslugi.ru/
+srvA-vision fp=chrome                    svc-B          FAIL     exit 60 https://www.sberbank.ru/
+srvA-vision fp=chrome                    svc-B          OK       HTTP_307 https://www.ozon.ru/
+srvA-vision fp=chrome                    VERDICT        PASS     
+srvA-vision fp=firefox                   exit-ip        OK       <SERVER_A_IP>
+srvA-vision fp=firefox                   series         6/6      200 200 200 200 200 200
+srvA-vision fp=firefox                   download-20MB  OK       20000000 bytes, 15,7 Mbit/s, exit 0
+srvA-vision fp=firefox                   svc-X          OK       HTTP_200 https://www.google.com/
+srvA-vision fp=firefox                   svc-X          OK       HTTP_200 https://github.com/
+srvA-vision fp=firefox                   svc-X          OK       HTTP_200 https://www.wikipedia.org/
+srvA-vision fp=firefox                   svc-A          OK       HTTP_200 https://www.instagram.com/
+srvA-vision fp=firefox                   svc-A          FAIL     HTTP_400 https://www.facebook.com/
+srvA-vision fp=firefox                   svc-A          OK       HTTP_200 https://x.com/
+srvA-vision fp=firefox                   svc-A          OK       HTTP_200 https://www.youtube.com/
+srvA-vision fp=firefox                   svc-A          OK       HTTP_200 https://www.linkedin.com/
+srvA-vision fp=firefox                   svc-A          OK       HTTP_200 https://discord.com/
+srvA-vision fp=firefox                   svc-A          FAIL     HTTP_400 https://web.whatsapp.com/
+srvA-vision fp=firefox                   svc-A          OK       HTTP_200 https://web.telegram.org/
+srvA-vision fp=firefox                   svc-A          OK       HTTP_200 https://signal.org/
+srvA-vision fp=firefox                   svc-A          OK       HTTP_200 https://www.bbc.com/
+srvA-vision fp=firefox                   svc-C          FAIL     exit 28 https://chatgpt.com/
+srvA-vision fp=firefox                   svc-C          OK       HTTP_302 https://claude.ai/
+srvA-vision fp=firefox                   svc-C          OK       HTTP_200 https://gemini.google.com/
+srvA-vision fp=firefox                   svc-C          OK       HTTP_302 https://www.netflix.com/
+srvA-vision fp=firefox                   svc-B          OK       HTTP_302 https://ya.ru/
+srvA-vision fp=firefox                   svc-B          OK       HTTP_200 https://www.gosuslugi.ru/
+srvA-vision fp=firefox                   svc-B          FAIL     exit 60 https://www.sberbank.ru/
+srvA-vision fp=firefox                   svc-B          OK       HTTP_307 https://www.ozon.ru/
+srvA-vision fp=firefox                   VERDICT        PASS     
+srvA-vision fp=safari                    exit-ip        OK       <SERVER_A_IP>
+srvA-vision fp=safari                    series         6/6      200 200 200 200 200 200
+srvA-vision fp=safari                    download-20MB  OK       20000000 bytes, 8,4 Mbit/s, exit 0
+srvA-vision fp=safari                    svc-X          OK       HTTP_200 https://www.google.com/
+srvA-vision fp=safari                    svc-X          OK       HTTP_200 https://github.com/
+srvA-vision fp=safari                    svc-X          OK       HTTP_200 https://www.wikipedia.org/
+srvA-vision fp=safari                    svc-A          OK       HTTP_200 https://www.instagram.com/
+srvA-vision fp=safari                    svc-A          FAIL     HTTP_400 https://www.facebook.com/
+srvA-vision fp=safari                    svc-A          OK       HTTP_200 https://x.com/
+srvA-vision fp=safari                    svc-A          OK       HTTP_200 https://www.youtube.com/
+srvA-vision fp=safari                    svc-A          OK       HTTP_200 https://www.linkedin.com/
+srvA-vision fp=safari                    svc-A          OK       HTTP_200 https://discord.com/
+srvA-vision fp=safari                    svc-A          FAIL     HTTP_400 https://web.whatsapp.com/
+srvA-vision fp=safari                    svc-A          OK       HTTP_200 https://web.telegram.org/
+srvA-vision fp=safari                    svc-A          OK       HTTP_200 https://signal.org/
+srvA-vision fp=safari                    svc-A          OK       HTTP_200 https://www.bbc.com/
+srvA-vision fp=safari                    svc-C          OK       HTTP_200 https://chatgpt.com/
+srvA-vision fp=safari                    svc-C          OK       HTTP_302 https://claude.ai/
+srvA-vision fp=safari                    svc-C          OK       HTTP_200 https://gemini.google.com/
+srvA-vision fp=safari                    svc-C          OK       HTTP_302 https://www.netflix.com/
+srvA-vision fp=safari                    svc-B          OK       HTTP_302 https://ya.ru/
+srvA-vision fp=safari                    svc-B          OK       HTTP_200 https://www.gosuslugi.ru/
+srvA-vision fp=safari                    svc-B          FAIL     exit 60 https://www.sberbank.ru/
+srvA-vision fp=safari                    svc-B          OK       HTTP_307 https://www.ozon.ru/
+srvA-vision fp=safari                    VERDICT        PASS     
+srvA-xhttp fp=chrome                     exit-ip        OK       <SERVER_A_IP>
+srvA-xhttp fp=chrome                     series         6/6      200 200 200 200 200 200
+srvA-xhttp fp=chrome                     download-20MB  OK       20000000 bytes, 6,2 Mbit/s, exit 0
+srvA-xhttp fp=chrome                     svc-X          OK       HTTP_200 https://www.google.com/
+srvA-xhttp fp=chrome                     svc-X          OK       HTTP_200 https://github.com/
+srvA-xhttp fp=chrome                     svc-X          OK       HTTP_200 https://www.wikipedia.org/
+srvA-xhttp fp=chrome                     svc-A          OK       HTTP_200 https://www.instagram.com/
+srvA-xhttp fp=chrome                     svc-A          FAIL     HTTP_400 https://www.facebook.com/
+srvA-xhttp fp=chrome                     svc-A          OK       HTTP_200 https://x.com/
+srvA-xhttp fp=chrome                     svc-A          OK       HTTP_200 https://www.youtube.com/
+srvA-xhttp fp=chrome                     svc-A          OK       HTTP_200 https://www.linkedin.com/
+srvA-xhttp fp=chrome                     svc-A          OK       HTTP_200 https://discord.com/
+srvA-xhttp fp=chrome                     svc-A          FAIL     HTTP_400 https://web.whatsapp.com/
+srvA-xhttp fp=chrome                     svc-A          OK       HTTP_200 https://web.telegram.org/
+srvA-xhttp fp=chrome                     svc-A          OK       HTTP_200 https://signal.org/
+srvA-xhttp fp=chrome                     svc-A          OK       HTTP_200 https://www.bbc.com/
+srvA-xhttp fp=chrome                     svc-C          OK       HTTP_200 https://chatgpt.com/
+srvA-xhttp fp=chrome                     svc-C          OK       HTTP_302 https://claude.ai/
+srvA-xhttp fp=chrome                     svc-C          OK       HTTP_200 https://gemini.google.com/
+srvA-xhttp fp=chrome                     svc-C          OK       HTTP_302 https://www.netflix.com/
+srvA-xhttp fp=chrome                     svc-B          OK       HTTP_302 https://ya.ru/
+srvA-xhttp fp=chrome                     svc-B          OK       HTTP_200 https://www.gosuslugi.ru/
+srvA-xhttp fp=chrome                     svc-B          FAIL     exit 60 https://www.sberbank.ru/
+srvA-xhttp fp=chrome                     svc-B          OK       HTTP_307 https://www.ozon.ru/
+srvA-xhttp fp=chrome                     VERDICT        PASS     
+srvA-xhttp fp=firefox                    exit-ip        OK       <SERVER_A_IP>
+srvA-xhttp fp=firefox                    series         6/6      200 200 200 200 200 200
+srvA-xhttp fp=firefox                    download-20MB  OK       20000000 bytes, 5,7 Mbit/s, exit 0
+srvA-xhttp fp=firefox                    svc-X          OK       HTTP_200 https://www.google.com/
+srvA-xhttp fp=firefox                    svc-X          OK       HTTP_200 https://github.com/
+srvA-xhttp fp=firefox                    svc-X          OK       HTTP_200 https://www.wikipedia.org/
+srvA-xhttp fp=firefox                    svc-A          OK       HTTP_200 https://www.instagram.com/
+srvA-xhttp fp=firefox                    svc-A          FAIL     HTTP_400 https://www.facebook.com/
+srvA-xhttp fp=firefox                    svc-A          OK       HTTP_200 https://x.com/
+srvA-xhttp fp=firefox                    svc-A          OK       HTTP_200 https://www.youtube.com/
+srvA-xhttp fp=firefox                    svc-A          FAIL     exit 28 https://www.linkedin.com/
+srvA-xhttp fp=firefox                    svc-A          FAIL     exit 28 https://discord.com/
+srvA-xhttp fp=firefox                    svc-A          FAIL     HTTP_400 https://web.whatsapp.com/
+srvA-xhttp fp=firefox                    svc-A          OK       HTTP_200 https://web.telegram.org/
+srvA-xhttp fp=firefox                    svc-A          OK       HTTP_200 https://signal.org/
+srvA-xhttp fp=firefox                    svc-A          FAIL     exit 28 https://www.bbc.com/
+srvA-xhttp fp=firefox                    svc-C          OK       HTTP_200 https://chatgpt.com/
+srvA-xhttp fp=firefox                    svc-C          OK       HTTP_302 https://claude.ai/
+srvA-xhttp fp=firefox                    svc-C          OK       HTTP_200 https://gemini.google.com/
+srvA-xhttp fp=firefox                    svc-C          OK       HTTP_302 https://www.netflix.com/
+srvA-xhttp fp=firefox                    svc-B          OK       HTTP_302 https://ya.ru/
+srvA-xhttp fp=firefox                    svc-B          OK       HTTP_200 https://www.gosuslugi.ru/
+srvA-xhttp fp=firefox                    svc-B          FAIL     exit 60 https://www.sberbank.ru/
+srvA-xhttp fp=firefox                    svc-B          OK       HTTP_307 https://www.ozon.ru/
+srvA-xhttp fp=firefox                    VERDICT        PARTIAL  
+
+---- Errors during run (includes ones the script handled; for diagnosis) ----
+(none)
+
+---- Raw files kept on the PC (send only if asked) ----
+runs\phase2b-tunnel-20261108-195210\tunnel.csv  sha256 03df78a3bc52c8530ea7b8edf8b457c831a613505861fba7b8424a7f5dfadd3b
+runs\phase2b-tunnel-20261108-195210\console.log  sha256 240e9c9b46c7449b27d44d77235bcf5a4690a63d922d88317e156c0c7c5e9445
+==== END ====

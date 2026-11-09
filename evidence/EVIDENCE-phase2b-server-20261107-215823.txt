@@ -1,0 +1,41 @@
+==== RU-PROBE EVIDENCE ====
+Script:     setup-server.sh v24.04.5 LTS (Noble Numbat)
+Host:       srvA  (Ubuntu 24.04.5 LTS)
+Time:       2026-11-07T22:00:02Z UTC
+Status:     COMPLETED
+
+---- Results (no secrets) ----
+Public IPv4: <SERVER_A_IP>
+Packages: OK
+SSH: key login only, verified: permitrootlogin without-password passwordauthentication no kbdinteractiveauthentication no 
+fail2ban: active
+Firewall: active, open TCP 22, 443, 8443
+Auto security updates: on; TCP congestion control: bbr
+Xray: Xray 26.10.31 (Xray, Penetrates Everything.) a4a3dff (go1.27.3 linux/amd64)
+Camouflage site: <CAMOUFLAGE_A> (same /24 network, <CAMOUFLAGE_A_IP>)
+Neighbour candidates found: 9
+Xray runs as user 'xray'; config readable by it (root:xray 640)
+Xray service: active; listening on 443 (Vision) and 8443 (XHTTP)
+Client links written to /root/vpn-links.txt (2 links; secret, not included here)
+Client ID ends with: ...fe0c
+
+---- Listening ports ----
+Netid State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess                                                 
+tcp   LISTEN 0      4096         0.0.0.0:22        0.0.0.0:*    users:(("sshd",pid=1059,fd=3),("systemd",pid=1,fd=184))
+tcp   LISTEN 0      4096               *:443             *:*    users:(("xray",pid=7934,fd=3))                         
+tcp   LISTEN 0      4096            [::]:22           [::]:*    users:(("sshd",pid=1059,fd=4),("systemd",pid=1,fd=185))
+tcp   LISTEN 0      4096               *:8443            *:*    users:(("xray",pid=7934,fd=6))                         
+
+---- Firewall ----
+Status: active
+
+To                         Action      From
+--                         ------      ----
+22/tcp                     ALLOW       Anywhere                  
+443/tcp                    ALLOW       Anywhere                  
+8443/tcp                   ALLOW       Anywhere                  
+22/tcp (v6)                ALLOW       Anywhere (v6)             
+443/tcp (v6)               ALLOW       Anywhere (v6)             
+8443/tcp (v6)              ALLOW       Anywhere (v6)             
+
+==== END ====

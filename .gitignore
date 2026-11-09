@@ -1,0 +1,10 @@
+# Private values, archive, raw evidence: never in git (see CLAUDE.md, "Privacy").
+.private/
+# Built packages and binaries
+dist/
+*.zip
+*.exe
+**/runs/
+# Local noise
+.DS_Store
+.claude/settings.local.json

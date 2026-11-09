@@ -1,0 +1,8 @@
+# Public or reserved addresses that may appear in git. Everything else is treated as private.
+127.0.0.1     # loopback (local SOCKS proxies)
+0.0.0.0       # listen on all interfaces
+1.1.1.1       # Cloudflare public DNS / route probe
+8.8.8.8       # Google public DNS
+77.88.8.8     # Yandex public DNS
+192.168.8.1   # GL.iNet factory admin address
+10.77.0.1     # planned router LAN address

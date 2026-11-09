@@ -1,0 +1,4 @@
+# Russian-PC packages must keep their exact bytes (CRLF, ASCII): no line-ending conversion.
+windows/** -text
+*.ps1 -text
+*.cmd -text

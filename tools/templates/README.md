@@ -18,7 +18,8 @@ allowed; push, `git add -A`/`.`, `commit -a` and `--no-verify` are denied. Put a
 
        git config core.hooksPath tools/git-hooks
 
-2. Restore `.private/` from your backup (it is not in git; it holds the original archive, raw logs and the
+2. Restore `.private/` from your backup (including `downloads/`, the verified Xray and PowerShell files; without it
+   the first build downloads Xray from GitHub and caches it) (it is not in git; it holds the original archive, raw logs and the
    real values). Without a backup, create it from the templates:
 
        mkdir -p .private

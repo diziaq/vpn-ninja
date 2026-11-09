@@ -9,9 +9,11 @@ set -euo pipefail
 # as the release's .dgst file). Binaries are never committed: dist/ is git-ignored.
 # Bookkeeping files (STATUS.md, EXECUTION-RECORD.md, RESULTS/) are left out of the zip.
 #
-# Offline or behind a proxy that blocks GitHub: download Xray-windows-64.zip yourself and pass
-#   XRAY_ZIP=/path/to/Xray-windows-64.zip tools/build-ru-probe.sh <package>
-# The checksum is verified either way.
+# Where the Xray zip comes from, first match wins (the checksum is verified in every case):
+#   1. XRAY_ZIP=/path/to/Xray-windows-64.zip
+#   2. the local cache .private/downloads/xray-v<version>/Xray-windows-64.zip (not in git)
+#   3. a download from GitHub, which is then saved into that cache. GitHub often fails while the
+#      corporate VPN is connected (LESSONS L16); the cache makes later builds independent of it.
 
 XRAY_VERSION="${XRAY_VERSION:-26.10.31}"
 XRAY_SHA256="${XRAY_SHA256:-2e04a9995a6f2ad1b28c0bb25c708ecb2695e43a1c9c7889c4b6ac2b48cf7a6a}"
@@ -37,16 +39,23 @@ mkdir -p "$WORK/ru-probe/bin" "$DIST"
   done
 
 # 2. Xray, verified
+CACHE="$ROOT/.private/downloads/xray-v$XRAY_VERSION/Xray-windows-64.zip"
 ZIP="${XRAY_ZIP:-}"
-if [[ -z "$ZIP" ]]; then
+if [[ -z "$ZIP" && -f "$CACHE" ]]; then
+  ZIP="$CACHE"
+elif [[ -z "$ZIP" ]]; then
   ZIP="$WORK/Xray-windows-64.zip"
   curl -fsSL --max-time 300 -o "$ZIP" \
     "https://github.com/XTLS/Xray-core/releases/download/v$XRAY_VERSION/Xray-windows-64.zip" ||
-    { echo "error: download failed (GitHub blocked or proxy? see XRAY_ZIP in the header)" >&2; exit 1; }
+    { echo "error: download failed (GitHub blocked or proxy? see the header)" >&2; exit 1; }
 fi
 actual="$(shasum -a 256 "$ZIP" | awk '{print $1}')"
 [[ "$actual" == "$XRAY_SHA256" ]] ||
   { echo "error: Xray zip SHA-256 $actual does not match pinned $XRAY_SHA256 (version $XRAY_VERSION)" >&2; exit 1; }
+if [[ "$ZIP" == "$WORK/"* ]]; then   # fresh, verified download: keep it for next time
+  mkdir -p "$(dirname "$CACHE")" && cp -p "$ZIP" "$CACHE"
+fi
+echo "Xray zip: ${ZIP#"$ROOT/"}"
 unzip -q -o "$ZIP" xray.exe LICENSE -d "$WORK/x"
 cp "$WORK/x/xray.exe" "$WORK/ru-probe/bin/xray.exe"
 cp "$WORK/x/LICENSE" "$WORK/ru-probe/bin/LICENSE-xray.txt"

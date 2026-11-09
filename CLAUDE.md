@@ -97,4 +97,6 @@ Then reply with a 5-line summary of where things stand and the next step with ex
 - `tools/`: `privacy.py` (redact/scan), `git-hooks/pre-commit`, `build-ru-probe.sh`, `allowed-ips.txt`, `test/`,
   `templates/` (machine-local file templates with setup steps).
 - `.claude/settings.json`: shared permissions (denies push, broad adds, unverified commits).
-- `.private/` (not in git): real values, original archive, raw evidence.
+- `.private/` (not in git): real values, original archive, raw evidence, and `downloads/` (verified Xray releases
+  for Windows and linux-arm64, the PowerShell linux-arm64 tarball for Docker tests; the package builder uses this cache
+  first, so builds work while GitHub is unreachable).

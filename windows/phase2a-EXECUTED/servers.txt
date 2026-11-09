@@ -1,0 +1,4 @@
+# Servers to check from the Russian PC. Format:  LABEL  IPv4  NOTE
+# Add a line for server B later.
+
+A  <SERVER_A_IP>  Time4VPS-Lithuania

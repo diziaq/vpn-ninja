@@ -1,0 +1,40 @@
+﻿==== RU-PROBE EVIDENCE ====
+Script:     phase2a-ipcheck.ps1 v1.0
+Run ID:     phase2a-ipcheck-20261105-232638-1ae9f46b
+Machine:    1ae9f46b (hash of computer name)
+Started:    2026-11-05T23:26:38 local / 2026-11-05T18:26:38 UTC
+Finished:   2026-11-05T23:28:19 local / 2026-11-05T18:28:19 UTC (1,7 min)
+Status:     COMPLETED
+Parameters: MaxTime=25 s; servers=A=<SERVER_A_IP>
+
+---- Results ----
+
+== Server A: <SERVER_A_IP> (Time4VPS-Lithuania) ==
+TCP connect: 22: 3/3 open; 80: 3/3 open; 443: 3/3 open
+http-80          OK 3/3   attempts: OK, OK, OK   last: 8000000 bytes, 16,5 Mbit/s
+https-443-noSNI  OK 3/3   attempts: OK, OK, OK   last: 8000000 bytes, 16,9 Mbit/s
+https-443-SNI    OK 3/3   attempts: OK, OK, OK   last: 8000000 bytes, 10,4 Mbit/s
+Verdict for server A: PASS: IP usable, continue with VPN setup
+
+---- Detail ----
+srv ip              test             #    class                      detail             bytes  Mbit/s  connect      tls    total
+A   <SERVER_A_IP>  tcp-22           1-3  3/3 OPEN                   OPEN,OPEN,OPEN                                             
+A   <SERVER_A_IP>  tcp-80           1-3  3/3 OPEN                   OPEN,OPEN,OPEN                                             
+A   <SERVER_A_IP>  tcp-443          1-3  3/3 OPEN                   OPEN,OPEN,OPEN                                             
+A   <SERVER_A_IP>  http-80          1    OK                         HTTP_200         8000000    21,5 0.061761 0.000000 2.979844
+A   <SERVER_A_IP>  http-80          2    OK                         HTTP_200         8000000    15,4 0.061645 0.000000 4.159546
+A   <SERVER_A_IP>  http-80          3    OK                         HTTP_200         8000000    16,5 0.061742 0.000000 3.882611
+A   <SERVER_A_IP>  https-443-noSNI  1    OK                         HTTP_200         8000000    15,5 0.062721 0.167017 4.131708
+A   <SERVER_A_IP>  https-443-noSNI  2    OK                         HTTP_200         8000000    13,9 0.060932 0.160893 4.593768
+A   <SERVER_A_IP>  https-443-noSNI  3    OK                         HTTP_200         8000000    16,9 0.063712 0.162252 3.794733
+A   <SERVER_A_IP>  https-443-SNI    1    OK                         HTTP_200         8000000    14,8 0.061076 0.156547 4.328204
+A   <SERVER_A_IP>  https-443-SNI    2    OK                         HTTP_200         8000000    11,9 0.064016 0.165535 5.369433
+A   <SERVER_A_IP>  https-443-SNI    3    OK                         HTTP_200         8000000    10,4 0.062821 0.159341 6.177113
+
+---- Errors during run (includes ones the script handled; for diagnosis) ----
+(none)
+
+---- Raw files kept on the PC (send only if asked) ----
+runs\phase2a-ipcheck-20261105-232638\ipcheck.csv  sha256 08557df66d084d30e96eada5e6a1f2a06afdc85fe300587836fd552841dd5f98
+runs\phase2a-ipcheck-20261105-232638\console.log  sha256 6c30a851d8eb227afa30cbc87a5db2121b52522ef731b075f67d350a2f9bd19c
+==== END ====

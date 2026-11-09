@@ -162,7 +162,7 @@ footer.prov dt{font-weight:600} footer.prov dd{margin:0}
     <div class="scroll-x">
     <svg class="dg" viewBox="0 0 960 230" role="img" aria-labelledby="ft fd">
       <title id="ft">Arrival check flow</title>
-      <desc id="fd">At the counter: inspect the closed box. If anything is wrong, refuse the parcel at the counter. Otherwise accept and take it home. At home: power on with factory firmware and run checks B1 to B6. If any check fails, return within the window. If all pass, label the unit main or spare. Only then flash OpenWrt on the main unit.</desc>
+      <desc id="fd">At the counter: inspect the closed box. If anything is wrong, refuse the parcel at the counter. Otherwise accept and take it home. At home: power on with factory firmware and run checks B1 to B7. If any check fails, return within the window. If all pass, label the unit main or spare (a CN-version unit: spare only). Only then flash OpenWrt on the main unit.</desc>
       <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs>
       <rect class="box a" x="10" y="30" width="190" height="70" rx="6"/><text class="tb" x="105" y="60">A. At the counter</text><text class="ts" x="105" y="80">closed box, 5 minutes</text>
       <rect class="box a" x="260" y="30" width="190" height="70" rx="6"/><text class="tb" x="355" y="60">B. At home</text><text class="ts" x="355" y="80">factory firmware, 30 min</text>
@@ -196,6 +196,7 @@ footer.prov dt{font-weight:600} footer.prov dd{margin:0}
       <tr><td class="ck"><input type="checkbox" aria-label="A5 done"></td><td>A5</td><td>Contents</td><td>Router, USB-C power cable, Ethernet cable, quick-start leaflet. A power adapter may or may not be included, depending on region.</td><td><span class="sev warn">photo, decide at home</span></td></tr>
       <tr><td class="ck"><input type="checkbox" aria-label="A6 done"></td><td>A6</td><td>Ports, by eye</td><td>Two Ethernet ports (one marked WAN, 2.5G), one USB-A, one USB-C (power), a reset hole, a small side switch.</td><td><span class="sev stop">refuse</span></td></tr>
       <tr><td class="ck"><input type="checkbox" aria-label="A7 done"></td><td>A7</td><td>Photograph the label</td><td>Readable photo of serial, MAC and Wi-Fi password. You will need it in step B.</td><td>&ndash;</td></tr>
+      <tr><td class="ck"><input type="checkbox" aria-label="A8 done"></td><td>A8</td><td>Version: Global or CN</td><td>Box and quick-start leaflet in English or multilingual = <b>Global</b> (also sold as "international"). Chinese-only box and leaflet = <b>CN</b> (mainland China) version.</td><td><span class="sev warn">CN: accept, spare only; B7 confirms</span></td></tr>
     </tbody>
   </table>
   </div>
@@ -214,9 +215,11 @@ footer.prov dt{font-weight:600} footer.prov dd{margin:0}
       Then, on the router:
 <pre><code>ubus call system board
 free -m
-cat /proc/device-tree/compatible; echo</code></pre>
-      Expected: <code>"model": "GL.iNet GL-MT3000"</code> and <code>"board_name": "glinet,gl-mt3000"</code>; <code>free -m</code> total about 490&ndash;500 MB (512 MB RAM minus reserved); the compatible line names <code>glinet,gl-mt3000</code> and <code>mediatek,mt7981</code>. Type <code>exit</code> to leave.</li>
+cat /proc/device-tree/compatible; echo
+cat /proc/gl-hw-info/country_code; echo</code></pre>
+      Expected: <code>"model": "GL.iNet GL-MT3000"</code> and <code>"board_name": "glinet,gl-mt3000"</code>; <code>free -m</code> total about 490&ndash;500 MB (512 MB RAM minus reserved); the compatible line names <code>glinet,gl-mt3000</code> and <code>mediatek,mt7981</code>; the country code is not <code>CN</code> (if it is, or the file is missing, note it for B7). Type <code>exit</code> to leave.</li>
     <li><b>B6. Wired port.</b> Plug the laptop into the LAN port with the Ethernet cable (Wi-Fi off). The admin page at <code>192.168.8.1</code> must open over the cable too.</li>
+    <li><b>B7. Global or CN version.</b> In the admin page's left menu, look for a <b>VPN</b> section (OpenVPN, WireGuard). Present = <b>Global</b>: can be MAIN. Missing = <b>CN</b> version (GL.iNet removes VPN from it): keep it only as SPARE, and return it if a Global unit is easy to get within the window. <span class="small">We replace the factory software with official OpenWrt anyway, so GL's missing VPN menu does not matter to us; forum users report OpenWrt works on CN units, but GL.iNet does not confirm it and Wi-Fi limits there are unknown. A CN unit becomes MAIN only after we flash it and Wi-Fi works on 2.4 GHz and 5 GHz channels 36&ndash;48.</span></li>
   </ol>
   <div class="callout">
     <p><b>Why B5 is decisive.</b> A different board cannot report <code>glinet,gl-mt3000</code> together with a MediaTek MT7981 and 512 MB. Later, the official OpenWrt image is built for exactly this board and refuses to install on anything else: that is the final proof, done only on the unit you keep as MAIN.</p>
@@ -231,9 +234,10 @@ cat /proc/device-tree/compatible; echo</code></pre>
     <caption>Decision per unit</caption>
     <thead><tr><th>Result</th><th>Action</th></tr></thead>
     <tbody>
-      <tr><td><span class="sev ok"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7.5" fill="currentColor"/><path d="M4.5 8.2 7 10.6 11.6 5.4" stroke="#fff" stroke-width="2" fill="none"/></svg>all of A and B pass</span></td><td>Keep. Put a sticker on it: <b>MAIN</b> (first one) or <b>SPARE</b>. Keep the box, all packaging and the receipt until the return window has closed.</td></tr>
+      <tr><td><span class="sev ok"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7.5" fill="currentColor"/><path d="M4.5 8.2 7 10.6 11.6 5.4" stroke="#fff" stroke-width="2" fill="none"/></svg>all of A and B pass</span></td><td>Keep. Put a sticker on it: <b>MAIN</b> (first Global one) or <b>SPARE</b>. Keep the box, all packaging and the receipt until the return window has closed.</td></tr>
       <tr><td><span class="sev warn"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1l7 14H1z" fill="currentColor"/></svg>only a missing accessory</span></td><td>Usually keep (any 5 V / 3 A USB-C charger works). Note it in the record.</td></tr>
       <tr><td><span class="sev stop"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 1h6l4 4v6l-4 4H5l-4-4V5z" fill="currentColor"/></svg>any of B1&ndash;B6 fails</span></td><td>Return within the window, with photos of the failing screen and of the label. Reset to factory first (hold reset about 10 s) so your admin password is not on it.</td></tr>
+      <tr><td><span class="sev warn"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1l7 14H1z" fill="currentColor"/></svg>CN version (A8 / B7)</span></td><td>SPARE only. If you already have a Global MAIN and SPARE, return it. If no Global unit passed, keep it and tell me: we test-flash OpenWrt on it before relying on it.</td></tr>
       <tr><td>A third unit that passes</td><td>Return it within the window, or keep it as a second spare if the cost is acceptable.</td></tr>
     </tbody>
   </table>
@@ -254,7 +258,8 @@ cat /proc/device-tree/compatible; echo</code></pre>
       <tr><td>Return deadline</td><td class="fill"></td><td class="fill"></td><td class="fill"></td></tr>
       <tr><td>Serial number (label)</td><td class="fill"></td><td class="fill"></td><td class="fill"></td></tr>
       <tr><td>MAC (label)</td><td class="fill"></td><td class="fill"></td><td class="fill"></td></tr>
-      <tr><td>A1&ndash;A7 / B1&ndash;B6 result</td><td class="fill"></td><td class="fill"></td><td class="fill"></td></tr>
+      <tr><td>Version: Global / CN (A8, B7)</td><td class="fill"></td><td class="fill"></td><td class="fill"></td></tr>
+      <tr><td>A1&ndash;A8 / B1&ndash;B7 result</td><td class="fill"></td><td class="fill"></td><td class="fill"></td></tr>
       <tr><td>Admin password stored in password manager?</td><td class="fill"></td><td class="fill"></td><td class="fill"></td></tr>
       <tr><td>Decision: MAIN / SPARE / RETURN</td><td class="fill"></td><td class="fill"></td><td class="fill"></td></tr>
     </tbody>
@@ -283,8 +288,9 @@ cat /proc/device-tree/compatible; echo</code></pre>
     <summary>Sources and limits: GL-MT3000 facts from the project FACTS.md; check values from the board's OpenWrt-based firmware; render check below.</summary>
     <dl>
       <dt>Facts</dt><dd>Hardware (MediaTek MT7981B, 512 MB RAM, 2.5G WAN + 1G LAN, USB-C 5 V / 3 A, admin at 192.168.8.1, SSID and key on the label) from FACTS.md.</dd>
-      <dt>Not verified</dt><dd>Exact box contents per region, the exact free-memory figure, and each marketplace's pickup and return rules.</dd>
-      <dt>Render</dt><dd id="render-status">offline-check.sh 2026-11-08: no external loads, SVG valid, headless render and PDF with network blocked; screenshot and PDF pages looked at. Not checked: phone width, dark mode.</dd>
+      <dt>Global vs CN</dt><dd>GL.iNet staff: CN units have no VPN or AdGuard Home and cannot officially be converted to Global (forum.gl-inet.com, statement on products bought in mainland China). FACTS.md, 2026-11-09.</dd>
+      <dt>Not verified</dt><dd>Exact box contents per region, the exact free-memory figure, and each marketplace's pickup and return rules. That box language reliably marks a CN unit (GL.iNet staff say Chinese packaging and manual; a few CN units were sold abroad). The <code>/proc/gl-hw-info/country_code</code> file (forum users only). OpenWrt behaviour on CN units (forum users only).</dd>
+      <dt>Render</dt><dd id="render-status">offline-check.sh 2026-11-08, again 2026-11-09 after adding A8/B7: no external loads, SVG valid, headless render and PDF with network blocked; screenshot and PDF pages looked at. Not checked: phone width, dark mode.</dd>
     </dl>
   </details>
 </footer>

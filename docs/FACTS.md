@@ -38,6 +38,16 @@
   USB-C 5 V / 3 A (no battery; works from a USB-C PD power bank of 15 W+), ~8 W typical. Official
   OpenWrt supported (25.12.5 current). Official store price $86.90; GL supports firmware 2 years after
   the last production batch. Stock firmware admin at http://192.168.8.1; SSID/key on the bottom label.
+- GL-MT3000 regional versions (checked 2026-11-09): only two exist, **CN** (mainland China) and
+  **Global**; "international" and "global" are names for the same Global version. GL.iNet staff: CN units lack the VPN
+  and AdGuard Home features; Taobao/Tmall sell only CN; no official CN-to-Global conversion after
+  2023-04 ("No, this isn't supported", 2025-06). How to tell: a CN unit comes with Chinese packaging and
+  manual, and its stock admin UI has no VPN menu. CN units also turned up on Lazada Thailand.
+  User reports only (UNVERIFIED): the region code sits in the Factory partition (offset 0x88), and
+  vanilla OpenWrt flashes and works on CN units "the same as others". No source covers the Wi-Fi
+  regulatory domain on CN units under vanilla OpenWrt.
+  (https://forum.gl-inet.com/t/statement-on-the-purchase-of-products-in-mainland-china/29186,
+  https://forum.openwrt.org/t/converting-gl-inet-mt3000-beryl-ax-from-cn-to-global/165159)
 - GL-MT3600BE Beryl 7: official OpenWrt only since 25.12.5; MT7990 Wi-Fi driver still maturing
   (https://openwrt.org/toh/gl.inet/gl-mt3600be). Not used (D-06).
 - GL.iNet official store does not ship to Russia. Georgian shop phone-ge.com looked like a scraped

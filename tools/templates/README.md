@@ -18,9 +18,9 @@ allowed; push, `git add -A`/`.`, `commit -a` and `--no-verify` are denied. Put a
 
        git config core.hooksPath tools/git-hooks
 
-2. Restore `.private/` from your backup (including `downloads/`, the verified Xray and PowerShell files; without it
-   the first build downloads Xray from GitHub and caches it) (it is not in git; it holds the original archive, raw logs and the
-   real values). Without a backup, create it from the templates:
+2. Restore `.private/` from your backup. It is not in git; it holds the real values, the original archive, raw
+   logs and `downloads/` (verified Xray and PowerShell files; without them the first build downloads Xray from
+   GitHub and caches it). Without a backup, create it from the templates:
 
        mkdir -p .private
        cp tools/templates/redact-map.tsv.example .private/redact-map.tsv

@@ -1,0 +1,20 @@
+==== RU-PROBE EVIDENCE ====
+Script:     rotate-keys.sh v1.0
+Host:       srvA
+Time:       2026-11-09T05:52:18Z UTC
+Status:     COMPLETED
+
+---- Results (no secrets) ----
+Old client ID ends with: ...fe0c (will be removed)
+Camouflage site kept: <CAMOUFLAGE_A>
+New client ID ends with: ...4831
+Backup: /usr/local/etc/xray/config.json.bak-rotate-20261109-055215
+New configuration validated by 'xray run -test' and installed
+Xray service: active; listening on 443 (Vision) and 8443 (XHTTP); old client IDs gone from the effective config
+New links written to /root/vpn-links.txt (2 links; secret, not included here). Old-secret backup deleted.
+
+---- Listening ports ----
+State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess
+LISTEN 0      4096               *:443             *:*          
+LISTEN 0      4096               *:8443            *:*          
+==== END ====

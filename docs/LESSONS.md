@@ -1,7 +1,7 @@
 # LESSONS: problems we hit, how we got past them, and what to do differently next time
 
 Read before building or running anything. Each entry: what happened, the fix, the rule it left behind.
-`docs/guide.html` shows the same items on the journey map.
+The Plan tab of `docs/index.html` shows the same items on the journey map.
 
 ## Server
 

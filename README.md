@@ -6,8 +6,8 @@ Every step is gated: the cheapest question that can kill the plan goes first, an
 evidence file.
 
 - **Where it stands:** `docs/STATUS.md`; what comes next: `docs/NEXT-STEPS.md`.
-- **The journey at a glance:** open `docs/guide.html` in a browser: every step as a card, with the problems
-  met and how they were solved. Concepts: `docs/vpn-explained.html`.
+- **The handbook:** open `docs/index.html` in a browser (works offline): the Plan tab shows every step as a card,
+  with the problems met and how they were solved; other tabs explain the concepts and the router check and setup.
 - **Lessons:** `docs/LESSONS.md`. **Decisions:** `docs/DECISIONS.md`.
 - **Working with an agent:** start Claude Code in this folder; `CLAUDE.md` is the cold-start file.
 

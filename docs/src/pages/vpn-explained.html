@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="en" data-doc="vpn-russia-explained">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VPN chain explained</title>
+<script>document.documentElement.classList.add('js');</script>
+<style>
+/* fonts:begin */
+/* fonts:end */
+:root{
+  color-scheme:light;
+  --surface:#fcfcfb; --surface-2:#f2f1ee; --rule:#d9d7d2; --track:#e4e2dd;
+  --ink:#1b1b1a; --ink-2:#52514e; --line:#6b6a66; --neutral:#8f8d87;
+  --accent:#0072B2; --focus:#0072B2;
+  --c1:#0072B2; --c2:#E69F00; --c3:#009E73; --c4:#D55E00; --c5:#56B4E9; --c6:#CC79A7;
+  --good:#00754f; --warning:#8a5a00; --serious:#b84a00; --critical:#b3261e;
+  --font:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-c:"IBM Plex Sans Condensed","IBM Plex Sans","Arial Narrow",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --s1:.25rem; --s2:.5rem; --s3:.75rem; --s4:1rem; --s5:1.5rem; --s6:2rem; --s7:3rem;
+  --radius:4px; --measure:75ch; --fast:180ms;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{background:var(--surface);color:var(--ink);font:16px/1.55 var(--font);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--surface)}
+h1,h2,h3{font-family:var(--font-c);font-weight:600;line-height:1.2;margin:0}
+h1{font-size:2rem}
+h2{font-size:1.4rem;margin:var(--s7) 0 var(--s3);padding-top:var(--s3);border-top:1px solid var(--rule)}
+h3{font-size:1.1rem;margin:var(--s5) 0 var(--s2)}
+p,li,dd{max-width:var(--measure)}
+p{margin:0 0 var(--s3)}
+b,strong{font-weight:600}
+a{color:var(--accent);text-underline-offset:.15em}
+code{font-family:var(--mono);font-size:.875em;background:var(--surface-2);padding:.05em .3em;border-radius:3px}
+.small{font-size:.875rem;color:var(--ink-2)}
+.eyebrow{font:600 .75rem var(--font-c);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);margin:0 0 var(--s1)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+button{font:inherit;font-size:.875rem;color:var(--ink);background:var(--surface-2);border:1px solid var(--rule);border-radius:var(--radius);padding:.2rem .6rem;cursor:pointer}
+
+.page{display:grid;grid-template-columns:12rem minmax(0,1fr);gap:var(--s6);max-width:76rem;margin:0 auto;padding:var(--s6) var(--s5) var(--s7)}
+.toc{position:sticky;top:var(--s5);align-self:start;font-size:.875rem}
+.toc ol{list-style:none;margin:0;padding:0;border-left:1px solid var(--rule)}
+.toc a{display:block;padding:.15rem var(--s3);color:var(--ink-2);text-decoration:none;border-left:2px solid transparent;margin-left:-1px}
+.toc a[aria-current="true"]{color:var(--ink);border-left-color:var(--accent);font-weight:600}
+.toc .toc-title{font:600 .875rem var(--font-c);margin:0 0 var(--s2) var(--s3)}
+main{min-width:0}
+header.doc p.lede{font-size:1.1rem;margin-top:var(--s2)}
+@media (max-width:60rem){
+  .page{grid-template-columns:minmax(0,1fr);gap:var(--s4);padding:var(--s5) 16px var(--s7)}
+  .toc{position:static}
+  .toc ol{display:flex;flex-wrap:wrap;gap:0 var(--s2);border-left:0}
+  .toc a{padding:.1rem var(--s2) .1rem 0;border-left:0}
+}
+
+.strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s4);margin:var(--s5) 0}
+.strip>div{border-left:1px solid var(--rule);padding-left:var(--s4)}
+.strip>div:first-child{border-left:0;padding-left:0}
+.big{font:600 2.6rem/1 var(--font-c);font-variant-numeric:tabular-nums}
+.big-label{font-size:.875rem;color:var(--ink-2);margin-top:var(--s1)}
+@media (max-width:40rem){.strip{grid-template-columns:minmax(0,1fr)}.strip>div{border-left:0;padding-left:0}}
+
+figure{margin:var(--s5) 0}
+figure.wide{max-width:none}
+figure svg{display:block;width:100%;height:auto;font-family:var(--font);font-size:13px;fill:var(--ink)}
+figcaption{font-size:.9rem;color:var(--ink-2);max-width:var(--measure);margin-top:var(--s2)}
+.scroll-x{overflow-x:auto}
+.scroll-x svg{min-width:44rem}
+
+/* diagram vocabulary */
+.dg .box{fill:var(--surface-2);stroke:var(--line);stroke-width:1.5}
+.dg .box.danger{fill:#fbeeed;stroke:var(--critical);stroke-width:2}
+.dg .box.ours{fill:#e8f2f9;stroke:var(--c1);stroke-width:2}
+.dg .box.done{fill:#e6f3ee;stroke:var(--good);stroke-width:2}
+.dg .box.now{fill:#fbf3e3;stroke:var(--warning);stroke-width:2}
+.dg .box.later{fill:var(--surface);stroke:var(--line);stroke-width:1.5;stroke-dasharray:6 4}
+.dg .dia{fill:#fff;stroke:var(--line);stroke-width:1.5}
+.dg .t{text-anchor:middle;fill:var(--ink)}
+.dg .tb{text-anchor:middle;font-weight:600;fill:var(--ink)}
+.dg .ts{text-anchor:middle;font-size:11.5px;fill:var(--ink-2)}
+.dg .lbl{font-size:12px;fill:var(--ink-2)}
+.dg .conn{fill:none;stroke:var(--line);stroke-width:2}
+.dg .conn.dash{stroke-dasharray:6 5}
+.dg .tun-outer{fill:none;stroke:var(--c1);stroke-width:7;stroke-linecap:round;opacity:.85}
+.dg .tun-inner{fill:none;stroke:var(--c2);stroke-width:3;stroke-dasharray:9 6}
+.dg .ok{stroke:var(--good)} .dg .bad{stroke:var(--critical)}
+.dg .badge circle{fill:var(--critical)}
+.dg .badge text{fill:#fff;font-weight:600;font-size:12px;text-anchor:middle}
+.dg marker path{fill:var(--line)}
+.dg .tg{fill:var(--good)} .dg .tr{fill:var(--critical)}
+.dg .live{stroke:var(--accent);stroke-dasharray:10 7;animation:flow-dash 2.4s linear infinite}
+@keyframes flow-dash{to{stroke-dashoffset:-34}}
+.flow-paused .dg .live{animation-play-state:paused}
+.flow-ctl{display:none} .js .flow-ctl{display:inline-block}
+.legend{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s5);list-style:none;padding:0;margin:var(--s2) 0 0;font-size:.85rem;color:var(--ink-2)}
+.legend li{display:inline-flex;align-items:center;gap:var(--s2)}
+.legend svg{width:2.4rem;height:1rem;flex:none}
+
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+caption{text-align:left;font-size:.875rem;color:var(--ink-2);padding-bottom:var(--s2)}
+th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-weight:600;color:var(--ink-2)}
+table:has(tbody tr:nth-child(8)) :is(th,td){padding:.3rem .5rem}
+.table-wrap{overflow-x:auto}
+
+.sev{display:inline-flex;align-items:center;gap:.3rem;white-space:nowrap;font-weight:600}
+.sev svg{width:.95rem;height:.95rem;flex:none}
+.sev.critical{color:var(--critical)} .sev.serious{color:var(--serious)} .sev.moderate{color:var(--warning)} .sev.low{color:var(--ink-2)}
+.sev.pass{color:var(--good)} .sev.now{color:var(--warning)} .sev.later{color:var(--ink-2)}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(15rem,1fr));gap:var(--s3);margin:var(--s4) 0}
+.card{background:var(--surface-2);border:1px solid var(--rule);border-radius:var(--radius);padding:var(--s3) var(--s4)}
+.card h3{margin:0 0 var(--s1);font-size:1rem}
+.card p{margin:0 0 var(--s2);font-size:.9rem}
+.card p:last-child{margin-bottom:0}
+.card .ans{border-top:1px solid var(--rule);padding-top:var(--s2);color:var(--ink)}
+.card.top-c1{border-top:4px solid var(--c1)} .card.top-c4{border-top:4px solid var(--c4)}
+.num{font:600 .8rem var(--font-c);color:var(--ink-2)}
+
+.callout{border-left:4px solid var(--c1);background:var(--surface-2);padding:var(--s3) var(--s4);margin:var(--s4) 0;max-width:var(--measure)}
+.callout p:last-child{margin:0}
+
+dl.gloss{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:.35rem var(--s4);max-width:62rem}
+dl.gloss dt{font-weight:600}
+dl.gloss dd{margin:0}
+@media (max-width:40rem){dl.gloss{grid-template-columns:minmax(0,1fr)} dl.gloss dd{margin-bottom:var(--s2)}}
+
+footer.prov{margin-top:var(--s7);border-top:1px solid var(--rule);padding-top:var(--s3);font-size:.85rem;color:var(--ink-2)}
+footer.prov summary{cursor:pointer}
+footer.prov dl{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:.15rem var(--s4);margin:var(--s2) 0 0}
+footer.prov dt{font-weight:600} footer.prov dd{margin:0}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important}
+  .js .flow-ctl{display:none}
+}
+@page{margin:14mm 12mm}
+@media print{
+  :root{--surface:#fff;--surface-2:#f4f4f2;--rule:#bdbbb5;--ink:#000;--ink-2:#333;--line:#333}
+  html{font-size:10.5pt}
+  .page{display:block;padding:0;max-width:none}
+  .toc,.flow-ctl{display:none !important}
+  .scroll-x{overflow:visible} .scroll-x svg{min-width:0}
+  h2{break-after:avoid;margin-top:var(--s5)}
+  figure,.card,tr,.callout{break-inside:avoid}
+  .dg .conn{stroke-width:2.5}
+  .dg .live{animation:none}
+  details{display:block}
+}
+</style>
+</head>
+<body>
+<div class="page">
+<nav class="toc" aria-label="Contents">
+  <p class="toc-title">Contents</p>
+  <ol>
+    <li><a href="#summary">Summary</a></li>
+    <li><a href="#chain">The chain</a></li>
+    <li><a href="#filter">How the filter decides</a></li>
+    <li><a href="#reality">How Reality hides</a></li>
+    <li><a href="#domain">Why an own domain</a></li>
+    <li><a href="#work">The work laptop</a></li>
+    <li><a href="#details">Why so many checks</a></li>
+    <li><a href="#risks">Risk map</a></li>
+    <li><a href="#unblocks">What unblocks what</a></li>
+    <li><a href="#steps">Every step as if-else</a></li>
+    <li><a href="#glossary">Glossary</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="doc" id="summary">
+  <p class="eyebrow">Reliable internet from Russia &middot; explainer &middot; updated 2026-11-08 after Phase 2b</p>
+  <h1>How the VPN chain works, and why we check so much</h1>
+  <p class="lede">Your traffic has to cross a Russian filter that judges four things: where it goes, what protocol it looks like, which site name it mentions, and how it behaves over time. Each check in the plan tests one point in the chain where the filter can cut it. The server side is built and verified, and on 8 November the tunnel <b>passed its first test from Russia</b>: 4 of 5 variants, all three Vision fingerprints, 6 of 6 repeated requests, a complete 20 MB download at up to 20.5 Mbit/s on a ~28 Mbit/s office line. Still untested: home ISPs, long runs and the work VPNs.</p>
+
+  <div class="strip">
+    <div><div class="big">4 / 8</div><div class="big-label">gates passed (Russian PC usable, hosters reachable, server A's address reachable, Phase 2b tunnel test for A)</div></div>
+    <div><div class="big">1 / 2</div><div class="big-label">servers running (A in Lithuania; B is bought next, after the monitor: decision D-17)</div></div>
+    <div><div class="big">21</div><div class="big-label">days to arrival in Russia (about 2026-11-29)</div></div>
+  </div>
+  <p class="small">Written for the user: not a network specialist, wants the real mechanism. Technical terms are explained where they first appear and again in the <a href="#glossary">glossary</a>.</p>
+</header>
+
+<section id="chain" aria-labelledby="chain-h">
+  <h2 id="chain-h">1. The chain: every hop your traffic makes</h2>
+  <p>A web page or a work VPN connection from Russia passes six points. A failure at any one of them breaks everything after it, which is why the plan tests each point separately instead of only asking "does the VPN work?".</p>
+  <figure class="wide">
+    <div class="scroll-x">
+    <svg class="dg" viewBox="0 0 980 300" role="img" aria-labelledby="f1t f1d">
+      <title id="f1t">The chain from your device in Russia to the internet</title>
+      <desc id="f1d">Six boxes left to right: your device, travel router, Russian ISP with the TSPU filter, international links, server A in Lithuania, and the destination (websites or the employer's VPN gateway). A thick blue tunnel runs from the router to server A. A dashed orange inner tunnel runs from the laptop all the way to the employer's gateway. Red numbered badges mark risk points 1 to 6.</desc>
+      <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs>
+
+      <g><rect class="box" x="10" y="50" width="140" height="80" rx="6"/>
+        <text class="tb" x="80" y="80">Your device</text><text class="ts" x="80" y="100">work laptop, phone,</text><text class="ts" x="80" y="116">personal laptop</text></g>
+      <g><rect class="box ours" x="175" y="50" width="140" height="80" rx="6"/>
+        <text class="tb" x="245" y="80">Travel router</text><text class="ts" x="245" y="100">GL-MT3000, Podkop</text><text class="ts" x="245" y="116">(phones: an app)</text></g>
+      <g><rect class="box danger" x="340" y="50" width="150" height="80" rx="6"/>
+        <text class="tb" x="415" y="80">Russian ISP</text><text class="ts" x="415" y="100">+ TSPU filter box</text><text class="ts" x="415" y="116">(home, mobile, hotel)</text></g>
+      <g><rect class="box" x="515" y="50" width="140" height="80" rx="6"/>
+        <text class="tb" x="585" y="80">Internet links</text><text class="ts" x="585" y="100">border, transit,</text><text class="ts" x="585" y="116">hoster's network</text></g>
+      <g><rect class="box ours" x="680" y="50" width="140" height="80" rx="6"/>
+        <text class="tb" x="750" y="80">Server A</text><text class="ts" x="750" y="100">Lithuania, Xray</text><text class="ts" x="750" y="116">(server B later)</text></g>
+      <g><rect class="box" x="845" y="50" width="125" height="80" rx="6"/>
+        <text class="tb" x="907" y="80">Destination</text><text class="ts" x="907" y="100">websites, work</text><text class="ts" x="907" y="116">VPN gateway</text></g>
+
+      <path class="conn" d="M150 90H173" marker-end="url(#ar)"/>
+      <path class="conn" d="M315 90H338" marker-end="url(#ar)"/>
+      <path class="conn" d="M490 90H513" marker-end="url(#ar)"/>
+      <path class="conn" d="M655 90H678" marker-end="url(#ar)"/>
+      <path class="conn" d="M820 90H843" marker-end="url(#ar)"/>
+
+      <g class="badge"><circle cx="146" cy="52" r="11"/><text x="146" y="56">1</text></g>
+      <g class="badge"><circle cx="311" cy="52" r="11"/><text x="311" y="56">2</text></g>
+      <g class="badge"><circle cx="486" cy="52" r="11"/><text x="486" y="56">3</text></g>
+      <g class="badge"><circle cx="651" cy="52" r="11"/><text x="651" y="56">4</text></g>
+      <g class="badge"><circle cx="816" cy="52" r="11"/><text x="816" y="56">5</text></g>
+      <g class="badge"><circle cx="966" cy="52" r="11"/><text x="966" y="56">6</text></g>
+
+      <path class="tun-outer" d="M245 175H750"/>
+      <path class="live" d="M245 175H750" fill="none" stroke-width="2.5" style="stroke:#fff"/>
+      <text class="lbl" x="497" y="200" text-anchor="middle">Outer tunnel: VLESS + Reality. To the filter it looks like ordinary HTTPS to a normal site.</text>
+      <path class="tun-inner" d="M80 238H907"/>
+      <text class="lbl" x="497" y="262" text-anchor="middle">Inner tunnel (work laptop only): GlobalProtect or AWS Client VPN, invisible to the filter inside the outer one.</text>
+      <path class="conn dash" d="M80 130V232"/><path class="conn dash" d="M907 130V232"/>
+      <path class="conn dash" d="M245 130V169"/><path class="conn dash" d="M750 130V169"/>
+      <text class="lbl" x="415" y="290" text-anchor="middle">The filter sees only the outer tunnel: an encrypted connection to a Lithuanian address.</text>
+    </svg>
+    </div>
+    <figcaption>Red badges are the risk points listed in the <a href="#risks">risk map</a>. Blue boxes are the parts we own and configure; the red box is the part we cannot see or control.</figcaption>
+    <ul class="legend">
+      <li><svg viewBox="0 0 40 14" aria-hidden="true"><path d="M2 7H38" stroke="#0072B2" stroke-width="7" stroke-linecap="round"/></svg>outer tunnel (VLESS + Reality)</li>
+      <li><svg viewBox="0 0 40 14" aria-hidden="true"><path d="M2 7H38" stroke="#E69F00" stroke-width="3" stroke-dasharray="9 6"/></svg>inner work VPN</li>
+      <li><button type="button" class="flow-ctl" aria-pressed="false">Pause motion</button></li>
+    </ul>
+  </figure>
+</section>
+
+<section id="filter" aria-labelledby="filter-h">
+  <h2 id="filter-h">2. How the Russian filter decides what to cut</h2>
+  <p>Every Russian ISP must install a TSPU box from the regulator (Roskomnadzor) in its network. It reads the traffic as it passes (deep packet inspection, DPI) and can drop, slow or reset connections. It does not need to break the encryption: the outside of a connection already tells it a lot. It applies roughly five tests. Each card says what it looks at and how our setup answers it.</p>
+  <div class="cards">
+    <article class="card top-c4"><span class="num">TEST 1</span><h3>Where is it going?</h3>
+      <p>Lists of blocked addresses. Since August 2026 whole address blocks (subnets) of hosters popular for VPNs are blocked. From the Russian PC, Hetzner, OVH and Linode were completely blocked.</p>
+      <p class="ans"><b>Answer:</b> hosters that tested clean from Russia (Time4VPS, BuyVM) and a second server at a different hoster as a spare.</p></article>
+    <article class="card top-c4"><span class="num">TEST 2</span><h3>What protocol is it?</h3>
+      <p>Classic VPNs have recognisable handshakes. Plain WireGuard and OpenVPN have been blocked since February 2026 by exactly this test.</p>
+      <p class="ans"><b>Answer:</b> VLESS over TLS 1.3, byte for byte the same shape as a browser opening an HTTPS site.</p></article>
+    <article class="card top-c4"><span class="num">TEST 3</span><h3>Which site does it name?</h3>
+      <p>The first message of an HTTPS connection carries the site name in plain text (the SNI field). Names of blocked sites are cut immediately.</p>
+      <p class="ans"><b>Answer:</b> the tunnel names an ordinary, unblocked site (the camouflage site), not the real destination.</p></article>
+    <article class="card top-c4"><span class="num">TEST 4</span><h3>How does it behave?</h3>
+      <p>The filter lets a suspicious connection start, watches it, and silently stalls it after about 16 KB. From the Russian PC a Vultr Frankfurt download froze at exactly 15,957 bytes.</p>
+      <p class="ans"><b>Answer:</b> Vision flow-control hides the typical "tunnel inside TLS" rhythm; we test big downloads and long runs, not just one page.</p></article>
+    <article class="card top-c4"><span class="num">TEST 5</span><h3>What is the server really?</h3>
+      <p>A censor can connect to a suspicious address itself and see whether a real website answers (active probing). This is documented for China's filter; general knowledge, not confirmed for Russia.</p>
+      <p class="ans"><b>Answer:</b> Reality: anyone without our key is passed through to a real website and sees its real certificate.</p></article>
+    <article class="card top-c4"><span class="num">BEYOND REACH</span><h3>Whitelist mode</h3>
+      <p>In many regions mobile internet is sometimes switched to "only allowlisted addresses". Then no tunnel to a foreign server can work.</p>
+      <p class="ans"><b>Answer:</b> none technical: use home or hotel Wi-Fi via the router; friends' tests record when it happens.</p></article>
+  </div>
+</section>
+
+<section id="reality" aria-labelledby="reality-h">
+  <h2 id="reality-h">3. How VLESS + Reality hides the tunnel</h2>
+  <p><b>Xray</b> is the program on the server and on your devices. <b>VLESS</b> is its lightweight tunnel protocol. <b>Reality</b> is the disguise: it makes the server look, to everyone except you, like an ordinary website that belongs to someone else.</p>
+  <figure class="wide">
+    <div class="scroll-x">
+    <svg class="dg" viewBox="0 0 960 300" role="img" aria-labelledby="f2t f2d">
+      <title id="f2t">Reality: same server, two different answers</title>
+      <desc id="f2d">Top: your client sends a normal-looking browser hello naming the camouflage site and carrying a hidden tag made with the server's key. Server A recognises the tag and opens the tunnel to the internet. Bottom: a censor's probe sends a hello without the tag. Server A forwards it untouched to the real camouflage site, so the probe sees a real website and its real certificate.</desc>
+      <defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs>
+      <rect class="box ours" x="10" y="30" width="170" height="70" rx="6"/>
+      <text class="tb" x="95" y="58">Your client</text><text class="ts" x="95" y="78">has the server's public key</text>
+      <rect class="box danger" x="10" y="190" width="170" height="70" rx="6"/>
+      <text class="tb" x="95" y="218">Censor's probe</text><text class="ts" x="95" y="238">has no key</text>
+      <rect class="box ours" x="400" y="90" width="160" height="110" rx="6"/>
+      <text class="tb" x="480" y="130">Server A</text><text class="ts" x="480" y="150">checks the hidden tag</text><text class="ts" x="480" y="168">in the TLS hello</text>
+      <rect class="box" x="780" y="30" width="170" height="70" rx="6"/>
+      <text class="tb" x="865" y="58">Open internet</text><text class="ts" x="865" y="78">through the tunnel</text>
+      <rect class="box" x="780" y="190" width="170" height="70" rx="6"/>
+      <text class="tb" x="865" y="218">Camouflage site</text><text class="ts" x="865" y="238">real, owned by someone else</text>
+
+      <path class="conn ok" d="M180 65C290 65 300 110 398 112" marker-end="url(#ar2)"/>
+      <text class="lbl" x="200" y="50">"I am Chrome, visiting camouflage site" + tag</text>
+      <path class="conn ok" d="M560 112C660 110 670 65 778 65" marker-end="url(#ar2)"/>
+      <text class="lbl" x="590" y="50">tag valid: tunnel opens</text>
+      <path class="conn bad" d="M180 225C290 225 300 180 398 178" marker-end="url(#ar2)"/>
+      <text class="lbl" x="200" y="282">same hello, but no valid tag</text>
+      <path class="conn bad" d="M560 178C660 180 670 225 778 225" marker-end="url(#ar2)"/>
+      <text class="lbl" x="580" y="282">no tag: passed through untouched</text>
+    </svg>
+    </div>
+    <figcaption>To the filter both conversations look identical: TLS 1.3 to a real site's name. Only the holder of the key gets a tunnel; everyone else gets the real website.</figcaption>
+  </figure>
+  <h3>The three extra knobs we test</h3>
+  <ul>
+    <li><b>Browser fingerprint (chrome, firefox, safari).</b> Every browser builds its opening TLS message slightly differently. Xray copies one of them exactly (uTLS). Filters have been known to target one specific fingerprint, so we test three and keep the one that survives.</li>
+    <li><b>Vision (port 443) vs XHTTP (port 8443).</b> Vision hides the give-away pattern of "an encrypted connection inside an encrypted connection" by passing the inner encryption straight through. XHTTP instead chops traffic into ordinary-looking HTTP requests. They fail in different ways, so having both doubles the chance one passes. The router's failover (URLTest) accepts only Vision, which is why Vision matters most.</li>
+    <li><b>Camouflage site.</b> The name in the opening message. Today it is a neighbour's site; the next section explains why we want our own.</li>
+  </ul>
+</section>
+
+<section id="domain" aria-labelledby="domain-h">
+  <h2 id="domain-h">4. Why we want our own domain for the camouflage</h2>
+  <p>Reality has to name some real site. Today our server names a <b>neighbour's</b> site: a small website on another server in the same hoster network. That works: Phase 2b passed with it from the Russian PC on 8 November. Our own domain ("self-steal") fixes three weaknesses of borrowing a stranger's site.</p>
+  <figure class="wide">
+    <div class="scroll-x">
+    <svg class="dg" viewBox="0 0 960 330" role="img" aria-labelledby="f3t f3d">
+      <title id="f3t">Neighbour camouflage versus own domain</title>
+      <desc id="f3d">Left, today: the connection names the neighbour's site; a public DNS lookup of that name gives address .6, but the connection goes to our server at .214, a mismatch. The real site belongs to a stranger. Right, own domain: the connection names our domain, DNS gives .214, the connection goes to .214, everything matches, and our own small website with a real certificate answers probes.</desc>
+      <defs><marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs>
+      <text class="tb" x="235" y="22">Today: neighbour's site</text>
+      <text class="tb" x="725" y="22">Later: own domain (self-steal)</text>
+      <path d="M480 10V320" stroke="var(--rule)" stroke-width="1.5"/>
+
+      <rect class="box" x="20" y="40" width="200" height="60" rx="6"/>
+      <text class="t" x="120" y="65">Name in the hello:</text><text class="tb" x="120" y="85">neighbour's site</text>
+      <rect class="box" x="260" y="40" width="200" height="60" rx="6"/>
+      <text class="t" x="360" y="65">Public DNS says it lives at</text><text class="tb" x="360" y="85">…111.6</text>
+      <rect class="box ours" x="20" y="150" width="200" height="60" rx="6"/>
+      <text class="t" x="120" y="175">Connection actually goes to</text><text class="tb" x="120" y="195">…111.214 (ours)</text>
+      <rect class="box danger" x="260" y="150" width="200" height="60" rx="6"/>
+      <text class="tb" x="360" y="175">Mismatch</text><text class="ts" x="360" y="195">name and address disagree</text>
+      <path class="conn" d="M220 70H258" marker-end="url(#ar3)"/>
+      <path class="conn bad" d="M220 180H258" marker-end="url(#ar3)"/>
+      <path class="conn bad" d="M360 100V148" marker-end="url(#ar3)"/>
+      <text class="lbl" x="20" y="245">A probe gets passed to the stranger's server.</text>
+      <text class="lbl" x="20" y="265">If they change, move or shut the site, our</text>
+      <text class="lbl" x="20" y="285">disguise breaks without warning.</text>
+      <text class="lbl" x="20" y="310">Gigabytes a day to a small hobby site looks odd.</text>
+
+      <rect class="box ours" x="510" y="40" width="200" height="60" rx="6"/>
+      <text class="t" x="610" y="65">Name in the hello:</text><text class="tb" x="610" y="85">our own domain</text>
+      <rect class="box" x="750" y="40" width="200" height="60" rx="6"/>
+      <text class="t" x="850" y="65">Public DNS says it lives at</text><text class="tb" x="850" y="85">…111.214</text>
+      <rect class="box ours" x="510" y="150" width="200" height="60" rx="6"/>
+      <text class="t" x="610" y="175">Connection actually goes to</text><text class="tb" x="610" y="195">…111.214 (ours)</text>
+      <rect class="box done" x="750" y="150" width="200" height="60" rx="6"/>
+      <text class="tb" x="850" y="175">Consistent</text><text class="ts" x="850" y="195">name, address, site agree</text>
+      <path class="conn" d="M710 70H748" marker-end="url(#ar3)"/>
+      <path class="conn ok" d="M710 180H748" marker-end="url(#ar3)"/>
+      <path class="conn ok" d="M850 100V148" marker-end="url(#ar3)"/>
+      <text class="lbl" x="510" y="245">A probe gets our own small website with a</text>
+      <text class="lbl" x="510" y="265">real certificate, served by our server.</text>
+      <text class="lbl" x="510" y="285">Nothing depends on a stranger.</text>
+      <text class="lbl" x="510" y="310">Traffic volume to "a personal site" is plausible.</text>
+    </svg>
+    </div>
+    <figcaption>Addresses shortened to their last digits. The full names and addresses are in <code>STATUS.md</code>, not in this page.</figcaption>
+  </figure>
+  <div class="cards">
+    <article class="card"><h3>1. Consistency</h3><p>A filter can look up the site name in public DNS and compare it with the address actually contacted. With a neighbour's site they disagree. With our domain they agree. We do not know that the Russian filter runs this check today; it is cheap for it to add.</p></article>
+    <article class="card"><h3>2. Independence</h3><p>Reality copies the camouflage site's live TLS behaviour. If the neighbour switches off TLS 1.3, changes certificate, moves, or goes offline, our connections start failing or start looking wrong. Our own site changes only when we change it.</p></article>
+    <article class="card"><h3>3. Plausible traffic</h3><p>A tunnel moves gigabytes. Gigabytes a day to a stranger's hobby site stand out; to "your own site on your own server" they look like a personal cloud or backup.</p></article>
+  </div>
+  <div class="callout">
+    <p><b>Cost and trade-offs.</b> About $10 a year at an international registrar, a non-.ru name, with WHOIS privacy. The name itself can be blocked; then we buy another, which is cheap and fast. It also adds a small web server with an auto-renewing certificate to maintain.</p>
+    <p><b>Why not now.</b> The neighbour's site passed Phase 2b from Russia, so the own domain is an upgrade for longevity, not urgent. We add it later and re-run the same test; if the tunnel ever starts failing, it is one of the first fixes to try.</p>
+  </div>
+</section>
+
+<section id="work" aria-labelledby="work-h">
+  <h2 id="work-h">5. Why the work laptop probably needs the router</h2>
+  <p>Your work laptop runs two corporate VPNs. Neither is built to hide from a censor:</p>
+  <ul>
+    <li><b>AWS Client VPN is built on OpenVPN</b>, and plain OpenVPN has been blocked in Russia since February 2026. Directly from a Russian network it will very likely be cut by test 2.</li>
+    <li><b>GlobalProtect</b> normally uses IPsec over UDP port 4501, with an HTTPS fallback. Its portal answered from the Russian PC, but its actual tunnel is untested.</li>
+  </ul>
+  <p>Wrapped inside our outer tunnel, the filter never sees either of them: it sees only the outer VLESS + Reality connection. Doing that wrapping on the laptop would mean installing our VPN software on a company-managed machine. The router does it outside the laptop: the laptop just joins the <b>WORK</b> Wi-Fi network and runs its corporate VPNs as usual. That is gate G4, and the planned OpenVPN probe decides it.</p>
+  <p>One technical cost: a tunnel inside a tunnel leaves less room per packet (MTU). The router script clamps packet sizes (MSS clamping) so the inner VPN does not stall on large transfers.</p>
+</section>
+
+<section id="details" aria-labelledby="details-h">
+  <h2 id="details-h">6. Why we check so many details</h2>
+  <p>Censorship failures are often partial: the first page loads, then a big file freezes; it works at noon and dies in the evening; it works on the office line and not at home. A single "it connected" proves very little. Each detail below catches one specific failure that a simpler test would miss.</p>
+  <div class="table-wrap">
+  <table>
+    <caption>What each check measures and the failure it catches</caption>
+    <thead><tr><th>Check</th><th>Catches</th><th>Where</th></tr></thead>
+    <tbody>
+      <tr><td>Exit address equals the server's address</td><td>Traffic leaking around the tunnel: it "works" but is not protected.</td><td>Phase 2b</td></tr>
+      <tr><td>Six requests in a row, need 5 or more</td><td>The filter letting the first connection through and cutting later ones.</td><td>Phase 2b</td></tr>
+      <tr><td>20 MB download</td><td>The ~16 KB stall: small pages load, anything big freezes.</td><td>Phase 2a, 2b</td></tr>
+      <tr><td>Three browser fingerprints</td><td>A block aimed at one specific TLS fingerprint.</td><td>Phase 2b</td></tr>
+      <tr><td>Vision and XHTTP</td><td>A block aimed at one traffic shape; also confirms the router's variant (Vision).</td><td>Phase 2b</td></tr>
+      <tr><td>Blocked-sites list (group A)</td><td>A tunnel that connects but cannot reach the sites you actually need. Any HTTP answer counts as reached: facebook.com and web.whatsapp.com answer "400" to scripts through a working tunnel. sberbank.ru fails only on its certificate (Russian national CA), on every variant: not a tunnel problem.</td><td>Phase 2b</td></tr>
+      <tr><td>Monitor: at least 3 h incl. evening (19:00-23:00), every 2.5 minutes</td><td>Late stalls, evening throttling, server instability. Replaces the 24-hour soak (decision D-18); night/day changes are not covered.</td><td>Phase 2c</td></tr>
+      <tr><td>Direct control site during the monitor</td><td>Telling "the tunnel broke" apart from "the office internet was down".</td><td>Phase 2c</td></tr>
+      <tr><td>PC stayed awake</td><td>Gaps from the PC sleeping that would look like outages.</td><td>Phase 2c</td></tr>
+      <tr><td>sing-box twin of the router</td><td>Router settings that are wrong. The router uses a different engine than the PC test; this catches errors before you land.</td><td>Phase 5.6</td></tr>
+      <tr><td>Friends on home ISPs and mobile</td><td>The office line being filtered more lightly than home lines; differences by ISP and region.</td><td>Phase 3 (G3)</td></tr>
+      <tr><td>OpenVPN probe</td><td>Whether the work laptop can reach AWS VPN without the router.</td><td>G4</td></tr>
+      <tr><td>Server state verified, not assumed</td><td>A config that is written but not in effect (it happened: the hoster's image overrode our SSH setting).</td><td>Server scripts</td></tr>
+      <tr><td>One evidence file per run, secrets masked</td><td>Results mixed up between runs; keys leaking into chats or files.</td><td>Every script</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="risks" aria-labelledby="risks-h">
+  <h2 id="risks-h">7. Risk map: which points are at risk now</h2>
+  <p>Numbers match the red badges in the <a href="#chain">chain diagram</a>. The level is my judgement from the evidence so far, not a measurement.</p>
+  <div class="table-wrap">
+  <table>
+    <caption>Risk by point in the chain, as of 2026-11-08</caption>
+    <thead><tr><th>#</th><th>Point</th><th>What can go wrong</th><th>Level</th><th>What covers it</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>3</td><td>Russian ISP + filter</td><td>Blocking differs by ISP, region and time of day. The tunnel passed on one office line; home ISPs, mobile and long runs are untested.</td>
+        <td><span class="sev critical"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 1h6l4 4v6l-4 4H5l-4-4V5z" fill="currentColor"/></svg>critical</span></td>
+        <td>Monitor, friends (G3)</td><td><span class="sev now"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1a7 7 0 1 0 0 14z" fill="currentColor"/><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>office line PASS; home ISPs untested</span></td></tr>
+      <tr><td>4</td><td>Internet links / hoster network</td><td>Whole hoster subnets get blocked (since August 2026); server A's address could be blocked any day.</td>
+        <td><span class="sev serious"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1l7 14H1z" fill="currentColor"/></svg>serious</span></td>
+        <td>Server B at another hoster; monitor</td><td><span class="sev later"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>after 2b</span></td></tr>
+      <tr><td>6</td><td>Work VPNs (destination)</td><td>AWS Client VPN (OpenVPN) blocked directly; GlobalProtect's tunnel untested; tunnel-in-tunnel packet size.</td>
+        <td><span class="sev serious"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1l7 14H1z" fill="currentColor"/></svg>serious</span></td>
+        <td>Router (G4), OpenVPN probe, MSS clamping</td><td><span class="sev later"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>planned</span></td></tr>
+      <tr><td>2</td><td>Travel router</td><td>Podkop is beta software on a new OpenWrt release; the router cannot be tested in Russia before you arrive.</td>
+        <td><span class="sev serious"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1l7 14H1z" fill="currentColor"/></svg>serious</span></td>
+        <td>sing-box twin test, prepared kit, spare unit</td><td><span class="sev later"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>planned</span></td></tr>
+      <tr><td>5</td><td>Server A</td><td>Single server; camouflage borrowed from a stranger (works from Russia, Phase 2b); account suspended one day after a missed payment.</td>
+        <td><span class="sev moderate"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1l7 7-7 7-7-7z" fill="currentColor"/></svg>moderate</span></td>
+        <td>Server B, own domain, autopay</td><td><span class="sev pass"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7.5" fill="currentColor"/><path d="M4.5 8.2 7 10.6 11.6 5.4" stroke="#fff" stroke-width="2" fill="none"/></svg>running, verified</span></td></tr>
+      <tr><td>1</td><td>Your devices and apps</td><td>Russian banking and state apps detect an active VPN and refuse to work.</td>
+        <td><span class="sev moderate"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1l7 7-7 7-7-7z" fill="currentColor"/></svg>moderate</span></td>
+        <td>DIRECT Wi-Fi network; split tunnelling in apps</td><td><span class="sev later"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>planned</span></td></tr>
+      <tr><td>&ndash;</td><td>Mobile whitelist mode</td><td>Only allowlisted addresses reachable on mobile data; no tunnel works.</td>
+        <td><span class="sev moderate"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1l7 7-7 7-7-7z" fill="currentColor"/></svg>moderate</span></td>
+        <td>Use Wi-Fi; nothing technical</td><td><span class="sev later"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>accepted</span></td></tr>
+      <tr><td>&ndash;</td><td>Employer approval</td><td>Working from Russia needs the employer's agreement (plan step 0.1). Not a technical risk; yours to obtain.</td>
+        <td><span class="sev serious"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1l7 14H1z" fill="currentColor"/></svg>serious</span></td>
+        <td>Your conversation with the employer</td><td><span class="sev now"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1a7 7 0 1 0 0 14z" fill="currentColor"/><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>open</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="unblocks" aria-labelledby="unblocks-h">
+  <h2 id="unblocks-h">8. What unblocks what</h2>
+  <p>The plan is gated: the cheapest question that can kill the plan goes first, and money and time go into the next step only after the current one passes. Phase 2b on the Russian PC was the bottleneck; it passed on 8 November. The monitor (at least 3 hours including the evening, decision D-18) runs next; server B follows it (decision D-17).</p>
+  <figure class="wide">
+    <div class="scroll-x">
+    <svg class="dg" viewBox="0 0 980 360" role="img" aria-labelledby="f4t f4d">
+      <title id="f4t">Dependencies between the gates</title>
+      <desc id="f4d">Done: Russian PC usable (G0), hosters reachable (G1), server A address reachable (2a), server A set up, and Phase 2b, the tunnel test from the Russian PC, passed on 8 November. Phase 2b unlocks: the monitor (at least 3 hours including the evening, next), own domain, server B, friends' tests (G3) and the router twin test. Server B enables the OpenVPN probe, which with Phase 2b decides G4, whether the work laptop needs the router. The twin test and G4 lead to router setup on day 1 in Russia (G5). Employer approval is a separate prerequisite for working from Russia.</desc>
+      <defs><marker id="ar4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs>
+      <g><rect class="box done" x="10" y="20" width="170" height="44" rx="6"/><text class="t" x="95" y="47">G0 Russian PC usable</text></g>
+      <g><rect class="box done" x="10" y="80" width="170" height="44" rx="6"/><text class="t" x="95" y="107">G1 hosters reachable</text></g>
+      <g><rect class="box done" x="10" y="140" width="170" height="44" rx="6"/><text class="t" x="95" y="167">2a server A address OK</text></g>
+      <g><rect class="box done" x="10" y="200" width="170" height="44" rx="6"/><text class="t" x="95" y="227">Server A set up</text></g>
+
+      <g><rect class="box done" x="220" y="110" width="170" height="60" rx="6"/><text class="tb" x="305" y="136">Phase 2b: PASS</text><text class="ts" x="305" y="155">tunnel test from Russia</text></g>
+
+      <g><rect class="box now" x="430" y="10" width="170" height="44" rx="6"/><text class="t" x="515" y="37">Monitor 3 h + evening</text></g>
+      <g><rect class="box later" x="430" y="70" width="170" height="44" rx="6"/><text class="t" x="515" y="97">Own domain</text></g>
+      <g><rect class="box later" x="430" y="130" width="170" height="44" rx="6"/><text class="t" x="515" y="157">Server B</text></g>
+      <g><rect class="box later" x="430" y="190" width="170" height="44" rx="6"/><text class="t" x="515" y="217">G3 friends' ISPs</text></g>
+      <g><rect class="box later" x="430" y="250" width="170" height="44" rx="6"/><text class="t" x="515" y="277">Router twin test</text></g>
+
+      <g><rect class="box later" x="640" y="130" width="150" height="44" rx="6"/><text class="t" x="715" y="157">OpenVPN probe</text></g>
+      <g><rect class="box later" x="640" y="190" width="150" height="60" rx="6"/><text class="tb" x="715" y="216">G4</text><text class="ts" x="715" y="235">laptop needs router?</text></g>
+
+      <g><rect class="box later" x="820" y="230" width="150" height="60" rx="6"/><text class="tb" x="895" y="256">G5 router</text><text class="ts" x="895" y="275">day 1 in Russia</text></g>
+      <g><rect class="box now" x="820" y="20" width="150" height="60" rx="6"/><text class="tb" x="895" y="46">Step 0.1</text><text class="ts" x="895" y="65">employer approval</text></g>
+
+      <path class="conn" d="M180 42C200 42 200 125 218 128" marker-end="url(#ar4)"/>
+      <path class="conn" d="M180 102C200 102 200 132 218 134" marker-end="url(#ar4)"/>
+      <path class="conn" d="M180 162C200 162 200 146 218 146" marker-end="url(#ar4)"/>
+      <path class="conn" d="M180 222C200 222 200 155 218 152" marker-end="url(#ar4)"/>
+
+      <path class="conn" d="M390 130C410 130 410 32 428 32" marker-end="url(#ar4)"/>
+      <path class="conn" d="M390 135C410 135 410 92 428 92" marker-end="url(#ar4)"/>
+      <path class="conn" d="M390 140H428" marker-end="url(#ar4)" transform="translate(0 12)"/>
+      <path class="conn" d="M390 150C410 150 410 212 428 212" marker-end="url(#ar4)"/>
+      <path class="conn" d="M390 160C410 160 410 272 428 272" marker-end="url(#ar4)"/>
+
+      <path class="conn" d="M600 152H638" marker-end="url(#ar4)"/>
+      <path class="conn" d="M715 174V188" marker-end="url(#ar4)"/>
+      <path class="conn" d="M790 220C810 220 805 250 818 252" marker-end="url(#ar4)"/>
+      <path class="conn" d="M600 272H818" marker-end="url(#ar4)"/>
+      <path class="conn dash" d="M895 80V228" marker-end="url(#ar4)"/>
+      <text class="lbl" x="905" y="160">needed to</text><text class="lbl" x="905" y="176">work there</text>
+
+      <g transform="translate(10 320)">
+        <rect class="box done" x="0" y="0" width="22" height="16" rx="3"/><text class="lbl" x="30" y="12">done</text>
+        <rect class="box now" x="80" y="0" width="22" height="16" rx="3"/><text class="lbl" x="110" y="12">now / open</text>
+        <rect class="box later" x="200" y="0" width="22" height="16" rx="3"/><text class="lbl" x="230" y="12">later, waits on the arrow's source</text>
+      </g>
+    </svg>
+    </div>
+    <figcaption>Colour is backed by the words in each box and the legend. Server B is bought after Phase 2b on server A passes (decision D-17); Phase 2b has passed, so B follows the monitor. The router kit itself can be prepared now; only its test waits.</figcaption>
+  </figure>
+  <h3>Can be prepared now, without the Russian PC</h3>
+  <ul>
+    <li>The Russian-PC package phase2b2c (built and delivered; tunnel test run and passed; monitor running next). The router twin test is still to build.</li>
+    <li>The own-domain setup script, ready for when the domain is bought.</li>
+    <li>Client management for friends' keys and the friends' instructions (G3).</li>
+    <li>The temporary OpenVPN probe (G4) and the router kit (G5).</li>
+  </ul>
+</section>
+
+
+
+
+
+
+<!-- FLOW:begin -->
+<section id="steps" aria-labelledby="steps-h">
+  <h2 id="steps-h">9. Every step as if-else</h2>
+  <p>The plan is a chain of yes/no questions. Each diamond is a test; the answer decides the next step. A "no" never ends the project: it either sends us back to try the next fix (dashed "try again" arrows) or switches to a fallback. The four flows below run after the steps already done.</p>
+  <h3>Done so far (5 to 8 November)</h3>
+  <p>Nine steps, all passed, the last being the first tunnel test from Russia. One failed first and was fixed the same day: setup v1.1 could not start Xray because the Xray installer now runs it as a new user; v1.2 fixed it.</p>
+  <figure class="wide"><div class="scroll-x"><svg class="dg" viewBox="0 0 960 460" role="img" aria-labelledby="tlt tld"><title id="tlt">Steps already done, 5 to 8 November 2026</title><desc id="tld">1. 5 Nov Phase 0: Russian PC: tools run, no admin needed filtering visible: PASS; 2. 5 Nov Phase 1: hosters: Time4VPS, BuyVM reachable; Hetzner, OVH, Linode blocked; 3. 5 Nov Bought server A: Time4VPS, Lithuania, monthly, 30-day refund; 4. 5 Nov Phase 2a: A from Russia: ports 22/80/443 open 3/3, 8 MB downloads 3/3: PASS; 5. 6 Nov SSH key-only login: hoster image overrode it; fixed, verified by sshd -T; 6. 8 Nov Server housekeeping: updates + reboot, root password, test site stopped; 7. 8 Nov Setup v1.1: FAILED: Xray could not read config (new installer user): fixed; 8. 8 Nov Setup v1.2: PASS: Xray on 443 + 8443, firewall, fail2ban, auto-updates; 9. 8 Nov Phase 2b: PASS: 4 of 5 variants, Vision 3/3; 20 MB at up to 20.5 Mbit/s. Next: monitor for at least 3 hours including the evening.</desc><defs><marker id="ar-tl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs><rect class="box done" x="10" y="20" width="212" height="100" rx="6"/><text class="lbl" x="20" y="40">01 &#183; 5 Nov</text><text class="tb" x="116.0" y="64">Phase 0: Russian PC</text><text class="ts" x="116.0" y="86">tools run, no admin needed</text><text class="ts" x="116.0" y="102">filtering visible: PASS</text><path class="conn" d="M222 70.0H251" marker-end="url(#ar-tl)"/><rect class="box done" x="253" y="20" width="212" height="100" rx="6"/><text class="lbl" x="263" y="40">02 &#183; 5 Nov</text><text class="tb" x="359.0" y="64">Phase 1: hosters</text><text class="ts" x="359.0" y="86">Time4VPS, BuyVM reachable;</text><text class="ts" x="359.0" y="102">Hetzner, OVH, Linode blocked</text><path class="conn" d="M465 70.0H494" marker-end="url(#ar-tl)"/><rect class="box done" x="496" y="20" width="212" height="100" rx="6"/><text class="lbl" x="506" y="40">03 &#183; 5 Nov</text><text class="tb" x="602.0" y="64">Bought server A</text><text class="ts" x="602.0" y="86">Time4VPS, Lithuania,</text><text class="ts" x="602.0" y="102">monthly, 30-day refund</text><path class="conn" d="M708 70.0H737" marker-end="url(#ar-tl)"/><rect class="box done" x="739" y="20" width="212" height="100" rx="6"/><text class="lbl" x="749" y="40">04 &#183; 5 Nov</text><text class="tb" x="845.0" y="64">Phase 2a: A from Russia</text><text class="ts" x="845.0" y="86">ports 22/80/443 open 3/3,</text><text class="ts" x="845.0" y="102">8 MB downloads 3/3: PASS</text><path class="conn" d="M845.0 120V140H116.0V158" marker-end="url(#ar-tl)"/><rect class="box done" x="10" y="160" width="212" height="100" rx="6"/><text class="lbl" x="20" y="180">05 &#183; 6 Nov</text><text class="tb" x="116.0" y="204">SSH key-only login</text><text class="ts" x="116.0" y="226">hoster image overrode it;</text><text class="ts" x="116.0" y="242">fixed, verified by sshd -T</text><path class="conn" d="M222 210.0H251" marker-end="url(#ar-tl)"/><rect class="box done" x="253" y="160" width="212" height="100" rx="6"/><text class="lbl" x="263" y="180">06 &#183; 8 Nov</text><text class="tb" x="359.0" y="204">Server housekeeping</text><text class="ts" x="359.0" y="226">updates + reboot, root</text><text class="ts" x="359.0" y="242">password, test site stopped</text><path class="conn" d="M465 210.0H494" marker-end="url(#ar-tl)"/><rect class="box now" x="496" y="160" width="212" height="100" rx="6"/><text class="lbl" x="506" y="180">07 &#183; 8 Nov</text><text class="tb" x="602.0" y="204">Setup v1.1: FAILED</text><text class="ts" x="602.0" y="226">Xray could not read config</text><text class="ts" x="602.0" y="242">(new installer user): fixed</text><path class="conn" d="M708 210.0H737" marker-end="url(#ar-tl)"/><rect class="box done" x="739" y="160" width="212" height="100" rx="6"/><text class="lbl" x="749" y="180">08 &#183; 8 Nov</text><text class="tb" x="845.0" y="204">Setup v1.2: PASS</text><text class="ts" x="845.0" y="226">Xray on 443 + 8443, firewall,</text><text class="ts" x="845.0" y="242">fail2ban, auto-updates</text><path class="conn" d="M845.0 260V280H116.0V298" marker-end="url(#ar-tl)"/><rect class="box done" x="10" y="300" width="212" height="100" rx="6"/><text class="lbl" x="20" y="320">09 &#183; 8 Nov</text><text class="tb" x="116.0" y="344">Phase 2b: PASS</text><text class="ts" x="116.0" y="366">4 of 5 variants, Vision 3/3;</text><text class="ts" x="116.0" y="382">20 MB at up to 20.5 Mbit/s</text><path class="conn" d="M222 350.0H251" marker-end="url(#ar-tl)"/><rect class="box now" x="253" y="320" width="242" height="60" rx="6"/><text class="tb" x="374.0" y="346">Next: monitor, 3 h</text><text class="ts" x="374.0" y="364">including the evening (D-18)</text><text class="lbl" x="10" y="430">Decisions on the way: router model GL-MT3000 only (6 Nov); no router pilot in Georgia (8 Nov);</text><text class="lbl" x="10" y="447">server B after Phase 2b passes (D-17, 8 Nov); 3-hour evening monitor instead of a 24-hour soak (D-18, 8 Nov).</text></svg></div><figcaption>Green: passed. Amber: failed, then fixed. Results come from the evidence files in the project folder.</figcaption></figure>
+  <h3>Flow A: does the tunnel survive from Russia? (Phase 2b passed; monitor next)</h3>
+  <p>The bottleneck. Its first test passed on 8 November; the monitor is the remaining step before server A counts as passed.</p>
+  <figure class="wide"><div class="scroll-x"><svg class="dg flow" viewBox="0 0 960 708" role="img" aria-labelledby="fat fad"><title id="fat">Flow A: does the tunnel survive from Russia</title><desc id="fad">Phase 2b ran five variants and passed on 8 November: xray.exe ran and all three Vision variants passed. Had xray.exe been blocked, friends phones would have been used; had no Vision variant passed, the fixes were another fingerprint, own domain, new IP, then another hoster. Next is the monitor for at least 3 hours including the evening. If success is below 97 percent or there is an outage of an hour or more, find the pattern, adjust and run again. Otherwise server A passes.</desc><defs><marker id="ar-fa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs><rect class="box done" x="135" y="20" width="330" height="60" rx="6"/><text class="tb" x="300" y="46">Phase 2b: PASS on 8 November</text><text class="ts" x="300" y="62">Vision 3 of 3, XHTTP 1 of 2</text><path class="conn" d="M300 80V118" marker-end="url(#ar-fa)"/><polygon class="box dia" points="300,120 450.0,168.0 300,216 150.0,168.0"/><text class="t" x="300" y="164">Is xray.exe</text><text class="ts" x="300" y="180">allowed to run?</text><path class="conn bad" d="M450.0 168.0H558.0" marker-end="url(#ar-fa)"/><text class="lbl" x="458.0" y="161">no</text><rect class="box later" x="560" y="133" width="340" height="70" rx="6"/><text class="t" x="730" y="156">Antivirus removed it:</text><text class="ts" x="730" y="172">test the same links on</text><text class="ts" x="730" y="188">friends&#x27; phones instead</text><path class="conn" d="M300 216V254" marker-end="url(#ar-fa)"/><text class="lbl" x="308" y="240">yes</text><polygon class="box dia" points="300,256 450.0,304.0 300,352 150.0,304.0"/><text class="t" x="300" y="300">Does at least one</text><text class="ts" x="300" y="316">Vision variant pass?</text><path class="conn bad" d="M450.0 304.0H558.0" marker-end="url(#ar-fa)"/><text class="lbl" x="458.0" y="297">no</text><rect class="box later" x="560" y="261" width="340" height="86" rx="6"/><text class="t" x="730" y="284">Try in this order: other fingerprint,</text><text class="ts" x="730" y="300">own domain, new IP, other hoster.</text><text class="ts" x="730" y="316">XHTTP-only still works in apps,</text><text class="ts" x="730" y="332">but the router needs Vision.</text><path class="conn dash" d="M900.0 304H914.0V50H467.0" marker-end="url(#ar-fa)"/><text class="lbl" x="477.0" y="43">try again</text><path class="conn" d="M300 352V390" marker-end="url(#ar-fa)"/><text class="lbl" x="308" y="376">yes</text><rect class="box now" x="135" y="392" width="330" height="60" rx="6"/><text class="tb" x="300" y="418">Monitor: 3 h or more incl. evening</text><text class="ts" x="300" y="434">every link every 2.5 minutes</text><path class="conn" d="M300 452V490" marker-end="url(#ar-fa)"/><polygon class="box dia" points="300,492 450.0,540.0 300,588 150.0,540.0"/><text class="t" x="300" y="536">97 % or more OK and</text><text class="ts" x="300" y="552">no outage of 1 h or more?</text><path class="conn bad" d="M450.0 540.0H558.0" marker-end="url(#ar-fa)"/><text class="lbl" x="458.0" y="533">no</text><rect class="box later" x="560" y="505" width="340" height="70" rx="6"/><text class="t" x="730" y="528">Read the pattern: evening?</text><text class="ts" x="730" y="544">big files? one variant?</text><text class="ts" x="730" y="560">Adjust and run again.</text><path class="conn dash" d="M900.0 540H914.0V422H467.0" marker-end="url(#ar-fa)"/><text class="lbl" x="477.0" y="415">try again</text><path class="conn" d="M300 588V626" marker-end="url(#ar-fa)"/><text class="lbl" x="308" y="612">yes</text><rect class="box done" x="135" y="628" width="330" height="60" rx="6"/><text class="tb" x="300" y="654">Server A passes (G2 for A)</text><text class="ts" x="300" y="670">then tracks B, C and D start</text></svg></div><figcaption>Five variants were tested so that one blocked variant would not stop the plan. The router can only use Vision, so Vision decided the "yes": 3 of 3 passed.</figcaption></figure>
+  <h3>Flow B: the second server, then the own domain</h3>
+  <figure class="wide"><div class="scroll-x"><svg class="dg flow" viewBox="0 0 960 908" role="img" aria-labelledby="fbt fbd"><title id="fbt">Flow B: the second server, then the own domain</title><desc id="fbd">Buy server B and check its address from Russia. If it fails, get a new IP or use Vultr Stockholm and re-check. Then set up B, run 2b and the monitor on it; if it fails, apply the same fixes as Flow A. Result: two servers with failover. Later, buy an own domain and switch to self-steal, then re-run 2b; if it no longer passes, return to the neighbour camouflage and investigate.</desc><defs><marker id="ar-fb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs><rect class="box later" x="135" y="20" width="330" height="60" rx="6"/><text class="tb" x="300" y="46">Buy server B (BuyVM, Luxembourg)</text><text class="ts" x="300" y="62">check its address from Russia (2a)</text><path class="conn" d="M300 80V118" marker-end="url(#ar-fb)"/><polygon class="box dia" points="300,120 450.0,168.0 300,216 150.0,168.0"/><text class="t" x="300" y="164">Does B&#x27;s address</text><text class="ts" x="300" y="180">pass 2a?</text><path class="conn bad" d="M450.0 168.0H558.0" marker-end="url(#ar-fb)"/><text class="lbl" x="458.0" y="161">no</text><rect class="box later" x="560" y="133" width="340" height="70" rx="6"/><text class="t" x="730" y="156">Ask for a new IP or take</text><text class="ts" x="730" y="172">Vultr Stockholm instead;</text><text class="ts" x="730" y="188">check again</text><path class="conn dash" d="M900.0 168H914.0V50H467.0" marker-end="url(#ar-fb)"/><text class="lbl" x="477.0" y="43">try again</text><path class="conn" d="M300 216V254" marker-end="url(#ar-fb)"/><text class="lbl" x="308" y="240">yes</text><rect class="box later" x="135" y="256" width="330" height="60" rx="6"/><text class="tb" x="300" y="282">Set up B (setup-server.sh v1.3)</text><text class="ts" x="300" y="298">add its links to the monitor</text><path class="conn" d="M300 316V354" marker-end="url(#ar-fb)"/><polygon class="box dia" points="300,356 450.0,404.0 300,452 150.0,404.0"/><text class="t" x="300" y="400">Does B pass 2b</text><text class="ts" x="300" y="416">and the monitor?</text><path class="conn bad" d="M450.0 404.0H558.0" marker-end="url(#ar-fb)"/><text class="lbl" x="458.0" y="397">no</text><rect class="box later" x="560" y="377" width="340" height="54" rx="6"/><text class="t" x="730" y="400">Same fixes as Flow A,</text><text class="ts" x="730" y="416">applied to B</text><path class="conn dash" d="M900.0 404H914.0V286H467.0" marker-end="url(#ar-fb)"/><text class="lbl" x="477.0" y="279">try again</text><path class="conn" d="M300 452V490" marker-end="url(#ar-fb)"/><text class="lbl" x="308" y="476">yes</text><rect class="box done" x="135" y="492" width="330" height="60" rx="6"/><text class="tb" x="300" y="518">G2 passed: two servers</text><text class="ts" x="300" y="534">router can fail over between them</text><path class="conn" d="M300 552V590" marker-end="url(#ar-fb)"/><rect class="box later" x="135" y="592" width="330" height="60" rx="6"/><text class="tb" x="300" y="618">Later: own domain, self-steal on A</text><text class="ts" x="300" y="634">run 2b again with the new links</text><path class="conn" d="M300 652V690" marker-end="url(#ar-fb)"/><polygon class="box dia" points="300,692 450.0,740.0 300,788 150.0,740.0"/><text class="t" x="300" y="736">Still passes</text><text class="ts" x="300" y="752">with own domain?</text><path class="conn bad" d="M450.0 740.0H558.0" marker-end="url(#ar-fb)"/><text class="lbl" x="458.0" y="733">no</text><rect class="box later" x="560" y="705" width="340" height="70" rx="6"/><text class="t" x="730" y="728">Switch back to the neighbour</text><text class="ts" x="730" y="744">site (keeps working) and</text><text class="ts" x="730" y="760">find out why</text><path class="conn" d="M300 788V826" marker-end="url(#ar-fb)"/><text class="lbl" x="308" y="812">yes</text><rect class="box done" x="135" y="828" width="330" height="60" rx="6"/><text class="tb" x="300" y="854">Camouflage fully under</text><text class="ts" x="300" y="870">our control</text></svg></div><figcaption>Starts after Flow A. Since the neighbour camouflage passed from Russia, server B now comes first (D-17) and the own domain is a later upgrade; B copies server A with the same script.</figcaption></figure>
+  <h3>Flow C: friends on real home connections (G3)</h3>
+  <figure class="wide"><div class="scroll-x"><svg class="dg flow" viewBox="0 0 960 336" role="img" aria-labelledby="fct fcd"><title id="fct">Flow C: friends on real home connections</title><desc id="fcd">Friends install an app, import a link and test on home Wi-Fi, mobile data and in the evening. If it works on fewer than two home ISPs, apply per-ISP fixes and try AmneziaWG 3.1 for phones, then test again. Otherwise G3 passes.</desc><defs><marker id="ar-fc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs><rect class="box later" x="135" y="20" width="330" height="60" rx="6"/><text class="tb" x="300" y="46">Friends: app + your link on home</text><text class="ts" x="300" y="62">Wi-Fi, mobile data, in the evening</text><path class="conn" d="M300 80V118" marker-end="url(#ar-fc)"/><polygon class="box dia" points="300,120 450.0,168.0 300,216 150.0,168.0"/><text class="t" x="300" y="164">Works on 2 or more</text><text class="ts" x="300" y="180">home ISPs?</text><path class="conn bad" d="M450.0 168.0H558.0" marker-end="url(#ar-fc)"/><text class="lbl" x="458.0" y="161">no</text><rect class="box later" x="560" y="133" width="340" height="70" rx="6"/><text class="t" x="730" y="156">Fix per ISP (variant, port);</text><text class="ts" x="730" y="172">add AmneziaWG 3.1 for</text><text class="ts" x="730" y="188">phones; test again</text><path class="conn dash" d="M900.0 168H914.0V50H467.0" marker-end="url(#ar-fc)"/><text class="lbl" x="477.0" y="43">try again</text><path class="conn" d="M300 216V254" marker-end="url(#ar-fc)"/><text class="lbl" x="308" y="240">yes</text><rect class="box done" x="135" y="256" width="330" height="60" rx="6"/><text class="tb" x="300" y="282">G3 passed: works beyond</text><text class="ts" x="300" y="298">the office line</text></svg></div><figcaption>Starts after Flow A. The office line may be filtered more lightly than home lines, so we need two or more different home ISPs.</figcaption></figure>
+  <h3>Flow D: the work laptop and the router (G4, G5)</h3>
+  <figure class="wide"><div class="scroll-x"><svg class="dg flow" viewBox="0 0 960 908" role="img" aria-labelledby="fdt fdd"><title id="fdt">Flow D: the work laptop and the router</title><desc id="fdd">A temporary OpenVPN server is tested from a friends phone. If AWS VPN style OpenVPN works directly, the router is optional for it. If it is blocked, as expected, the router is required. Then the router kit is tested with a sing-box twin on the Russian PC; if it fails, fix the config and re-test. Then buy two routers in Russia and set up on day 1. If the router fails on day 1, fall back to apps and Amnezia Premium and fix it next day.</desc><defs><marker id="ar-fd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs><rect class="box later" x="135" y="20" width="330" height="60" rx="6"/><text class="tb" x="300" y="46">OpenVPN probe: temporary server,</text><text class="ts" x="300" y="62">friend&#x27;s phone, 10 minutes</text><path class="conn" d="M300 80V118" marker-end="url(#ar-fd)"/><polygon class="box dia" points="300,120 450.0,168.0 300,216 150.0,168.0"/><text class="t" x="300" y="164">Is OpenVPN (AWS VPN)</text><text class="ts" x="300" y="180">blocked directly?</text><path class="conn bad" d="M450.0 168.0H558.0" marker-end="url(#ar-fd)"/><text class="lbl" x="458.0" y="161">no</text><rect class="box later" x="560" y="133" width="340" height="70" rx="6"/><text class="t" x="730" y="156">Router optional for AWS VPN;</text><text class="ts" x="730" y="172">still recommended for</text><text class="ts" x="730" y="188">GlobalProtect stability</text><path class="conn" d="M300 216V254" marker-end="url(#ar-fd)"/><text class="lbl" x="308" y="240">yes (expected)</text><rect class="box later" x="135" y="256" width="330" height="60" rx="6"/><text class="tb" x="300" y="282">G4: router required</text><text class="ts" x="300" y="298">for the work laptop</text><path class="conn" d="M300 316V354" marker-end="url(#ar-fd)"/><rect class="box later" x="135" y="356" width="330" height="60" rx="6"/><text class="tb" x="300" y="382">Router kit + sing-box twin test</text><text class="ts" x="300" y="398">on the Russian PC (same engine)</text><path class="conn" d="M300 416V454" marker-end="url(#ar-fd)"/><polygon class="box dia" points="300,456 450.0,504.0 300,552 150.0,504.0"/><text class="t" x="300" y="500">Does the twin pass</text><text class="ts" x="300" y="516">like Phase 2b?</text><path class="conn bad" d="M450.0 504.0H558.0" marker-end="url(#ar-fd)"/><text class="lbl" x="458.0" y="497">no</text><rect class="box later" x="560" y="477" width="340" height="54" rx="6"/><text class="t" x="730" y="500">Fix the router</text><text class="ts" x="730" y="516">configuration; test again</text><path class="conn dash" d="M900.0 504H914.0V386H467.0" marker-end="url(#ar-fd)"/><text class="lbl" x="477.0" y="379">try again</text><path class="conn" d="M300 552V590" marker-end="url(#ar-fd)"/><text class="lbl" x="308" y="576">yes</text><rect class="box later" x="135" y="592" width="330" height="60" rx="6"/><text class="tb" x="300" y="618">Buy 2 x GL-MT3000 in Russia;</text><text class="ts" x="300" y="634">set up on the first evening</text><path class="conn" d="M300 652V690" marker-end="url(#ar-fd)"/><polygon class="box dia" points="300,692 450.0,740.0 300,788 150.0,740.0"/><text class="t" x="300" y="736">Router works</text><text class="ts" x="300" y="752">on day 1?</text><path class="conn bad" d="M450.0 740.0H558.0" marker-end="url(#ar-fd)"/><text class="lbl" x="458.0" y="733">no</text><rect class="box later" x="560" y="705" width="340" height="70" rx="6"/><text class="t" x="730" y="728">Fallback: apps on phone and</text><text class="ts" x="730" y="744">Mac + Amnezia Premium;</text><text class="ts" x="730" y="760">fix the router next day</text><path class="conn" d="M300 788V826" marker-end="url(#ar-fd)"/><text class="lbl" x="308" y="812">yes</text><rect class="box done" x="135" y="828" width="330" height="60" rx="6"/><text class="tb" x="300" y="854">G5 passed: WORK and</text><text class="ts" x="300" y="870">DIRECT Wi-Fi networks live</text></svg></div><figcaption>The router kit is prepared now; only its tests wait. Router hardware is bought in Russia (no GL-MT3000 in Georgia).</figcaption></figure>
+  <div class="legend-row"><ul class="legend">
+    <li><svg viewBox="0 0 40 14" aria-hidden="true"><rect x="2" y="2" width="36" height="10" rx="2" fill="#e6f3ee" stroke="#00754f" stroke-width="2"/></svg>done / goal</li>
+    <li><svg viewBox="0 0 40 14" aria-hidden="true"><rect x="2" y="2" width="36" height="10" rx="2" fill="#fbf3e3" stroke="#8a5a00" stroke-width="2"/></svg>now, or failed then fixed</li>
+    <li><svg viewBox="0 0 40 14" aria-hidden="true"><rect x="2" y="2" width="36" height="10" rx="2" fill="none" stroke="#6b6a66" stroke-width="1.5" stroke-dasharray="6 4"/></svg>later</li>
+    <li><svg viewBox="0 0 40 14" aria-hidden="true"><path d="M2 7H38" stroke="#b3261e" stroke-width="2"/></svg>"no" branch</li>
+    <li><svg viewBox="0 0 40 14" aria-hidden="true"><path d="M2 7H38" stroke="#6b6a66" stroke-width="2" stroke-dasharray="6 5"/></svg>try again</li>
+  </ul></div>
+</section>
+<!-- FLOW:end -->
+
+<section id="glossary" aria-labelledby="glossary-h">
+  <h2 id="glossary-h">Glossary</h2>
+  <dl class="gloss">
+    <dt>TSPU</dt><dd>The filtering box Russian ISPs must install; it inspects passing traffic (DPI) and drops, slows or resets connections.</dd>
+    <dt>DPI</dt><dd>Deep packet inspection: judging traffic by its contents and patterns, not just its address.</dd>
+    <dt>TLS 1.3</dt><dd>The encryption under every HTTPS site. Its first message (the "hello") is partly readable.</dd>
+    <dt>SNI</dt><dd>The site name written in plain text inside the TLS hello. Filters read it.</dd>
+    <dt>Xray</dt><dd>The program on the server and on clients that runs the tunnel.</dd>
+    <dt>VLESS</dt><dd>Xray's tunnel protocol: a thin layer that carries your traffic inside TLS.</dd>
+    <dt>Reality</dt><dd>Xray's disguise: the server borrows a real site's TLS identity; only key holders get the tunnel, everyone else is passed to the real site.</dd>
+    <dt>Vision / XHTTP</dt><dd>Two ways of shaping tunnel traffic. Vision runs on port 443 and is what the router uses; XHTTP on 8443 is the backup variant.</dd>
+    <dt>Fingerprint (uTLS)</dt><dd>The exact byte pattern of a browser's TLS hello. Xray imitates Chrome, Firefox or Safari.</dd>
+    <dt>Self-steal</dt><dd>Reality pointing at our own domain and our own small website instead of a stranger's site.</dd>
+    <dt>Active probing</dt><dd>A censor connecting to a suspicious server to see what answers.</dd>
+    <dt>sing-box</dt><dd>Another tunnel program; Podkop on the router uses it. The "twin test" runs it on the Russian PC with the router's settings.</dd>
+    <dt>Podkop / OpenWrt</dt><dd>OpenWrt is open router firmware; Podkop is an add-on that sends chosen traffic through VLESS and fails over between servers (URLTest).</dd>
+    <dt>SOCKS proxy mode</dt><dd>How we test on the Russian PC: the tunnel serves only programs that ask for it, so Remote Desktop keeps working.</dd>
+    <dt>MTU / MSS clamping</dt><dd>Maximum packet size. Tunnels in tunnels shrink it; clamping prevents stalls.</dd>
+    <dt>AmneziaWG 3.1</dt><dd>A disguised WireGuard variant for phones; older versions (1.5, 2.0) are now detectable.</dd>
+  </dl>
+</section>
+
+<footer class="prov">
+  <details>
+    <summary>Sources: project files STATUS.md, DECISIONS.md, FACTS.md and evidence files incl. Phase 2b (EVIDENCE-phase2b-tunnel-20261108-195210), as of 2026-11-08. Render check: see below.</summary>
+    <dl>
+      <dt>Facts</dt><dd>Filtering behaviour and dates from FACTS.md (sources listed there); Russian PC results from evidence files of phases 0, 1 and 2a; server state from the server evidence of 2026-11-08.</dd>
+      <dt>Judgement</dt><dd>Risk levels and the active-probing note are the author's assessment, not measurements.</dd>
+      <dt>Omitted</dt><dd>Exact server address, camouflage site name and all keys are deliberately not in this page.</dd>
+      <dt>Render</dt><dd id="render-status">offline-check.sh 2026-11-08 (after Phase 2b update): no external loads, SVG valid, headless Chrome render and 13-page PDF with network blocked; screenshot and the PDF pages with sections 7-9 diagrams looked at. Not checked: phone width, dark mode (not provided).</dd>
+    </dl>
+  </details>
+</footer>
+</main>
+</div>
+<script>
+(function () {
+  var root = document.documentElement;
+  var btn = document.querySelector('.flow-ctl');
+  function setFlow(p) { root.classList.toggle('flow-paused', p); if (btn) { btn.setAttribute('aria-pressed', String(p)); btn.textContent = p ? 'Resume motion' : 'Pause motion'; } }
+  try { setFlow(localStorage.getItem('vpn-russia-explained:flow-paused') === '1'); } catch (e) {}
+  if (btn) btn.addEventListener('click', function () { var p = !root.classList.contains('flow-paused'); setFlow(p); try { localStorage.setItem('vpn-russia-explained:flow-paused', p ? '1' : '0'); } catch (e) {} });
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) { es.forEach(function (en) { if (!en.isIntersecting) return; links.forEach(function (a) { a.setAttribute('aria-current', String(a.getAttribute('href') === '#' + en.target.id)); }); }); }, { rootMargin: '0px 0px -70% 0px' });
+    links.forEach(function (a) { var s = document.getElementById(a.getAttribute('href').slice(1)); if (s) io.observe(s); });
+  }
+  window.addEventListener('beforeprint', function () { document.querySelectorAll('details').forEach(function (d) { d.open = true; }); });
+})();
+</script>
+</body>
+</html>

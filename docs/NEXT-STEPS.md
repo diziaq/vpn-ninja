@@ -47,7 +47,7 @@ Items marked **BUILD** need new code; follow `CLAUDE.md` (conventions, privacy, 
 
 ## 6. BUILD: router kit (pilot unit in Georgia, D-20)
 
-- Pilot: when the Georgian unit arrives, arrival check, then `docs/router-setup.html` steps 1-7; record
+- Pilot: when the Georgian unit arrives, arrival check, then the Router setup tab of `docs/index.html`, steps 1-7; record
   every deviation and replace the guide's UNVERIFIED notes with tested steps. Then build the script below on it.
 
 - `router/` for GL-MT3000 on official OpenWrt 25.12.x: sysupgrade image(s) + recovery notes (U-Boot web
@@ -58,14 +58,14 @@ Items marked **BUILD** need new code; follow `CLAUDE.md` (conventions, privacy, 
 - Twin test before arrival: sing-box (Podkop's engine) on the Russian PC with the router's outbound settings,
   reusing the phase2b harness. Accept: passes like phase 2b.
 - Verify Podkop compatibility with OpenWrt 25.12.x (apk package manager).
-- Day-1 guide; the hardware check is `docs/router-arrival-check.html`.
+- Day-1 guide; the hardware check is the Router arrival check tab of `docs/index.html`.
 
 ## 7. Purchases and dates
 
 - One GL-MT3000 bought in Georgia (pilot, D-20). In Russia 2 more from different sellers (MAIN Global; CN only as
   SPARE): order **~2026-11-13 to 11-15** from sellers on
   major Russian marketplaces (listings show ~14-day cross-border delivery); check pickup-point storage days and
-  extension; arrival check per `docs/router-arrival-check.html`.
+  extension; arrival check per the Router arrival check tab of `docs/index.html`.
 - Own domain for self-steal (~$10/yr, Cloudflare Registrar or similar, non-.ru, privacy; DNS-only record):
   after server B; longevity upgrade, not urgent (neighbour camouflage passed from Russia).
   **BUILD** `server/setup-selfsteal.sh` then (Caddy on a local port, Reality dest/serverNames -> own domain,

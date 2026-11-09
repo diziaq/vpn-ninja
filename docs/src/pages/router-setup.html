@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en" data-doc="router-setup">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Router setup guide</title>
+<script>document.documentElement.classList.add('js');</script>
+<style>
+/* fonts:begin */
+/* fonts:end */
+:root{
+  color-scheme:light;
+  --surface:#fcfcfb; --surface-2:#f2f1ee; --rule:#d9d7d2;
+  --ink:#1b1b1a; --ink-2:#52514e; --line:#6b6a66;
+  --accent:#0072B2; --focus:#0072B2;
+  --good:#00754f; --warning:#8a5a00; --serious:#b84a00; --critical:#b3261e;
+  --font:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-c:"IBM Plex Sans Condensed","IBM Plex Sans","Arial Narrow",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --s1:.25rem; --s2:.5rem; --s3:.75rem; --s4:1rem; --s5:1.5rem; --s6:2rem; --s7:3rem;
+  --radius:4px; --measure:75ch;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{background:var(--surface);color:var(--ink);font:16px/1.55 var(--font);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--surface)}
+h1,h2,h3{font-family:var(--font-c);font-weight:600;line-height:1.2;margin:0}
+h1{font-size:2rem}
+h2{font-size:1.4rem;margin:var(--s7) 0 var(--s3);padding-top:var(--s3);border-top:1px solid var(--rule)}
+h3{font-size:1.1rem;margin:var(--s5) 0 var(--s2)}
+p,li{max-width:var(--measure)}
+p{margin:0 0 var(--s3)}
+b,strong{font-weight:600}
+a{color:var(--accent)}
+code,pre{font-family:var(--mono);font-size:.875em}
+code{background:var(--surface-2);padding:.05em .3em;border-radius:3px}
+pre{background:var(--surface-2);border:1px solid var(--rule);border-radius:var(--radius);padding:var(--s2) var(--s3);overflow-x:auto;max-width:var(--measure);margin:var(--s2) 0 var(--s3)}
+pre code{background:none;padding:0}
+.small{font-size:.875rem;color:var(--ink-2)}
+.eyebrow{font:600 .75rem var(--font-c);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);margin:0 0 var(--s1)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+.page{display:grid;grid-template-columns:12rem minmax(0,1fr);gap:var(--s6);max-width:74rem;margin:0 auto;padding:var(--s6) var(--s5) var(--s7)}
+.toc{position:sticky;top:var(--s5);align-self:start;font-size:.875rem}
+.toc ol{list-style:none;margin:0;padding:0;border-left:1px solid var(--rule)}
+.toc a{display:block;padding:.15rem var(--s3);color:var(--ink-2);text-decoration:none;border-left:2px solid transparent;margin-left:-1px}
+.toc a[aria-current="true"]{color:var(--ink);border-left-color:var(--accent);font-weight:600}
+.toc .toc-title{font:600 .875rem var(--font-c);margin:0 0 var(--s2) var(--s3)}
+main{min-width:0}
+@media (max-width:60rem){
+  .page{grid-template-columns:minmax(0,1fr);gap:var(--s4);padding:var(--s5) 16px var(--s7)}
+  .toc{position:static}
+  .toc ol{display:flex;flex-wrap:wrap;gap:0 var(--s2);border-left:0}
+  .toc a{padding:.1rem var(--s2) .1rem 0;border-left:0}
+}
+
+.strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s4);margin:var(--s5) 0}
+.strip>div{border-left:1px solid var(--rule);padding-left:var(--s4)}
+.strip>div:first-child{border-left:0;padding-left:0}
+.big{font:600 2.2rem/1 var(--font-c)}
+.big-label{font-size:.875rem;color:var(--ink-2);margin-top:var(--s1)}
+@media (max-width:40rem){.strip{grid-template-columns:minmax(0,1fr)}.strip>div{border-left:0;padding-left:0}}
+
+figure{margin:var(--s5) 0}
+figure svg{display:block;width:100%;height:auto;font-family:var(--font);font-size:13px}
+figcaption{font-size:.9rem;color:var(--ink-2);max-width:var(--measure);margin-top:var(--s2)}
+.scroll-x{overflow-x:auto} .scroll-x svg{min-width:40rem}
+.dg .box{fill:var(--surface-2);stroke:var(--line);stroke-width:1.5}
+.dg .box.a{fill:#e8f2f9;stroke:var(--accent);stroke-width:2}
+.dg .box.ok{fill:#e6f3ee;stroke:var(--good);stroke-width:2}
+.dg .box.no{fill:#fbeeed;stroke:var(--critical);stroke-width:2}
+.dg .tb{text-anchor:middle;font-weight:600;fill:var(--ink)}
+.dg .ts{text-anchor:middle;font-size:11.5px;fill:var(--ink-2)}
+.dg .lbl{font-size:12px;fill:var(--ink-2)}
+.dg .conn{fill:none;stroke:var(--line);stroke-width:2}
+.dg .conn.bad{stroke:var(--critical)}
+.dg marker path{fill:var(--line)}
+
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+caption{text-align:left;font-size:.875rem;color:var(--ink-2);padding-bottom:var(--s2)}
+th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-weight:600;color:var(--ink-2)}
+td.ck{width:2rem}
+table:has(tbody tr:nth-child(8)) :is(th,td){padding:.3rem .5rem}
+.table-wrap{overflow-x:auto}
+input[type=checkbox]{width:1.1rem;height:1.1rem;accent-color:var(--good)}
+td.fill{min-width:8rem;border-bottom:1px solid var(--line)}
+
+.sev{display:inline-flex;align-items:center;gap:.3rem;font-weight:600;white-space:nowrap}
+.sev svg{width:.95rem;height:.95rem;flex:none}
+.sev.stop{color:var(--critical)} .sev.warn{color:var(--serious)} .sev.ok{color:var(--good)}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(16rem,1fr));gap:var(--s3);margin:var(--s4) 0}
+.card{background:var(--surface-2);border:1px solid var(--rule);border-left:5px solid var(--serious);border-radius:var(--radius);padding:var(--s3) var(--s4)}
+.card h3{margin:0 0 var(--s1);font-size:1rem}
+.card p{margin:0;font-size:.9rem}
+.callout{border-left:4px solid var(--accent);background:var(--surface-2);padding:var(--s3) var(--s4);margin:var(--s4) 0;max-width:var(--measure)}
+.callout p:last-child{margin:0}
+ol.steps>li{margin-bottom:var(--s3)}
+
+footer.prov{margin-top:var(--s7);border-top:1px solid var(--rule);padding-top:var(--s3);font-size:.85rem;color:var(--ink-2)}
+footer.prov summary{cursor:pointer}
+footer.prov dl{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:.15rem var(--s4);margin:var(--s2) 0 0}
+footer.prov dt{font-weight:600} footer.prov dd{margin:0}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none !important;transition:none !important}}
+@page{margin:14mm 12mm}
+@media print{
+  :root{--surface:#fff;--surface-2:#f4f4f2;--rule:#bdbbb5;--ink:#000;--ink-2:#333;--line:#333}
+  html{font-size:10.5pt}
+  .page{display:block;padding:0;max-width:none}
+  .toc{display:none !important}
+  .scroll-x{overflow:visible} .scroll-x svg{min-width:0}
+  h2{break-after:avoid;margin-top:var(--s5)}
+  figure,.card,tr,.callout,pre{break-inside:avoid}
+  .dg .conn{stroke-width:2.5}
+  pre{white-space:pre-wrap;overflow-wrap:anywhere}
+}
+</style>
+</head>
+<body>
+<div class="page">
+<nav class="toc" aria-label="Contents">
+  <p class="toc-title">Contents</p>
+  <ol>
+    <li><a href="#summary">Summary</a></li>
+    <li><a href="#cn">Global or CN</a></li>
+    <li><a href="#kit">0. Kit and downloads</a></li>
+    <li><a href="#flash">1. Install OpenWrt</a></li>
+    <li><a href="#recovery">1b. Recovery mode</a></li>
+    <li><a href="#first">2. First login</a></li>
+    <li><a href="#uplink">3. Internet in</a></li>
+    <li><a href="#wifi">4. Wi-Fi out</a></li>
+    <li><a href="#podkop">5. Podkop</a></li>
+    <li><a href="#verify">6. Verify</a></li>
+    <li><a href="#backup">7. Backup, spare</a></li>
+    <li><a href="#stock">8. Back to stock</a></li>
+    <li><a href="#stuck">When stuck</a></li>
+  </ol>
+</nav>
+<main>
+<header id="summary">
+  <p class="eyebrow">Reliable internet from Russia &middot; router kit &middot; 2026-11-09</p>
+  <h1>Router setup: GL-MT3000 with OpenWrt and Podkop</h1>
+  <p>A complete manual path from a new GL-MT3000 (Global or CN) to a router whose Wi-Fi sends everything through our VLESS + Reality server. It works without the chat session: every command is here, and each step says where it runs. Global and CN units follow <b>the same path</b>: we replace GL.iNet's software with official OpenWrt, so the CN restrictions disappear with it.</p>
+  <div class="strip">
+    <div><div class="big">~60 min</div><div class="big-label">first unit, with internet available</div></div>
+    <div><div class="big">25.12.6</div><div class="big-label">official OpenWrt, sysupgrade image (checksum below)</div></div>
+    <div><div class="big">0.7.24</div><div class="big-label">Podkop release (2026-10-11), sing-box 1.13 from OpenWrt</div></div>
+  </div>
+  <div class="callout">
+    <p><b>Before step 1:</b> the unit has passed the <a href="router-arrival-check.html#counter">arrival check</a> (A1&ndash;A8 and B1&ndash;B7). Flash only a unit you are keeping. Secrets (VLESS links, Wi-Fi and admin passwords) come from the password manager and never go into files or chat.</p>
+  </div>
+  <p class="small">Where a step runs: <b>Mac</b> = a terminal on your laptop (prefer your personal laptop: the work Mac is managed and its network settings or GlobalProtect may interfere); <b>browser</b> = the laptop's browser; <b>router</b> = after <code>ssh root@&hellip;</code>. Addresses: stock GL firmware <code>192.168.8.1</code>, recovery mode and fresh OpenWrt <code>192.168.1.1</code>.</p>
+</header>
+
+<section id="cn" aria-labelledby="cn-h">
+  <h2 id="cn-h">Global or CN: what differs for this guide</h2>
+  <div class="table-wrap">
+  <table>
+    <caption>Same path, three differences</caption>
+    <thead><tr><th>Step</th><th>Global unit</th><th>CN unit</th></tr></thead>
+    <tbody>
+      <tr><td>1. Install OpenWrt</td><td>Stock web page, Local Upgrade (path A).</td><td>Try path A. If the stock page refuses the file or has no Local Upgrade, use recovery mode (path B).</td></tr>
+      <tr><td>4. Wi-Fi</td><td>Set the country, check channels.</td><td>Same, and <b>check carefully</b> that 5 GHz channels 36&ndash;48 and 2.4 GHz work (step 4, check W3). If not: keep as spare, do not use as MAIN.</td></tr>
+      <tr><td>Role</td><td>MAIN or SPARE.</td><td>SPARE unless it passes step 4 and step 6.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="callout">
+    <p><b>We do not "patch" a CN unit to Global.</b> The known patch writes a country code into the router's Factory partition with <code>dd</code>. That partition also holds the Wi-Fi calibration data: one wrong byte can leave the unit without working Wi-Fi or unbootable. It is unofficial (GL.iNet: "No, this isn't supported") and only matters if you want GL.iNet's own software, which we do not use. Official OpenWrt ignores GL's region setting and uses its own country setting (forum users report CN units work "the same as others"; not confirmed by GL.iNet or OpenWrt).</p>
+  </div>
+</section>
+
+<section id="kit" aria-labelledby="kit-h">
+  <h2 id="kit-h">0. Kit and downloads (Mac, while internet works)</h2>
+  <p>Needed: the router, a USB-C charger of 5 V / 3 A or more, the Ethernet cable from the box, a laptop with an Ethernet port or USB-C Ethernet adapter, internet for the router (a cable from another router, or a Wi-Fi network you know the password of), the VLESS links from the password manager.</p>
+  <p>The image is also cached in the project at <code>.private/downloads/router-kit/</code> (checked 2026-11-09). To download it again, on the <b>Mac</b>:</p>
+<pre><code>mkdir -p ~/router-kit && cd ~/router-kit
+curl -fLO https://downloads.openwrt.org/releases/25.12.6/targets/mediatek/filogic/openwrt-25.12.6-mediatek-filogic-glinet_gl-mt3000-squashfs-sysupgrade.bin
+shasum -a 256 openwrt-25.12.6-mediatek-filogic-glinet_gl-mt3000-squashfs-sysupgrade.bin</code></pre>
+  <p>The printed checksum must be exactly:</p>
+<pre><code>c2965b9d49d2ff42bf00c4f04ef73eaae904f553c68af47332fec702b30bf6f4</code></pre>
+  <p class="small">If it differs, delete the file and download again; never flash a file with a different checksum. There is no separate "factory" image for this model: the sysupgrade image is used for both paths. A newer 25.12.x may exist later: then take its sysupgrade file and its line from the <code>sha256sums</code> file in the same folder.</p>
+</section>
+
+<section id="flash" aria-labelledby="flash-h">
+  <h2 id="flash-h">1. Install OpenWrt</h2>
+  <h3>Path A: from the stock GL.iNet page (try first)</h3>
+  <ol class="steps">
+    <li><b>Cable.</b> Router powered, laptop plugged into the <b>LAN</b> port (not WAN), laptop Wi-Fi off. On the work Mac, disconnect GlobalProtect from its menu first.</li>
+    <li><b>Browser:</b> open <code>http://192.168.8.1</code> and log in with the admin password set during the arrival check.</li>
+    <li>Left menu <b>SYSTEM &rarr; Upgrade</b>, tab <b>Local Upgrade</b>. Choose the <code>&hellip;squashfs-sysupgrade.bin</code> file.</li>
+    <li><b>Untick "Keep Settings".</b> GL.iNet settings must not be carried into OpenWrt.</li>
+    <li>Confirm the install. <b>Do not unplug power</b> for 5 minutes. The LED blinks, then settles.</li>
+    <li>The router now lives at <code>192.168.1.1</code>. Unplug and replug the cable so the laptop picks up a new address, then go to step 2.</li>
+  </ol>
+  <p class="small">GL.iNet's documentation describes Local Upgrade for its own firmware files; whether the stock page accepts an official OpenWrt file is not documented (widely done by users; on a CN unit unknown). If it refuses the file, use path B; nothing has changed on the router.</p>
+</section>
+
+<section id="recovery" aria-labelledby="recovery-h">
+  <h2 id="recovery-h">1b. Path B: recovery mode (U-Boot web page)</h2>
+  <p>Use it when path A refuses the file, after a failed flash, or to go back to GL.iNet firmware. It cannot be broken by a bad image: you can always repeat it. Source: GL.iNet "debrick" documentation (dated 2026-10-22).</p>
+  <ol class="steps">
+    <li><b>Power off</b> the router. Laptop cable into the <b>LAN</b> port; nothing in WAN.</li>
+    <li><b>Laptop address (Mac):</b> System Settings &rarr; Network &rarr; the Ethernet adapter &rarr; Details &rarr; TCP/IP &rarr; Configure IPv4: <b>Manually</b>. IP address <code>192.168.1.2</code>, Subnet mask <code>255.255.255.0</code>, Router <code>192.168.1.1</code>. Turn off any VPN or proxy on the laptop (GlobalProtect disconnected).</li>
+    <li><b>Hold the reset button</b> firmly with a pin, and while holding it, plug in power. The <b>blue LED flashes 6 times, then turns solid white</b>: release the button. <span class="small">GL.iNet notes that other production batches can show different colours or blink patterns; release when the pattern changes.</span></li>
+    <li><b>Browser:</b> <code>http://192.168.1.1</code> shows a plain upgrade page. <b>Choose file</b> &rarr; the <code>&hellip;squashfs-sysupgrade.bin</code> &rarr; <b>Update firmware</b>.</li>
+    <li>Wait about <b>3 minutes</b>; do not unplug power.</li>
+    <li>Set the Mac back to <b>Using DHCP</b> (same settings page), replug the cable, go to step 2.</li>
+  </ol>
+  <p class="small">GL.iNet documents this page for its own firmware; that it also accepts the official OpenWrt sysupgrade image is reported by users, not documented (UNVERIFIED). If it is refused, stop and ask (see "When stuck").</p>
+</section>
+
+<section id="first" aria-labelledby="first-h">
+  <h2 id="first-h">2. First login and password</h2>
+  <p><b>Mac</b> (the cable still in LAN; a fresh OpenWrt has no password yet, so the login asks none). If ssh warns that the host key changed, run the first line, then the second:</p>
+<pre><code>ssh-keygen -R 192.168.1.1
+ssh root@192.168.1.1</code></pre>
+  <p>On the <b>router</b>: check what runs, then set the admin password (store it in the password manager first):</p>
+<pre><code>cat /etc/openwrt_release
+ubus call system board
+passwd</code></pre>
+  <p>Expected: <code>DISTRIB_RELEASE='25.12.6'</code>, <code>"board_name": "glinet,gl-mt3000"</code>. Then the <b>browser</b>: <code>http://192.168.1.1</code> opens the OpenWrt web page (LuCI); log in as <code>root</code> with the new password.</p>
+  <p class="small">If the web page does not open: official release images normally include it. Install it after step 3 gives the router internet: on the router <code>apk update</code>, then <code>apk add luci</code>.</p>
+  <p><b>Browser:</b> System &rarr; System &rarr; General: <b>Timezone</b> Europe/Moscow (or your current one) &rarr; Save &amp; Apply.</p>
+</section>
+
+<section id="uplink" aria-labelledby="uplink-h">
+  <h2 id="uplink-h">3. Internet into the router</h2>
+  <h3>Option 1: cable (simplest, use it for setup)</h3>
+  <p>A cable from the apartment's router into the <b>WAN</b> port (2.5G). OpenWrt asks for an address automatically. Check on the <b>router</b>:</p>
+<pre><code>ping -c 3 1.1.1.1</code></pre>
+  <h3>Option 2: someone else's Wi-Fi (hotel, apartment without cable)</h3>
+  <ol class="steps">
+    <li><b>Browser:</b> Network &rarr; Wireless. On the radio of the band you want (2.4 GHz reaches further) click <b>Scan</b>.</li>
+    <li>Next to the network click <b>Join Network</b>. Do <b>not</b> tick "Replace wireless configuration". Name: <code>wwan</code>. Enter its password. Firewall zone: <b>wan</b>. Submit, then Save &amp; Apply.</li>
+    <li>Check with <code>ping -c 3 1.1.1.1</code> on the router.</li>
+  </ol>
+  <p class="small">The router's own Wi-Fi then runs on the same channel as that network (one radio does both). A login page (captive portal) in a hotel must be completed from a laptop connected to the router, before Podkop is on, or with the laptop on the hotel Wi-Fi directly. Automatic switching between known networks (travelmate) comes with the setup script later; not needed for the first test.</p>
+</section>
+
+<section id="wifi" aria-labelledby="wifi-h">
+  <h2 id="wifi-h">4. Wi-Fi from the router</h2>
+  <p>Fresh OpenWrt usually starts with Wi-Fi switched off. <b>Browser:</b> Network &rarr; Wireless. For <b>each radio</b> (2.4 GHz and 5 GHz) click <b>Edit</b>:</p>
+  <ol class="steps">
+    <li><b>Device Configuration &rarr; Advanced Settings &rarr; Country Code:</b> the country you are in now (GE Georgia, RU Russia).</li>
+    <li><b>Operating frequency:</b> 5 GHz: mode AX, channel <b>36</b>, width <b>80 MHz</b>. 2.4 GHz: mode AX, channel <b>1</b>, <b>6</b> or <b>11</b>, width 20 MHz.</li>
+    <li><b>Interface Configuration &rarr; General:</b> ESSID <code>WORK</code> (same name on both radios), Network <b>lan</b>. <b>Wireless Security:</b> WPA2-PSK/WPA3-SAE Mixed Mode, a strong key from the password manager.</li>
+    <li>Save, then <b>Enable</b> the radio, then Save &amp; Apply.</li>
+  </ol>
+  <p>Checks on the <b>router</b>:</p>
+<pre><code>iw reg get
+iwinfo</code></pre>
+  <div class="table-wrap">
+  <table>
+    <caption>Wi-Fi checks (the ones that matter for a CN unit)</caption>
+    <thead><tr><th>#</th><th>Check</th><th>Pass</th></tr></thead>
+    <tbody>
+      <tr><td>W1</td><td><code>iw reg get</code></td><td>The <code>country</code> line shows the code you set (GE or RU), not CN.</td></tr>
+      <tr><td>W2</td><td><code>iwinfo</code></td><td>Two access-point interfaces named <code>WORK</code>, one on channel 36, one on 1, 6 or 11, each with a non-zero Tx-Power.</td></tr>
+      <tr><td>W3</td><td>Phone and laptop</td><td>Both see <code>WORK</code>, connect, and a phone 2 rooms away still holds the 5 GHz network.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="small">A CN unit that fails W1&ndash;W3 after setting the country stays SPARE; note the output and ask. Later the setup script adds the second network DIRECT (no tunnel) and moves the router to its own address range.</p>
+</section>
+
+<section id="podkop" aria-labelledby="podkop-h">
+  <h2 id="podkop-h">5. Podkop: send everything through the server</h2>
+  <p>Requires internet in the router (step 3). On the <b>router</b>, set the clock (certificate checks fail without it), then install Podkop with its official script:</p>
+<pre><code>ntpd -q -p 0.openwrt.pool.ntp.org
+sh &lt;(wget -O - https://raw.githubusercontent.com/itdoginfo/podkop/refs/heads/main/install.sh)</code></pre>
+  <p>The script asks in Russian whether to install the Russian translation: <b>n</b> for English, <b>y</b> for Russian. It installs <code>podkop</code>, <code>luci-app-podkop</code> and <code>sing-box</code> (1.13.x from OpenWrt; Podkop needs 1.12.4 or newer).</p>
+  <p class="small">If GitHub is unreachable from the router, copy the two Podkop files from <code>.private/downloads/router-kit/</code> (Podkop 0.7.24) to the router with <code>scp -O podkop-0.7.24-r1.apk luci-app-podkop-0.7.24-r1.apk root@192.168.1.1:/tmp/</code> on the Mac, then on the router <code>apk update</code> and <code>apk add --allow-untrusted /tmp/podkop-0.7.24-r1.apk /tmp/luci-app-podkop-0.7.24-r1.apk</code>. <code>apk update</code> still needs the OpenWrt package server (for sing-box).</p>
+
+  <p><b>Browser:</b> reload, then <b>Services &rarr; Podkop</b>. In the main section:</p>
+  <div class="table-wrap">
+  <table>
+    <caption>Podkop settings for "everything from WORK through the server"</caption>
+    <thead><tr><th>Setting</th><th>Value</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>Connection type</td><td><b>Proxy</b></td><td>VLESS is a proxy link, not a VPN interface.</td></tr>
+      <tr><td>Configuration Type</td><td><b>Connection URL</b> while only server A exists; <b>URLTest</b> once server B exists</td><td>URLTest picks the working link automatically (failover).</td></tr>
+      <tr><td>Link(s)</td><td>The <b>Vision</b> link of server A (port 443) from the password manager; with URLTest also server B's Vision link</td><td>Only Vision links; the XHTTP link (port 8443) is a test variant and needs a special sing-box build.</td></tr>
+      <tr><td>Fully Routed IPs</td><td><code>192.168.1.0/24</code> (the router's LAN range)</td><td>Sends <b>all</b> traffic of every device on WORK through the tunnel, not only listed sites.</td></tr>
+      <tr><td>Source Network Interface</td><td><code>br-lan</code> (default)</td><td>The bridge that WORK belongs to.</td></tr>
+      <tr><td>DNS</td><td>leave the defaults</td><td>Checked in step 6; tuned later by the setup script.</td></tr>
+      <tr><td>Community lists, domain lists</td><td>none</td><td>Not needed when everything is routed.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p><b>Save &amp; Apply.</b> Then on the router:</p>
+<pre><code>/usr/bin/podkop show_version
+/usr/bin/podkop global_check</code></pre>
+  <p class="small">Option names are from Podkop's documentation (podkop.net, 2026-11). Untested here: that a Vision link pastes as-is, and that URLTest with several links works on the standard sing-box (the README mentions an alternative build for "fallback links"). If the link is refused, ask; the fallback is the "Outbound Config" type with a sing-box JSON outbound.</p>
+</section>
+
+<section id="verify" aria-labelledby="verify-h">
+  <h2 id="verify-h">6. Verify</h2>
+  <div class="table-wrap">
+  <table>
+    <caption>Pass all before relying on the router</caption>
+    <thead><tr><th>&#10003;</th><th>#</th><th>Where</th><th>Check</th><th>Pass</th></tr></thead>
+    <tbody>
+      <tr><td class="ck"><input type="checkbox" aria-label="V1 done"></td><td>V1</td><td>Browser</td><td>Services &rarr; Podkop &rarr; Diagnostics &rarr; <b>Run diagnostics</b></td><td>No red items. A failing "FakeIP" item is expected when everything is routed (Fully Routed IPs).</td></tr>
+      <tr><td class="ck"><input type="checkbox" aria-label="V2 done"></td><td>V2</td><td>Phone on WORK, mobile data off</td><td>Open an "what is my IP" page (e.g. ifconfig.me)</td><td>Shows <b>server A's</b> address (compare with the password manager entry), not the local provider.</td></tr>
+      <tr><td class="ck"><input type="checkbox" aria-label="V3 done"></td><td>V3</td><td>Phone on WORK</td><td>A 2&ndash;3 minute video, a speed test</td><td>Plays smoothly; speed roughly like the Russian-PC test (7&ndash;11 Mbit/s or better).</td></tr>
+      <tr><td class="ck"><input type="checkbox" aria-label="V4 done"></td><td>V4</td><td>Router</td><td><code>reboot</code>, wait 2 minutes, repeat V2</td><td>Works again without touching anything.</td></tr>
+      <tr><td class="ck"><input type="checkbox" aria-label="V5 done"></td><td>V5</td><td>Router</td><td>Unplug WAN for 1 minute, plug back, repeat V2 after 1 minute</td><td>Recovers by itself.</td></tr>
+      <tr><td class="ck"><input type="checkbox" aria-label="V6 done"></td><td>V6</td><td>Phone</td><td>Leave connected overnight</td><td>Still works in the morning.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="small">In Georgia these checks prove the router setup, not that it passes Russian filtering; that part is proven by the Russian-PC tests and on day 1 in Russia.</p>
+</section>
+
+<section id="backup" aria-labelledby="backup-h">
+  <h2 id="backup-h">7. Backup and the spare unit</h2>
+  <ol class="steps">
+    <li><b>Browser:</b> System &rarr; Backup / Flash Firmware &rarr; <b>Generate archive</b>. The file contains the VLESS link and Wi-Fi passwords: store it in the password manager as an attachment, not in the project or a chat.</li>
+    <li><b>Spare unit:</b> steps 1 and 2 on the spare, then System &rarr; Backup / Flash Firmware &rarr; <b>Restore backup</b> with that archive. Then install Podkop (step 5, install part only; settings come from the backup) and run step 6. Same model, so the backup restores 1:1. Do this only after the spare's return window has closed, or once you are sure to keep it.</li>
+  </ol>
+</section>
+
+<section id="stock" aria-labelledby="stock-h">
+  <h2 id="stock-h">8. Back to GL.iNet stock firmware (if ever needed)</h2>
+  <p>For a return to the seller or to start over. In a browser on the Mac open <code>https://dl.gl-inet.com/router/mt3000/</code>, download the current stable firmware in its <b>U-Boot</b> variant (GL: "Please download the U-Boot compatible firmware"), then follow 1b with that file. Afterwards the stock page is back at <code>192.168.8.1</code>. A CN unit returns to its CN firmware's behaviour only if you flash CN firmware; for a return to the seller this does not matter for the unit's function.</p>
+</section>
+
+<section id="stuck" aria-labelledby="stuck-h">
+  <h2 id="stuck-h">When stuck</h2>
+  <div class="cards">
+    <article class="card"><h3>Page does not open</h3><p>Check the cable is in LAN, Wi-Fi is off, GlobalProtect is disconnected, and the Mac is on DHCP (except during 1b). Replug the cable.</p></article>
+    <article class="card"><h3>Flash failed, LED odd</h3><p>Nothing is lost: do 1b. Recovery mode normally lives in a separate part of the flash that an upgrade does not touch.</p></article>
+    <article class="card"><h3>No internet after Podkop</h3><p>Services &rarr; Podkop &rarr; Stop; if internet returns, the link or server is the problem (check V2 from the phone app with the same link).</p></article>
+    <article class="card"><h3>Need help in a new session</h3><p>Open the project in Claude Code and say "router setup, step N, here is the output". Paste output, never links or passwords.</p></article>
+  </div>
+</section>
+
+<footer class="prov">
+  <details>
+    <summary>Sources and limits: OpenWrt download server, GL.iNet documentation, Podkop documentation, checked 2026-11-09. Untested on a real unit yet.</summary>
+    <dl>
+      <dt>Verified</dt><dd>Image name, size and SHA-256 from downloads.openwrt.org 25.12.6 (<code>sha256sums</code>, <code>profiles.json</code>: sysupgrade and initramfs images only, no factory image); downloaded copy matches. sing-box 1.13.21 and luci-app-travelmate in the 25.12.6 package feed. Podkop 0.7.24 release assets (apk).</dd>
+      <dt>Documented</dt><dd>GL.iNet: Local Upgrade, "Keep Settings", U-Boot recovery steps and the MT3000 LED pattern (docs.gl-inet.com, upgrade and debrick pages). Podkop: install script, option names, diagnostics, sing-box &ge; 1.12.4 (github.com/itdoginfo/podkop, podkop.net).</dd>
+      <dt>Not verified</dt><dd>That the stock page and the U-Boot page accept the official OpenWrt image (user reports only); CN-unit behaviour; default Wi-Fi state; Vision link parsing and multi-link URLTest in Podkop on the standard sing-box; Podkop's DNS path with Fully Routed IPs. To be replaced by tested steps after the Georgia unit is set up.</dd>
+      <dt>Render</dt><dd id="render-status">offline-check.sh 2026-11-09: no external loads, headless render with network blocked; screenshot looked at. Not checked: phone width, dark mode, print.</dd>
+    </dl>
+  </details>
+</footer>
+</main>
+</div>
+<script>
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) { es.forEach(function (en) { if (!en.isIntersecting) return; links.forEach(function (a) { a.setAttribute('aria-current', String(a.getAttribute('href') === '#' + en.target.id)); }); }); }, { rootMargin: '0px 0px -70% 0px' });
+    links.forEach(function (a) { var s = document.getElementById(a.getAttribute('href').slice(1)); if (s) io.observe(s); });
+  }
+  var key = 'router-setup:ticks';
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('input[type=checkbox]'));
+  try { var saved = JSON.parse(localStorage.getItem(key) || '[]'); boxes.forEach(function (b, i) { b.checked = !!saved[i]; }); } catch (e) {}
+  boxes.forEach(function (b) { b.addEventListener('change', function () { try { localStorage.setItem(key, JSON.stringify(boxes.map(function (x) { return x.checked; }))); } catch (e) {} }); });
+  window.addEventListener('beforeprint', function () { document.querySelectorAll('details').forEach(function (d) { d.open = true; }); });
+})();
+</script>
+</body>
+</html>

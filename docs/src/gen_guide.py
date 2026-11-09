@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
-"""Generate docs/guide.html: the whole path as navigable cards, each opening a detail panel.
+"""The Plan tab of docs/index.html: the whole path as navigable cards, each opening a detail panel.
 
 Single sources: the STEPS list below (the path) and docs/LESSONS.md (problems and fixes, parsed
-by their L-numbers, never retyped here). After editing either, run:
+by their L-numbers, never retyped here). build() returns the page; docs/src/build_docs.py puts it
+into docs/index.html with the other documents. After editing either source, run:
 
-    python3 docs/src/gen_guide.py
-    python3 ~/.claude/skills/html-report/scripts/embed-fonts.py docs/guide.html   # optional: house fonts
+    python3 docs/src/build_docs.py        (running this file does the same)
 
-The page works offline, without JavaScript (all panels stacked) and in print.
+Link to a detailed document instead of repeating it: in `evidence`, write
+"docs/router-setup.html#flash" and it becomes a link to that section's tab.
 """
 import html
 import os
 import re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-OUT = os.path.join(ROOT, "docs", "guide.html")
 LESSONS = os.path.join(ROOT, "docs", "LESSONS.md")
 
 # status: done | now | next | planned | later
@@ -256,9 +256,8 @@ def build():
     page = TEMPLATE.format(rail=rail, gates=gates, details=details, lesson_index=lesson_index,
                            fresh=fresh_html, done=done, total=len(STEPS), nlessons=len(lessons),
                            unused=len(set(lessons) - used))
-    with open(OUT, "w", encoding="utf-8") as f:
-        f.write(page)
-    print(f"wrote {OUT}: {len(STEPS)} steps, {len(lessons)} lessons ({len(set(lessons) - used)} not tied to a step)")
+    print(f"plan: {len(STEPS)} steps, {len(lessons)} lessons ({len(set(lessons) - used)} not tied to a step)")
+    return page
 
 
 TEMPLATE = """<!doctype html>
@@ -343,7 +342,7 @@ footer{{margin-top:var(--s7);border-top:1px solid var(--rule);padding-top:var(--
   <h1>The whole path, step by step</h1>
   <p class="lede">Reliable internet from Russia, built and proven in gated steps. {done} of {total} steps are done; server A works from Russia. Click a card to open its detail: the question it answered, what we did, the problems we hit and how we got past them, and what we would do differently.</p>
   <ul class="gates" aria-label="Gates">{gates}</ul>
-  <p class="howto">Status is shown by icon and word: done, now, next, planned, later. Keyboard: Tab to a card, Enter to open. Concepts (Reality, camouflage, the filter) are explained in <a href="vpn-explained.html">vpn-explained.html</a>.</p>
+  <p class="howto">Status is shown by icon and word: done, now, next, planned, later. Keyboard: Tab to a card, Enter to open. Concepts (Reality, camouflage, the filter) are explained in the <a href="vpn-explained.html">VPN explained</a> tab; router work follows the <a href="router-arrival-check.html">Router arrival check</a> and <a href="router-setup.html">Router setup</a> tabs.</p>
 </header>
 
 <h2 id="path">The path</h2>
@@ -361,6 +360,7 @@ footer{{margin-top:var(--s7);border-top:1px solid var(--rule);padding-top:var(--
 <h2 id="map">Where things live</h2>
 <dl class="map">
   <dt>CLAUDE.md</dt><dd>Cold start for an agent: rules, conventions, privacy, how to continue.</dd>
+  <dt>docs/index.html</dt><dd>This handbook: every HTML document as a tab; built by <code>docs/src/build_docs.py</code> from <code>docs/src/</code>.</dd>
   <dt>docs/STATUS.md</dt><dd>Gates and current server state.</dd>
   <dt>docs/NEXT-STEPS.md</dt><dd>The ordered work queue.</dd>
   <dt>docs/DECISIONS.md</dt><dd>Decisions D-01 onwards and why.</dd>
@@ -373,7 +373,7 @@ footer{{margin-top:var(--s7);border-top:1px solid var(--rule);padding-top:var(--
 </dl>
 
 <footer>
-  <p>Generated page; edit <code>docs/src/gen_guide.py</code> or <code>docs/LESSONS.md</code> and regenerate. Real addresses, hosts and keys are deliberately absent. Render check (2026-11-09): offline-check.sh passed (no external loads, headless render and PDF with the network blocked); screenshot and PDF pages looked at. Not checked: phone width, dark mode.</p>
+  <p>Generated tab; edit <code>docs/src/gen_guide.py</code> or <code>docs/LESSONS.md</code> and run <code>python3 docs/src/build_docs.py</code>. Real addresses, hosts and keys are deliberately absent.</p>
 </footer>
 </div>
 <script>
@@ -405,4 +405,5 @@ footer{{margin-top:var(--s7);border-top:1px solid var(--rule);padding-top:var(--
 """
 
 if __name__ == "__main__":
-    build()
+    import build_docs
+    raise SystemExit(build_docs.build())
